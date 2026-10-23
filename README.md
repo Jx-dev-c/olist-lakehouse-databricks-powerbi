@@ -57,11 +57,22 @@ erDiagram
 
 ## Principais insights
 
-<!-- Preencha com os números reais depois de rodar o pipeline. Recrutadores leem esta seção primeiro. -->
-- 📦 …% dos pedidos entregues chegaram com atraso; a pior UF foi …
-- ⭐ Pedidos atrasados têm nota média … contra … dos pedidos no prazo
-- 🔁 Só …% dos clientes compraram mais de uma vez: retenção é a maior oportunidade
-- 🏷️ As 5 maiores categorias concentram …% da receita
+Período analisado: jan/2017 a ago/2018. São 99 mil pedidos, R$ 15,9 milhões em receita e ticket médio de R$ 160,91.
+
+- ⭐ **O atraso é o que mais derruba a satisfação.** Pedidos no prazo têm nota média **4,29**; atrasados, **2,27**. A partir de 6 dias de atraso, **78%** das avaliações são negativas (1–2 estrelas), contra 10% nas entregas no prazo.
+- 📦 **6,8% das entregas atrasam, mas o prazo prometido é muito folgado.** A entrega real leva em média **12,5 dias** contra **24,3 prometidos**. Mesmo assim, o atraso se concentra no Nordeste e no RJ: **MA (17,4%)**, CE (13,8%), BA (12,2%) e RJ (12,1%), o dobro da média nacional.
+- 🔁 **Retenção é a maior oportunidade.** Só **3%** dos 93 mil clientes compraram mais de uma vez. O segmento RFM *Em risco (alto valor)* reúne 13,8 mil clientes que já gastaram R$ 4,2 milhões e não voltaram.
+- 🏷️ **A receita é pouco concentrada.** As 5 maiores categorias (Beleza & Saúde, Relógios & Presentes, Cama Mesa Banho, Esporte & Lazer, Informática) somam **39,8%** da receita de produtos.
+
+| Faixa de entrega | Pedidos | Nota média | % avaliações negativas |
+|---|---:|---:|---:|
+| 10+ dias adiantado | 61.523 | 4,32 | 8,9% |
+| No prazo | 27.920 | 4,22 | 10,1% |
+| 1 a 5 dias de atraso | 2.722 | 2,99 | 41,1% |
+| 6 a 15 dias de atraso | 2.479 | 1,74 | 78,2% |
+| 15+ dias de atraso | 1.180 | 1,73 | 78,3% |
+
+**Qualidade dos dados:** as 17 verificações bloqueantes passaram. Três anomalias da origem ficam registradas como aviso: 1 pedido sem pagamento, 8 pedidos "entregues" sem data de entrega e 279 clientes com CEP sem coordenadas.
 
 ## Como reproduzir
 
