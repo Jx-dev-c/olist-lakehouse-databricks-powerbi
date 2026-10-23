@@ -198,6 +198,19 @@ table fact_orders
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Faixa de pontualidade da entrega (prefixo numérico garante a ordem no eixo)
+	column faixa_entrega = SWITCH ( TRUE (), fact_orders[is_delivered] = FALSE (), "6. Não entregue", fact_orders[delay_days] <= -10, "1. 10+ dias adiantado", fact_orders[delay_days] <= 0, "2. No prazo", fact_orders[delay_days] <= 5, "3. 1–5 dias de atraso", fact_orders[delay_days] <= 15, "4. 6–15 dias de atraso", "5. 15+ dias de atraso" )
+		dataType: string
+		summarizeBy: none
+
+	column forma_pagamento = SWITCH ( fact_orders[main_payment_type], "credit_card", "Cartão de crédito", "boleto", "Boleto", "voucher", "Voucher", "debit_card", "Cartão de débito", "Outros" )
+		dataType: string
+		summarizeBy: none
+
+	column faixa_parcelas = SWITCH ( TRUE (), fact_orders[installments] <= 1, "1. À vista", fact_orders[installments] <= 3, "2. 2–3x", fact_orders[installments] <= 6, "3. 4–6x", fact_orders[installments] <= 10, "4. 7–10x", "5. 11x ou mais" )
+		dataType: string
+		summarizeBy: none
+
 	partition fact_orders = m
 		mode: import
 		source =

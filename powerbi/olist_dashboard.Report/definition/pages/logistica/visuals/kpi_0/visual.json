@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "kpi_0",
   "position": {
-    "x": 40.0,
-    "y": 110,
-    "z": 2000,
-    "height": 140,
-    "width": 352.0,
-    "tabOrder": 2000
+    "x": 208.0,
+    "y": 76,
+    "z": 700,
+    "height": 96,
+    "width": 238.0,
+    "tabOrder": 700
   },
   "visual": {
     "visualType": "card",
@@ -23,15 +23,30 @@
                       "Entity": "_Medidas"
                     }
                   },
-                  "Property": "Pedidos Entregues"
+                  "Property": "Tempo Médio de Entrega (dias)"
                 }
               },
-              "queryRef": "_Medidas.Pedidos Entregues",
-              "nativeQueryRef": "Pedidos Entregues"
+              "queryRef": "_Medidas.Tempo Médio de Entrega (dias)",
+              "nativeQueryRef": "Tempo Médio de Entrega (dias)"
             }
           ]
         }
       }
+    },
+    "objects": {
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
     },
     "drillFilterOtherVisuals": true
   }

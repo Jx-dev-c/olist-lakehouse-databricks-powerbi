@@ -9,7 +9,7 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
-annotation PBI_QueryOrder = ["fact_orders","dim_customer","dim_seller","dim_product","dim_date","customer_rfm","agg_atraso_vs_avaliacao","fact_order_items"]
+annotation PBI_QueryOrder = ["fact_orders","dim_customer","dim_seller","dim_product","dim_date","customer_rfm","fact_order_items"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
@@ -19,7 +19,6 @@ ref table dim_seller
 ref table dim_product
 ref table dim_date
 ref table customer_rfm
-ref table agg_atraso_vs_avaliacao
 ref table fact_order_items
 ref table _Medidas
 

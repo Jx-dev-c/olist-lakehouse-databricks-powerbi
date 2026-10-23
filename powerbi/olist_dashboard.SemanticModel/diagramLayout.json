@@ -10,19 +10,6 @@
       "nodes": [
         {
           "location": {
-            "x": 925.00968216353226,
-            "y": 279.29227698987546
-          },
-          "nodeIndex": "agg_atraso_vs_avaliacao",
-          "nodeLineageTag": "8d5fcde9-1a1d-45f0-b3e4-2c66fb451c62",
-          "size": {
-            "height": 176,
-            "width": 234
-          },
-          "zIndex": 0
-        },
-        {
-          "location": {
             "x": 923.00968216353226,
             "y": 0
           },

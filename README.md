@@ -51,7 +51,7 @@ erDiagram
 
 1. Como receita, pedidos e ticket médio evoluíram mês a mês?
 2. Quais estados e regiões sofrem mais com atraso na entrega?
-3. **Quanto o atraso derruba a nota da avaliação?** (`agg_atraso_vs_avaliacao`)
+3. **Quanto o atraso derruba a nota da avaliação?** (`gold.agg_atraso_vs_avaliacao` e página *Clientes & Avaliações*)
 4. Quais categorias e vendedores concentram a receita, e qual é a satisfação deles?
 5. Como se distribui a base de clientes nos segmentos RFM, e quanto ela é recorrente?
 

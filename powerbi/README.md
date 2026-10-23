@@ -1,60 +1,88 @@
-# Power BI: conexão, modelo e páginas
+# Power BI: Olist | E-commerce Analytics
 
-O relatório está versionado como **projeto do Power BI** (`olist_dashboard.pbip`): o modelo semântico fica em TMDL (`olist_dashboard.SemanticModel/definition`) e as páginas em JSON (PBIR, `olist_dashboard.Report/definition`). Basta abrir o `.pbip` no Power BI Desktop, informar o token do Databricks e clicar em **Atualizar**.
+O relatório está versionado como **projeto do Power BI** (`olist_dashboard.pbip`):
 
-O passo a passo abaixo documenta como o modelo foi montado.
+| Pasta | Conteúdo |
+|---|---|
+| `olist_dashboard.SemanticModel/definition` | Modelo em TMDL: tabelas, relacionamentos e medidas (`tables/_Medidas.tmdl`) |
+| `olist_dashboard.Report/definition` | Páginas e visuais em JSON (PBIR) |
+| `olist_dashboard.Report/StaticResources/RegisteredResources` | Tema `OlistLight.json` e imagens de fundo |
 
-## 1. Conectar ao Databricks
+Para abrir: abra o `.pbip` no Power BI Desktop, informe o token do Databricks (escopo *BI tools*) e clique em **Atualizar**.
 
-1. No Databricks: **SQL Warehouses** > seu warehouse > **Connection details**. Copie *Server hostname* e *HTTP path*.
-2. Crie um token: **Settings > Developer > Access tokens > Generate new token**.
-3. No Power BI Desktop: **Obter dados > Azure Databricks** (funciona também para workspaces AWS/Free Edition).
-   - Server hostname / HTTP path: os valores copiados
-   - Modo: **Importar** (o dataset tem ~100 mil pedidos, então o import é rápido e permite DAX completo)
-   - Autenticação: **Personal Access Token**
-4. Navegue até `workspace > olist_gold` e selecione:
-   `fact_orders`, `fact_order_items`, `dim_customer`, `dim_seller`, `dim_product`, `dim_date`, `customer_rfm`, `agg_atraso_vs_avaliacao`.
+## Conexão
 
-## 2. Modelo de dados
+| Campo | Valor |
+|---|---|
+| Conector | **Databricks** (não "Azure Databricks": o workspace roda na AWS) |
+| Host | `dbc-a48959b5-98b7.cloud.databricks.com` |
+| Caminho HTTP | `/sql/1.0/warehouses/5bc0d92575b8996b` |
+| Modo | Importar |
+
+## Modelo
 
 ```
-                 dim_date (date_key)
-                  1 │        │ 1
-                    *        *
-dim_customer 1──* fact_orders    fact_order_items *──1 dim_product
-  │  1──────────────────────────────*   │ *
-  │ *                                   └──1 dim_seller
-  1
-customer_rfm (customer_unique_id)
+            dim_date ─┬─────────────┐
+                      │             │
+dim_customer ── fact_orders    fact_order_items ── dim_product
+     │      └───────────────────────┘        └──── dim_seller
+customer_rfm
 ```
 
-| De (muitos) | Para (um) | Coluna |
-|---|---|---|
-| `fact_orders` | `dim_date` | `purchase_date_key` → `date_key` |
-| `fact_orders` | `dim_customer` | `customer_id` |
-| `fact_order_items` | `dim_date` | `purchase_date_key` → `date_key` |
-| `fact_order_items` | `dim_customer` | `customer_id` |
-| `fact_order_items` | `dim_product` | `product_id` |
-| `fact_order_items` | `dim_seller` | `seller_id` |
-| `dim_customer` | `customer_rfm` | `customer_unique_id` |
+- Duas fatos (pedido e item) compartilham as dimensões, sem relacionamento direto entre si: isso evita caminhos ambíguos até `dim_date`.
+- As medidas usam `TREATAS` para propagar o filtro de uma fato para a outra. Assim, filtrar por **categoria/vendedor** (itens) afeta prazo e nota (pedidos), e filtrar por **forma de pagamento/parcelas** (pedidos) afeta a receita (itens).
+- Colunas calculadas em `fact_orders`: `faixa_entrega`, `forma_pagamento`, `faixa_parcelas` (prefixo numérico garante a ordem nos eixos).
+- **Receita** = preço + frete dos itens. Pedidos sem itens (cancelados/indisponíveis, <1%) ficam fora dos indicadores.
+- `dim_date` marcada como tabela de datas; data/hora automática desativada.
 
-> **Não** relacione `fact_order_items` com `fact_orders`. Isso cria caminhos ambíguos até `dim_date`. As duas fatos já compartilham as dimensões.
+## Layout (canvas 1280×720, grade de 8 px)
 
-Ajustes:
-- `dim_date`: **Marcar como tabela de datas** (coluna `date`); ordenar `month_name` por `month` e `month_year` por `year_month`.
-- `dim_customer[state]` e `dim_seller[state]`: categoria de dados **Estado ou província**; `lat`/`lng` como **Latitude/Longitude**.
-- Oculte as colunas de chave (`*_key`, `*_id`) da exibição de relatório.
-- Cole as medidas de [`medidas.dax`](medidas.dax) numa tabela `_Medidas`.
+Pirâmide invertida em todas as páginas: **KPIs no topo → tendência/comparação no meio → detalhe embaixo**, com filtros sincronizados na barra lateral (Período, Estado, Região, Categoria) e navegação entre páginas no cabeçalho.
 
-## 3. Páginas sugeridas
+| Zona | x | y | largura | altura |
+|---|---:|---:|---:|---:|
+| Cabeçalho (imagem de fundo) | 0 | 0 | 1280 | 56 |
+| Navegação entre páginas | 640 | 12 | 624 | 32 |
+| Barra lateral de filtros | 0 | 59 | 184 | 661 |
+| Linha de KPIs | 200 | 72 | 1064 | 104 |
+| Meio | 200 | 192 | 1064 | 248–256 |
+| Base | 200 | 456–464 | 1064 | 240–248 |
 
-| Página | Pergunta de negócio | Visuais |
-|---|---|---|
-| **Visão Executiva** | Como as vendas evoluíram? | Cartões (Receita, Pedidos, Ticket Médio, Nota Média), linha de Receita por `month_year` com MoM %, receita por região (mapa) |
-| **Logística** | Onde e quanto atrasamos? | Mapa de % atraso por UF, prazo real × prometido por mês, barras de `agg_atraso_vs_avaliacao` |
-| **Produtos & Vendedores** | O que vende e quem vende bem? | Top 10 categorias (Receita Produtos), dispersão de vendedores (receita × nota, tamanho = pedidos) |
-| **Clientes** | Quem são nossos clientes? | Treemap por `segment` do RFM, % Clientes Recorrentes, receita por segmento |
+| Página | KPIs | Meio | Base |
+|---|---|---|---|
+| **Visão Geral** | Receita, Pedidos, Ticket Médio, Nota Média, % Atraso (com ▲▼ vs mês anterior) | Linha: receita mensal · Barras: top 10 categorias | Barras: top 10 estados · Insight |
+| **Vendas & Produtos** | Receita, Ticket Médio, Itens/Pedido, % receita dos 20% maiores vendedores | Barras: top 10 categorias · Dispersão: volume × ticket por categoria · Insight | Rosca: forma de pagamento · Combo: parcelamento × ticket · Pareto: top 20 vendedores |
+| **Logística** | Tempo médio de entrega, Prazo estimado, % Atraso, Atraso médio dos atrasados | Linhas: real × estimado por mês · Barras: % atraso por estado (27 UFs) | Colunas: evolução do % atraso · Insight |
+| **Clientes & Avaliações** | Nota Média, % Negativas, Clientes Únicos, % Recompra | Colunas: distribuição 1–5 · Combo: nota × pontualidade · Insight | Barras: top 10 estados por clientes · Barras: segmentos RFM |
 
-Filtro recomendado: **jan/2017 a ago/2018**. Os meses de 2016 e de set–out/2018 têm pouquíssimos pedidos e distorcem as tendências.
+Páginas ocultas: **Dica - Resumo** (dica de ferramenta 320×240) e **Detalhe do Vendedor** (drill-through).
 
-Ao terminar, salve `olist_dashboard.pbix` nesta pasta e capturas de tela em `docs/img/` para o README principal.
+### Por que cada gráfico
+
+- **Barras horizontais** para categorias e estados: rótulos longos ficam legíveis e o ranking é imediato. Um mapa de 27 UFs esconderia as diferenças de 2–3 p.p. entre estados.
+- **Linha** para tudo que é mensal: o eixo contínuo mostra tendência melhor que colunas.
+- **Dispersão volume × ticket**: separa categorias de "muito volume, ticket baixo" das de "nicho caro" num visual só, em vez de dois rankings.
+- **Rosca só para forma de pagamento**, com 4 fatias. Pizza com 70 categorias seria ilegível.
+- **Pareto (colunas + % acumulado)** para vendedores: responde "quem concentra o faturamento" melhor que uma tabela de 3 mil linhas.
+- **Sem gauges**: o card com ▲▼ e cor já comunica a meta implícita (subir/cair) ocupando um quarto do espaço.
+
+## Período
+
+O dataset tem pouquíssimos pedidos em 2016 e em set–out/2018. Um **filtro no nível do relatório** limita a `dim_date[year_month]` a **201701–201808**, e uma nota na barra lateral explica o recorte. Para ver tudo, remova o filtro em **Filtros → Filtros em todas as páginas**.
+
+A variação "vs mês anterior" compara sempre o **último mês com vendas no contexto** com o mês anterior a ele (ex.: ago/18 vs jul/18).
+
+## Checklist de limpeza aplicado no tema
+
+- Sem linhas de grade; eixo de valores oculto em barras/colunas (o rótulo de dados já mostra o número).
+- Sem títulos de eixo (o título do visual já diz o que é).
+- Legenda só quando há mais de uma série, no topo à esquerda.
+- Valores: R$ sem centavos (exceto ticket), % com 1 casa, dias com 1 casa, nota com 2 casas.
+- Cards sem borda, sobre caixas desenhadas no fundo, com faixa azul de destaque.
+
+## Configuração manual pendente (2 minutos)
+
+O formato PBIR não garante esses dois tipos de página quando criados por arquivo, então faça no Desktop:
+
+1. **Dica de ferramenta:** página *Dica - Resumo* → painel **Formatar página** → **Informações da página** → ative **Permitir uso como dica de ferramenta**. Depois, nos gráficos "Top 10 categorias" e "% de pedidos atrasados por estado", vá em **Formatar visual → Geral → Dicas de ferramenta → Tipo: Página de relatório → Página: Dica - Resumo**.
+2. **Drill-through:** página *Detalhe do Vendedor* → painel **Visualizações** → **Detalhamento** → arraste `dim_seller[seller_id]` para "Adicionar campos de detalhamento aqui". O botão **Voltar** é criado automaticamente. No Pareto de vendedores, clique com o botão direito numa coluna → **Detalhamento → Detalhe do Vendedor**.

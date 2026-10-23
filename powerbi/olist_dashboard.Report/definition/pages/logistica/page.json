@@ -3,18 +3,25 @@
   "name": "logistica",
   "displayName": "Logística",
   "displayOption": "FitToPage",
-  "height": 1080,
-  "width": 1920,
+  "height": 720,
+  "width": 1280,
   "objects": {
     "background": [
       {
         "properties": {
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          },
           "image": {
             "image": {
               "name": {
                 "expr": {
                   "Literal": {
-                    "Value": "'fundo_olist.png'"
+                    "Value": "'fundo_kpi4.png'"
                   }
                 }
               },
@@ -23,7 +30,7 @@
                   "ResourcePackageItem": {
                     "PackageName": "RegisteredResources",
                     "PackageType": 1,
-                    "ItemName": "fundo_olist.png"
+                    "ItemName": "fundo_kpi4.png"
                   }
                 }
               },
@@ -33,13 +40,6 @@
                     "Value": "'Fit'"
                   }
                 }
-              }
-            }
-          },
-          "transparency": {
-            "expr": {
-              "Literal": {
-                "Value": "0D"
               }
             }
           }
