@@ -1,0 +1,85 @@
+// ============================================================
+// Medidas DAX do dashboard Olist
+// Crie uma tabela vazia "_Medidas" (Inserir dados > OK) e cole cada medida nela.
+// Pré-requisito: marcar dim_date como tabela de datas (coluna dim_date[date]).
+// ============================================================
+
+// ---------- Vendas ----------
+Receita =
+SUM ( fact_orders[payment_value] )
+
+Pedidos =
+COUNTROWS ( fact_orders )
+
+Ticket Médio =
+DIVIDE ( [Receita], [Pedidos] )
+
+Clientes Únicos =
+CALCULATE ( DISTINCTCOUNT ( dim_customer[customer_unique_id] ), fact_orders )
+
+Receita Produtos =
+SUM ( fact_order_items[price] )
+
+Frete % do Pedido =
+DIVIDE (
+    SUM ( fact_orders[freight_value] ),
+    SUM ( fact_orders[items_value] ) + SUM ( fact_orders[freight_value] )
+)
+
+// ---------- Inteligência de tempo ----------
+Receita Mês Anterior =
+CALCULATE ( [Receita], DATEADD ( dim_date[date], -1, MONTH ) )
+
+Receita MoM % =
+DIVIDE ( [Receita] - [Receita Mês Anterior], [Receita Mês Anterior] )
+
+Receita Ano Anterior =
+CALCULATE ( [Receita], SAMEPERIODLASTYEAR ( dim_date[date] ) )
+
+Receita YoY % =
+DIVIDE ( [Receita] - [Receita Ano Anterior], [Receita Ano Anterior] )
+
+Receita Acumulada no Ano =
+TOTALYTD ( [Receita], dim_date[date] )
+
+// ---------- Logística ----------
+Pedidos Entregues =
+CALCULATE ( [Pedidos], fact_orders[is_delivered] = TRUE () )
+
+% Entregas Atrasadas =
+DIVIDE ( CALCULATE ( [Pedidos], fact_orders[is_late] = TRUE () ), [Pedidos Entregues] )
+
+% Entregas no Prazo =
+1 - [% Entregas Atrasadas]
+
+Prazo Médio de Entrega (dias) =
+CALCULATE ( AVERAGE ( fact_orders[delivery_days] ), fact_orders[is_delivered] = TRUE () )
+
+Prazo Médio Prometido (dias) =
+AVERAGE ( fact_orders[estimated_days] )
+
+// ---------- Satisfação ----------
+Nota Média =
+AVERAGE ( fact_orders[review_score] )
+
+% Avaliações Negativas =
+DIVIDE (
+    CALCULATE ( COUNT ( fact_orders[review_score] ), fact_orders[review_score] <= 2 ),
+    COUNT ( fact_orders[review_score] )
+)
+
+Nota Média - Atrasados =
+CALCULATE ( [Nota Média], fact_orders[is_late] = TRUE () )
+
+Nota Média - No Prazo =
+CALCULATE ( [Nota Média], fact_orders[is_late] = FALSE () )
+
+Impacto do Atraso na Nota =
+[Nota Média - Atrasados] - [Nota Média - No Prazo]
+
+// ---------- Clientes (RFM) ----------
+Clientes RFM =
+COUNTROWS ( customer_rfm )
+
+% Clientes Recorrentes =
+DIVIDE ( CALCULATE ( [Clientes RFM], customer_rfm[frequency] >= 2 ), [Clientes RFM] )

@@ -1,0 +1,20 @@
+# Databricks Asset Bundle: versiona e faz deploy do job via CLI
+#   databricks bundle validate
+#   databricks bundle deploy
+#   databricks bundle run olist_pipeline
+bundle:
+  name: olist_lakehouse
+
+variables:
+  catalog:
+    description: Catálogo do Unity Catalog onde os schemas serão criados
+    default: workspace
+
+include:
+  - resources/*.yml
+
+targets:
+  dev:
+    mode: development
+    default: true
+    # o host vem do perfil configurado em `databricks auth login`

@@ -1,0 +1,17 @@
+# dados brutos do Kaggle (licença e tamanho: não versionar)
+data/
+*.csv
+*.zip
+
+# Databricks Asset Bundles
+.databricks/
+
+# Python / IDE
+__pycache__/
+.venv/
+.vscode/
+.idea/
+
+# Power BI: arquivos temporários
+*.pbix.bak
+~$*
