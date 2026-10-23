@@ -9,7 +9,7 @@
    - Modo: **Importar** (o dataset tem ~100 mil pedidos, então o import é rápido e permite DAX completo)
    - Autenticação: **Personal Access Token**
 4. Navegue até `workspace > olist_gold` e selecione:
-   `fact_orders`, `fact_order_items`, `dim_customer`, `dim_seller`, `dim_product`, `dim_date`, `customer_rfm`, `vw_atraso_vs_avaliacao`.
+   `fact_orders`, `fact_order_items`, `dim_customer`, `dim_seller`, `dim_product`, `dim_date`, `customer_rfm`, `agg_atraso_vs_avaliacao`.
 
 ## 2. Modelo de dados
 
@@ -47,7 +47,7 @@ Ajustes:
 | Página | Pergunta de negócio | Visuais |
 |---|---|---|
 | **Visão Executiva** | Como as vendas evoluíram? | Cartões (Receita, Pedidos, Ticket Médio, Nota Média), linha de Receita por `month_year` com MoM %, receita por região (mapa) |
-| **Logística** | Onde e quanto atrasamos? | Mapa de % atraso por UF, prazo real × prometido por mês, barras de `vw_atraso_vs_avaliacao` |
+| **Logística** | Onde e quanto atrasamos? | Mapa de % atraso por UF, prazo real × prometido por mês, barras de `agg_atraso_vs_avaliacao` |
 | **Produtos & Vendedores** | O que vende e quem vende bem? | Top 10 categorias (Receita Produtos), dispersão de vendedores (receita × nota, tamanho = pedidos) |
 | **Clientes** | Quem são nossos clientes? | Treemap por `segment` do RFM, % Clientes Recorrentes, receita por segmento |
 

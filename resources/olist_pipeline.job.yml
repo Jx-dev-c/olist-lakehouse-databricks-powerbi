@@ -37,7 +37,7 @@ resources:
           notebook_task:
             notebook_path: ../notebooks/04_data_quality.py
 
-        - task_key: bi_views
+        - task_key: bi_aggregates
           depends_on: [{ task_key: data_quality }]
           notebook_task:
-            notebook_path: ../notebooks/05_bi_views.py
+            notebook_path: ../notebooks/05_bi_aggregates.py

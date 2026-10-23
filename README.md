@@ -17,7 +17,7 @@ flowchart LR
         B -->|tipagem, limpeza, dedup| S[Silver]
         S -->|modelo estrela + RFM| G[Gold]
         G --> DQ{Qualidade<br/>de dados}
-        DQ -->|ok| VW[Views analíticas]
+        DQ -->|ok| VW[Agregados para BI]
     end
     G -->|SQL Warehouse| PBI[Power BI]
     J[[Job orquestrado<br/>Asset Bundle]] -.-> Databricks
@@ -30,7 +30,9 @@ flowchart LR
 | Silver | [`02_silver_transform`](notebooks/02_silver_transform.py) | `try_cast` seguro, padronização de texto, deduplicação pela versão mais recente, geolocalização por CEP |
 | Gold | [`03_gold_star_schema`](notebooks/03_gold_star_schema.py) | 2 fatos + 4 dimensões, calendário em PT-BR, segmentação RFM |
 | Qualidade | [`04_data_quality`](notebooks/04_data_quality.py) | 20 verificações (PK, FK, regras de negócio, reconciliação), histórico em `dq_results`; falha bloqueia o job |
-| Views | [`05_bi_views`](notebooks/05_bi_views.py) | KPIs mensais, atraso × avaliação, desempenho de vendedores |
+| Agregados | [`05_bi_aggregates`](notebooks/05_bi_aggregates.py) | KPIs mensais, atraso × avaliação, desempenho de vendedores |
+
+Todas as transformações usam a **API de DataFrame do PySpark**. `spark.sql` aparece apenas em DDL (`CREATE SCHEMA`/`VOLUME`, `COMMENT ON TABLE`).
 
 ## Modelo estrela (Gold)
 
@@ -49,7 +51,7 @@ erDiagram
 
 1. Como receita, pedidos e ticket médio evoluíram mês a mês?
 2. Quais estados e regiões sofrem mais com atraso na entrega?
-3. **Quanto o atraso derruba a nota da avaliação?** (`vw_atraso_vs_avaliacao`)
+3. **Quanto o atraso derruba a nota da avaliação?** (`agg_atraso_vs_avaliacao`)
 4. Quais categorias e vendedores concentram a receita, e qual é a satisfação deles?
 5. Como se distribui a base de clientes nos segmentos RFM, e quanto ela é recorrente?
 
@@ -93,7 +95,7 @@ Depois, siga o guia [`powerbi/README.md`](powerbi/README.md) para conectar o Pow
 - **Auto Loader com `availableNow`.** Processa só arquivos novos, com checkpoint, mas roda como batch: sem cluster ligado 24/7 e compatível com serverless.
 - **Deduplicação por `_ingested_at`.** Reenviar um CSV corrigido atualiza o dado sem duplicar.
 - **Duas tabelas fato.** `fact_orders` (grão pedido) responde logística e satisfação; `fact_order_items` (grão item) responde produto e vendedor. Juntar tudo num grão só distorceria somas de frete e pagamento.
-- **Qualidade como gate.** Um erro de qualidade interrompe o job antes das views, então o BI nunca lê dados inconsistentes.
+- **Qualidade como gate.** Um erro de qualidade interrompe o job antes dos agregados, então o BI nunca lê dados inconsistentes.
 - **Infra como código.** Job versionado com Databricks Asset Bundles.
 
 ## Próximos passos
@@ -105,7 +107,7 @@ Depois, siga o guia [`powerbi/README.md`](powerbi/README.md) para conectar o Pow
 
 ## Stack
 
-Databricks (Unity Catalog, Auto Loader, Delta Lake, Jobs, Asset Bundles, SQL Warehouse) · PySpark · Spark SQL · Power BI (DAX) · PowerShell
+Databricks (Unity Catalog, Auto Loader, Delta Lake, Jobs, Asset Bundles, SQL Warehouse) · PySpark · Power BI (DAX) · PowerShell
 
 ---
 Dados: [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (CC BY-NC-SA 4.0).

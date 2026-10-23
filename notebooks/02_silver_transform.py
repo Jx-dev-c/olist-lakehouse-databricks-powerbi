@@ -27,15 +27,16 @@ def latest(df: DataFrame, keys: list[str]) -> DataFrame:
 
 
 def ts(col: str):
-    return F.expr(f"try_to_timestamp({col}, 'yyyy-MM-dd HH:mm:ss')")
+    return F.try_to_timestamp(F.col(col), F.lit("yyyy-MM-dd HH:mm:ss"))
 
 
 def num(col: str, dtype: str = "double"):
+    # Column.try_cast só existe a partir do Spark 4; a expressão funciona em qualquer runtime
     return F.expr(f"try_cast({col} AS {dtype})")
 
 
 def txt(col: str):
-    return F.expr(f"nullif(trim({col}), '')")
+    return F.nullif(F.trim(F.col(col)), F.lit(""))
 
 
 def city(col: str):

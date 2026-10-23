@@ -2,7 +2,7 @@
 # MAGIC %md
 # MAGIC # 04 · Qualidade de dados
 # MAGIC
-# MAGIC Cada verificação é uma query que retorna o **número de violações** (0 = passou).
+# MAGIC Cada verificação é uma função que retorna o **número de violações** (0 = passou).
 # MAGIC - `error`: interrompe o job, então o Power BI nunca recebe dados quebrados.
 # MAGIC - `warn`: só registra. São anomalias conhecidas do dataset de origem.
 # MAGIC
@@ -12,6 +12,9 @@
 
 from datetime import datetime, timezone
 
+from pyspark.sql import DataFrame
+from pyspark.sql import functions as F
+
 dbutils.widgets.text("catalog", "workspace")
 catalog = dbutils.widgets.get("catalog")
 
@@ -19,63 +22,68 @@ silver = f"{catalog}.olist_silver"
 gold = f"{catalog}.olist_gold"
 
 
-def unique(table: str, *keys: str) -> str:
-    cols = ", ".join(keys)
-    return f"SELECT COUNT(*) FROM (SELECT {cols} FROM {gold}.{table} GROUP BY {cols} HAVING COUNT(*) > 1)"
+def table(name: str) -> DataFrame:
+    return spark.table(f"{gold}.{name}")
 
 
-def not_null(table: str, col: str) -> str:
-    return f"SELECT COUNT(*) FROM {gold}.{table} WHERE {col} IS NULL"
+def duplicates(name: str, *keys: str) -> int:
+    return table(name).groupBy(*keys).count().filter(F.col("count") > 1).count()
 
 
-def references(fact: str, dim: str, fk: str, pk: str | None = None) -> str:
-    return (
-        f"SELECT COUNT(*) FROM {gold}.{fact} f LEFT ANTI JOIN {gold}.{dim} d "
-        f"ON f.{fk} = d.{pk or fk} WHERE f.{fk} IS NOT NULL"
-    )
+def nulls(name: str, col: str) -> int:
+    return table(name).filter(F.col(col).isNull()).count()
+
+
+def orphans(fact: str, dim: str, fk: str, pk: str | None = None) -> int:
+    keys = table(dim).select(F.col(pk or fk).alias(fk))
+    return table(fact).filter(F.col(fk).isNotNull()).join(keys, fk, "left_anti").count()
+
+
+def violations(name: str, condition) -> int:
+    return table(name).filter(condition).count()
 
 
 CHECKS = [
     # chaves primárias
-    ("dim_customer.customer_id único", "error", unique("dim_customer", "customer_id")),
-    ("dim_seller.seller_id único", "error", unique("dim_seller", "seller_id")),
-    ("dim_product.product_id único", "error", unique("dim_product", "product_id")),
-    ("dim_date.date_key único", "error", unique("dim_date", "date_key")),
-    ("fact_orders.order_id único", "error", unique("fact_orders", "order_id")),
-    ("fact_order_items (order_id, order_item_id) único", "error", unique("fact_order_items", "order_id", "order_item_id")),
-    ("customer_rfm.customer_unique_id único", "error", unique("customer_rfm", "customer_unique_id")),
+    ("dim_customer.customer_id único", "error", lambda: duplicates("dim_customer", "customer_id")),
+    ("dim_seller.seller_id único", "error", lambda: duplicates("dim_seller", "seller_id")),
+    ("dim_product.product_id único", "error", lambda: duplicates("dim_product", "product_id")),
+    ("dim_date.date_key único", "error", lambda: duplicates("dim_date", "date_key")),
+    ("fact_orders.order_id único", "error", lambda: duplicates("fact_orders", "order_id")),
+    ("fact_order_items (order_id, order_item_id) único", "error",
+     lambda: duplicates("fact_order_items", "order_id", "order_item_id")),
+    ("customer_rfm.customer_unique_id único", "error", lambda: duplicates("customer_rfm", "customer_unique_id")),
     # obrigatoriedade
-    ("fact_orders.purchase_date_key não nulo", "error", not_null("fact_orders", "purchase_date_key")),
-    ("fact_orders.customer_id não nulo", "error", not_null("fact_orders", "customer_id")),
+    ("fact_orders.purchase_date_key não nulo", "error", lambda: nulls("fact_orders", "purchase_date_key")),
+    ("fact_orders.customer_id não nulo", "error", lambda: nulls("fact_orders", "customer_id")),
     # integridade referencial
-    ("fact_orders -> dim_customer", "error", references("fact_orders", "dim_customer", "customer_id")),
-    ("fact_orders -> dim_date", "error", references("fact_orders", "dim_date", "purchase_date_key", "date_key")),
-    ("fact_order_items -> dim_product", "error", references("fact_order_items", "dim_product", "product_id")),
-    ("fact_order_items -> dim_seller", "error", references("fact_order_items", "dim_seller", "seller_id")),
-    ("fact_order_items -> dim_date", "error", references("fact_order_items", "dim_date", "purchase_date_key", "date_key")),
+    ("fact_orders -> dim_customer", "error", lambda: orphans("fact_orders", "dim_customer", "customer_id")),
+    ("fact_orders -> dim_date", "error", lambda: orphans("fact_orders", "dim_date", "purchase_date_key", "date_key")),
+    ("fact_order_items -> dim_product", "error", lambda: orphans("fact_order_items", "dim_product", "product_id")),
+    ("fact_order_items -> dim_seller", "error", lambda: orphans("fact_order_items", "dim_seller", "seller_id")),
+    ("fact_order_items -> dim_date", "error",
+     lambda: orphans("fact_order_items", "dim_date", "purchase_date_key", "date_key")),
     # regras de negócio
-    ("preço do item > 0", "error", f"SELECT COUNT(*) FROM {gold}.fact_order_items WHERE price <= 0"),
-    ("review_score entre 1 e 5", "error", f"SELECT COUNT(*) FROM {gold}.fact_orders WHERE review_score NOT BETWEEN 1 AND 5"),
+    ("preço do item > 0", "error", lambda: violations("fact_order_items", F.col("price") <= 0)),
+    ("review_score entre 1 e 5", "error",
+     lambda: violations("fact_orders", ~F.col("review_score").between(1, 5))),
     # reconciliação silver x gold
-    (
-        "nº de pedidos silver = gold",
-        "error",
-        f"SELECT ABS((SELECT COUNT(*) FROM {silver}.orders) - (SELECT COUNT(*) FROM {gold}.fact_orders))",
-    ),
+    ("nº de pedidos silver = gold", "error",
+     lambda: abs(spark.table(f"{silver}.orders").count() - table("fact_orders").count())),
     # anomalias conhecidas da origem
-    ("pedido sem pagamento", "warn", f"SELECT COUNT(*) FROM {gold}.fact_orders WHERE payment_value IS NULL"),
+    ("pedido sem pagamento", "warn", lambda: nulls("fact_orders", "payment_value")),
     ("status 'delivered' sem data de entrega", "warn",
-     f"SELECT COUNT(*) FROM {gold}.fact_orders WHERE order_status = 'delivered' AND delivered_at IS NULL"),
-    ("cliente sem coordenadas", "warn", f"SELECT COUNT(*) FROM {gold}.dim_customer WHERE lat IS NULL"),
+     lambda: violations("fact_orders", (F.col("order_status") == "delivered") & F.col("delivered_at").isNull())),
+    ("cliente sem coordenadas", "warn", lambda: nulls("dim_customer", "lat")),
 ]
 
 # COMMAND ----------
 
 run_at = datetime.now(timezone.utc)
 rows = []
-for name, severity, query in CHECKS:
-    violations = int(spark.sql(query).first()[0])
-    rows.append((run_at, name, severity, violations, violations == 0))
+for name, severity, check in CHECKS:
+    found = int(check())
+    rows.append((run_at, name, severity, found, found == 0))
 
 results = spark.createDataFrame(
     rows, "run_at TIMESTAMP, check_name STRING, severity STRING, violations BIGINT, passed BOOLEAN"

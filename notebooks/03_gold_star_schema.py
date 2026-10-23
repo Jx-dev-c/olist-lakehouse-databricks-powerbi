@@ -14,7 +14,7 @@
 
 # COMMAND ----------
 
-from datetime import timedelta
+from datetime import date, timedelta
 
 from pyspark.sql import DataFrame, Window
 from pyspark.sql import functions as F
@@ -82,25 +82,35 @@ save(dim_product, "dim_product", "Dimensão de produtos (grão: product_id)")
 
 # calendário cobrindo anos completos do período de vendas
 bounds = orders.agg(F.min("purchased_at").alias("mn"), F.max("purchased_at").alias("mx")).first()
-start, end = f"{bounds.mn.year}-01-01", f"{bounds.mx.year}-12-31"
+start, end = date(bounds.mn.year, 1, 1), date(bounds.mx.year, 12, 31)
 
-dim_date = spark.sql(f"""
-    SELECT
-      CAST(date_format(d, 'yyyyMMdd') AS INT)                         AS date_key,
-      d                                                               AS date,
-      year(d)                                                         AS year,
-      quarter(d)                                                      AS quarter,
-      month(d)                                                        AS month,
-      element_at(array('Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho',
-                       'Agosto','Setembro','Outubro','Novembro','Dezembro'), month(d)) AS month_name,
-      element_at(array('Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'), month(d))
-        || '/' || date_format(d, 'yy')                                AS month_year,
-      CAST(date_format(d, 'yyyyMM') AS INT)                           AS year_month,
-      dayofweek(d)                                                    AS weekday,
-      element_at(array('Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'), dayofweek(d)) AS weekday_name,
-      dayofweek(d) IN (1, 7)                                          AS is_weekend
-    FROM (SELECT explode(sequence(DATE'{start}', DATE'{end}', INTERVAL 1 DAY)) AS d)
-""")
+MESES = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+         "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
+DIAS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
+
+
+def lookup(names: list[str], index):
+    return F.element_at(F.array(*[F.lit(n) for n in names]), index)
+
+
+d = F.col("date")
+dim_date = (
+    spark.range(1)
+    .select(F.explode(F.sequence(F.lit(start), F.lit(end))).alias("date"))
+    .select(
+        F.date_format(d, "yyyyMMdd").cast("int").alias("date_key"),
+        d,
+        F.year(d).alias("year"),
+        F.quarter(d).alias("quarter"),
+        F.month(d).alias("month"),
+        lookup(MESES, F.month(d)).alias("month_name"),
+        F.concat(F.substring(lookup(MESES, F.month(d)), 1, 3), F.lit("/"), F.date_format(d, "yy")).alias("month_year"),
+        F.date_format(d, "yyyyMM").cast("int").alias("year_month"),
+        F.dayofweek(d).alias("weekday"),
+        lookup(DIAS, F.dayofweek(d)).alias("weekday_name"),
+        F.dayofweek(d).isin(1, 7).alias("is_weekend"),
+    )
+)
 save(dim_date, "dim_date", "Calendário (grão: dia)")
 
 # COMMAND ----------
@@ -181,23 +191,21 @@ rfm_base = (
     )
 )
 
+r, f, m = F.col("r_score"), F.col("f_score"), F.col("m_score")
+segment = (
+    F.when((r >= 4) & (f >= 3), "Campeões")
+    .when(f >= 3, "Leais")
+    .when((r >= 4) & (m >= 4), "Novos de alto valor")
+    .when(r >= 4, "Recentes")
+    .when((r <= 2) & (m >= 4), "Em risco (alto valor)")
+    .when(r <= 2, "Hibernando")
+    .otherwise("Precisam de atenção")
+)
+
 customer_rfm = (
     rfm_base.withColumn("r_score", F.ntile(5).over(Window.orderBy(F.col("recency_days").desc())))
     .withColumn("f_score", F.when(F.col("frequency") >= 3, 5).when(F.col("frequency") == 2, 3).otherwise(1))
     .withColumn("m_score", F.ntile(5).over(Window.orderBy("monetary")))
-    .withColumn(
-        "segment",
-        F.expr("""
-            CASE
-              WHEN r_score >= 4 AND f_score >= 3 THEN 'Campeões'
-              WHEN f_score >= 3                  THEN 'Leais'
-              WHEN r_score >= 4 AND m_score >= 4 THEN 'Novos de alto valor'
-              WHEN r_score >= 4                  THEN 'Recentes'
-              WHEN r_score <= 2 AND m_score >= 4 THEN 'Em risco (alto valor)'
-              WHEN r_score <= 2                  THEN 'Hibernando'
-              ELSE 'Precisam de atenção'
-            END
-        """),
-    )
+    .withColumn("segment", segment)
 )
 save(customer_rfm, "customer_rfm", "Segmentação RFM (grão: customer_unique_id)")
