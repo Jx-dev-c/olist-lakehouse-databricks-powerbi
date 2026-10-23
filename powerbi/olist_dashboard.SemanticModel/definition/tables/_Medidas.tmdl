@@ -1,127 +1,158 @@
 table _Medidas
+	lineageTag: ab0a897d-0e18-437a-9496-42188e8c1d81
 
 	/// Valor total pago pelos clientes
 	measure Receita = SUM ( fact_orders[payment_value] )
-		formatString: """R$"" #,0"
+		formatString: "R$" #,0
 		displayFolder: Vendas
+		lineageTag: 813016bc-b9e6-4f96-a18d-6b7de2bf6f70
 
 	measure Pedidos = COUNTROWS ( fact_orders )
 		formatString: #,0
 		displayFolder: Vendas
+		lineageTag: 6ade6ffb-189e-4ec1-b806-0423b7f15e15
 
 	measure 'Ticket Médio' = DIVIDE ( [Receita], [Pedidos] )
-		formatString: """R$"" #,0.00"
+		formatString: "R$" #,0.00
 		displayFolder: Vendas
+		lineageTag: 8792d715-8979-4ed9-8f50-52c4faa9e5c2
 
 	measure 'Clientes Únicos' = CALCULATE ( DISTINCTCOUNT ( dim_customer[customer_unique_id] ), fact_orders )
 		formatString: #,0
 		displayFolder: Vendas
+		lineageTag: 586a2335-ea3c-4add-9e07-44460f887eab
 
 	measure 'Receita Produtos' = SUM ( fact_order_items[price] )
-		formatString: """R$"" #,0"
+		formatString: "R$" #,0
 		displayFolder: Vendas
+		lineageTag: 5d4a16fe-f6b8-4357-a988-c32c4e413414
 
 	measure 'Frete % do Pedido' = DIVIDE ( SUM ( fact_orders[freight_value] ), SUM ( fact_orders[items_value] ) + SUM ( fact_orders[freight_value] ) )
 		formatString: 0.0%
 		displayFolder: Vendas
+		lineageTag: 6918134e-c023-48f0-b527-75d932d073c9
 
 	measure 'Receita Mês Anterior' = CALCULATE ( [Receita], DATEADD ( dim_date[date], -1, MONTH ) )
-		formatString: """R$"" #,0"
+		formatString: "R$" #,0
 		displayFolder: Tempo
+		lineageTag: 6c92a99b-a2b1-466e-9cf2-fb90aab58010
 
 	measure 'Receita MoM %' = DIVIDE ( [Receita] - [Receita Mês Anterior], [Receita Mês Anterior] )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: Tempo
+		lineageTag: 7030def3-8f88-46fa-ab1c-efd451ce5bca
 
 	measure 'Receita Ano Anterior' = CALCULATE ( [Receita], SAMEPERIODLASTYEAR ( dim_date[date] ) )
-		formatString: """R$"" #,0"
+		formatString: "R$" #,0
 		displayFolder: Tempo
+		lineageTag: af4f474a-f72c-4302-b624-972d133e9954
 
 	measure 'Receita YoY %' = DIVIDE ( [Receita] - [Receita Ano Anterior], [Receita Ano Anterior] )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: Tempo
+		lineageTag: 39a043cd-bf9b-4355-ba5a-b9a27182533b
 
 	measure 'Receita Acumulada no Ano' = TOTALYTD ( [Receita], dim_date[date] )
-		formatString: """R$"" #,0"
+		formatString: "R$" #,0
 		displayFolder: Tempo
+		lineageTag: ada73df1-38dc-4df7-a166-ad0ecf2af909
 
 	measure 'Pedidos Entregues' = CALCULATE ( [Pedidos], fact_orders[is_delivered] = TRUE () )
 		formatString: #,0
 		displayFolder: Logística
+		lineageTag: c70269bf-eb93-4210-adb6-56c0ff04a043
 
 	measure '% Entregas Atrasadas' = DIVIDE ( CALCULATE ( [Pedidos], fact_orders[is_late] = TRUE () ), [Pedidos Entregues] )
 		formatString: 0.0%
 		displayFolder: Logística
+		lineageTag: 31477782-6a76-4402-a985-4672248d5774
 
 	measure '% Entregas no Prazo' = 1 - [% Entregas Atrasadas]
 		formatString: 0.0%
 		displayFolder: Logística
+		lineageTag: 708c9a73-7c52-4fc2-b1b8-e85ca8daf375
 
 	measure 'Prazo Médio de Entrega (dias)' = CALCULATE ( AVERAGE ( fact_orders[delivery_days] ), fact_orders[is_delivered] = TRUE () )
 		formatString: 0.0
 		displayFolder: Logística
+		lineageTag: db7f35f1-11da-4d6f-832e-e40fef60d12b
 
 	measure 'Prazo Médio Prometido (dias)' = AVERAGE ( fact_orders[estimated_days] )
 		formatString: 0.0
 		displayFolder: Logística
+		lineageTag: 20fae381-24a4-4426-be18-eacbe4b271c3
 
 	measure 'Nota Média' = AVERAGE ( fact_orders[review_score] )
 		formatString: 0.00
 		displayFolder: Satisfação
+		lineageTag: 119fc530-cd74-4d92-b062-4f175cd3b6e4
 
 	measure '% Avaliações Negativas' = DIVIDE ( CALCULATE ( COUNT ( fact_orders[review_score] ), fact_orders[review_score] <= 2 ), COUNT ( fact_orders[review_score] ) )
 		formatString: 0.0%
 		displayFolder: Satisfação
+		lineageTag: 1b391a6a-5cd1-4fda-9cc8-8e1d65b13d67
 
 	measure 'Nota Média - Atrasados' = CALCULATE ( [Nota Média], fact_orders[is_late] = TRUE () )
 		formatString: 0.00
 		displayFolder: Satisfação
+		lineageTag: 47ba6946-1f8b-427c-ae79-2c2d65d4dfb3
 
 	measure 'Nota Média - No Prazo' = CALCULATE ( [Nota Média], fact_orders[is_late] = FALSE () )
 		formatString: 0.00
 		displayFolder: Satisfação
+		lineageTag: 790cacf7-3534-4288-b1ee-69e1d0f8cca5
 
 	measure 'Impacto do Atraso na Nota' = [Nota Média - Atrasados] - [Nota Média - No Prazo]
 		formatString: +0.00;-0.00;0.00
 		displayFolder: Satisfação
+		lineageTag: 2c5d9f17-0082-4a70-9dbc-ee1ad80fbf00
 
 	/// Tabela agregada no Databricks (gold.agg_atraso_vs_avaliacao), sem relacionamentos
 	measure 'Nota Média (faixa de entrega)' = AVERAGE ( agg_atraso_vs_avaliacao[nota_media] )
 		formatString: 0.00
 		displayFolder: Satisfação
+		lineageTag: df8870ca-d56e-45f7-90e0-6cf97d018e4a
 
 	measure '% Avaliações Negativas (faixa de entrega)' = AVERAGE ( agg_atraso_vs_avaliacao[pct_avaliacao_negativa] ) / 100
 		formatString: 0.0%
 		displayFolder: Satisfação
+		lineageTag: 10740fcd-c2d0-47a8-9af6-f6f6d27ff51e
 
 	/// dim_seller filtra só fact_order_items; TREATAS leva os pedidos do vendedor até fact_orders
 	measure 'Pedidos Vendedor' = DISTINCTCOUNT ( fact_order_items[order_id] )
 		formatString: #,0
 		displayFolder: Vendedores
+		lineageTag: 4b5cd7d7-d6c3-4326-b6f2-f7ab7b02e15f
 
 	measure 'Nota Média Vendedor' = CALCULATE ( [Nota Média], TREATAS ( VALUES ( fact_order_items[order_id] ), fact_orders[order_id] ) )
 		formatString: 0.00
 		displayFolder: Vendedores
+		lineageTag: 14fe459b-a047-4d54-aeac-23b91d8cf748
 
 	measure '% Atraso Vendedor' = CALCULATE ( [% Entregas Atrasadas], TREATAS ( VALUES ( fact_order_items[order_id] ), fact_orders[order_id] ) )
 		formatString: 0.0%
 		displayFolder: Vendedores
+		lineageTag: 3629225f-f9ae-4219-ac86-4a5cee4018f5
 
 	measure 'Clientes RFM' = COUNTROWS ( customer_rfm )
 		formatString: #,0
 		displayFolder: Clientes
+		lineageTag: e5b2a6f2-4097-4d17-b9c3-06a7db00c306
 
 	measure 'Receita Clientes' = SUM ( customer_rfm[monetary] )
-		formatString: """R$"" #,0"
+		formatString: "R$" #,0
 		displayFolder: Clientes
+		lineageTag: 7566e7f4-a76d-4477-8f3e-e47e02d71c29
 
 	measure '% Clientes Recorrentes' = DIVIDE ( CALCULATE ( [Clientes RFM], customer_rfm[frequency] >= 2 ), [Clientes RFM] )
 		formatString: 0.0%
 		displayFolder: Clientes
+		lineageTag: f14958f5-dca9-42a0-8d51-988c944076b4
 
 	column Coluna
 		dataType: string
 		isHidden
+		lineageTag: e22d5f9d-75a0-4d94-a49d-ef3481e0059a
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Coluna]

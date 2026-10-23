@@ -13,15 +13,15 @@ annotation PBI_QueryOrder = ["fact_orders","dim_customer","dim_seller","dim_prod
 
 annotation PBI_ProTooling = ["DevMode"]
 
-ref table _Medidas
 ref table fact_orders
-ref table fact_order_items
 ref table dim_customer
 ref table dim_seller
 ref table dim_product
 ref table dim_date
 ref table customer_rfm
 ref table agg_atraso_vs_avaliacao
+ref table fact_order_items
+ref table _Medidas
 
 ref cultureInfo pt-BR
 

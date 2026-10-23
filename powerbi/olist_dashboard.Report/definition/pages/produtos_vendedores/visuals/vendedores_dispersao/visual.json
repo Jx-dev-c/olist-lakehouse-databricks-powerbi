@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "vendedores_dispersao",
   "position": {
     "x": 880,
@@ -13,42 +13,6 @@
     "visualType": "scatterChart",
     "query": {
       "queryState": {
-        "X": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Receita Produtos"
-                }
-              },
-              "queryRef": "_Medidas.Receita Produtos",
-              "nativeQueryRef": "Receita Produtos"
-            }
-          ]
-        },
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Nota Média Vendedor"
-                }
-              },
-              "queryRef": "_Medidas.Nota Média Vendedor",
-              "nativeQueryRef": "Nota Média Vendedor"
-            }
-          ]
-        },
         "Category": {
           "projections": [
             {
@@ -83,6 +47,43 @@
               },
               "queryRef": "_Medidas.Pedidos Vendedor",
               "nativeQueryRef": "Pedidos Vendedor"
+            }
+          ]
+        },
+        "X": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Receita Produtos"
+                }
+              },
+              "queryRef": "_Medidas.Receita Produtos",
+              "nativeQueryRef": "Receita Produtos",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Nota Média Vendedor"
+                }
+              },
+              "queryRef": "_Medidas.Nota Média Vendedor",
+              "nativeQueryRef": "Nota Média Vendedor"
             }
           ]
         }
