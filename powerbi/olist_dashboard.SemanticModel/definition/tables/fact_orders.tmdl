@@ -1,0 +1,236 @@
+table fact_orders
+	lineageTag: f0f70ff0-561f-4b8d-9835-2105304cd4e8
+
+	column order_id
+		dataType: string
+		lineageTag: 6366d5cd-b5c7-4535-b8f5-40e2521cc68e
+		summarizeBy: none
+		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: string
+		lineageTag: e6c41b5e-40e8-4261-8354-734ba217ee12
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column purchase_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: df55f58e-6fba-4591-a781-6c3b9fa22aa2
+		summarizeBy: sum
+		sourceColumn: purchase_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_status
+		dataType: string
+		lineageTag: 2f8874a0-43a5-4a25-9e15-82b16cb40b9c
+		summarizeBy: none
+		sourceColumn: order_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column purchased_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5fc16714-9c4e-4885-866c-c3d0b1556670
+		summarizeBy: none
+		sourceColumn: purchased_at
+
+		variation Variação
+			isDefault
+			relationship: 13bab499-35ef-4166-aa2d-b65f9abdaf6f
+			defaultHierarchy: LocalDateTable_86f64ed5-1260-4738-adb4-be450fa900ee.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+	column approved_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 0e9d0bfd-50ec-452f-b74d-9a86534412d1
+		summarizeBy: none
+		sourceColumn: approved_at
+
+		variation Variação
+			isDefault
+			relationship: 412c651d-b17e-49a1-ac68-17371bc1dbee
+			defaultHierarchy: LocalDateTable_b266da6b-b50b-4f5f-baba-9ba6a25fa04d.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+	column shipped_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: a53cebb6-8286-460e-910f-c9d0dfa12e5c
+		summarizeBy: none
+		sourceColumn: shipped_at
+
+		variation Variação
+			isDefault
+			relationship: 8d2b278c-42c3-4e97-ac73-7973a6f32af3
+			defaultHierarchy: LocalDateTable_c5433991-4f5b-4280-81b2-89eb83e87ccb.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+	column delivered_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: f48785a6-7883-4578-b0cf-a3cf342130a3
+		summarizeBy: none
+		sourceColumn: delivered_at
+
+		variation Variação
+			isDefault
+			relationship: 96d9ecd3-0d11-4e6e-8a6a-035724fc2631
+			defaultHierarchy: LocalDateTable_417dcd35-8b00-4a68-8001-97df85684850.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+	column estimated_delivery_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 16739fc0-240b-4cda-aefe-ba26e110dbdf
+		summarizeBy: none
+		sourceColumn: estimated_delivery_at
+
+		variation Variação
+			isDefault
+			relationship: 7d78d994-20fe-48c8-bbd8-44a6ad38595e
+			defaultHierarchy: LocalDateTable_ba9cfc8a-98a0-4d67-b85f-be06e3f0490c.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+	column item_count
+		dataType: int64
+		formatString: 0
+		lineageTag: edba1c1c-2f18-46d9-9c22-e474bfa16a39
+		summarizeBy: sum
+		sourceColumn: item_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 414c83bc-dfda-419a-939e-01f0e69a303c
+		summarizeBy: sum
+		sourceColumn: seller_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column items_value
+		dataType: double
+		lineageTag: 90e5500a-8c5d-4504-9870-f61eeca12db4
+		summarizeBy: sum
+		sourceColumn: items_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column freight_value
+		dataType: double
+		lineageTag: 2e57b667-23f2-4fac-9a31-831901ebc45d
+		summarizeBy: sum
+		sourceColumn: freight_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column payment_value
+		dataType: double
+		lineageTag: 12d30c1b-6596-4627-82f4-ab4b4f90aa1f
+		summarizeBy: sum
+		sourceColumn: payment_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column installments
+		dataType: int64
+		formatString: 0
+		lineageTag: 4b5db0a5-08a5-429d-951c-036c1081fd20
+		summarizeBy: sum
+		sourceColumn: installments
+
+		annotation SummarizationSetBy = Automatic
+
+	column main_payment_type
+		dataType: string
+		lineageTag: 17b96b2e-6cae-4001-8dd5-fd2d8c4af16e
+		summarizeBy: none
+		sourceColumn: main_payment_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_score
+		dataType: int64
+		formatString: 0
+		lineageTag: d782d3f9-78d1-4175-9c9d-7de710dbd211
+		summarizeBy: sum
+		sourceColumn: review_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_delivered
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 75980f79-a550-4248-9df9-ec0311b24b3e
+		summarizeBy: none
+		sourceColumn: is_delivered
+
+		annotation SummarizationSetBy = Automatic
+
+	column delivery_days
+		dataType: int64
+		formatString: 0
+		lineageTag: ca8fe177-d249-4cca-a396-b539943bb2ba
+		summarizeBy: sum
+		sourceColumn: delivery_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column estimated_days
+		dataType: int64
+		formatString: 0
+		lineageTag: ef0368b9-d0d5-435b-a246-6c005e9fe362
+		summarizeBy: sum
+		sourceColumn: estimated_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column delay_days
+		dataType: int64
+		formatString: 0
+		lineageTag: 87b1213b-ee15-48c5-9926-e9375966c8a9
+		summarizeBy: sum
+		sourceColumn: delay_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_late
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: d2e464e9-d038-46a3-b1bc-b3af0ba5acdc
+		summarizeBy: none
+		sourceColumn: is_late
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_orders = m
+		mode: import
+		source =
+				let
+				    Fonte = DatabricksMultiCloud.Catalogs("dbc-a48959b5-98b7.cloud.databricks.com", "/sql/1.0/warehouses/5bc0d92575b8996b", [Catalog=null, Database=null, QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    workspace_Database = Fonte{[Name="workspace",Kind="Database"]}[Data],
+				    olist_gold_Schema = workspace_Database{[Name="olist_gold",Kind="Schema"]}[Data],
+				    fact_orders_Table = olist_gold_Schema{[Name="fact_orders",Kind="Table"]}[Data]
+				in
+				    fact_orders_Table
+

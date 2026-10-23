@@ -1,0 +1,74 @@
+table dim_seller
+	lineageTag: 2ba8c4fa-05b2-4b8d-a09d-2d11f9d35472
+
+	column seller_id
+		dataType: string
+		lineageTag: 0de06758-9d76-41c0-91a7-09ff51a234a2
+		summarizeBy: none
+		sourceColumn: seller_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column zip_code_prefix
+		dataType: string
+		lineageTag: df66f376-0b27-4dac-b80b-f9b71ae0a1d4
+		summarizeBy: none
+		sourceColumn: zip_code_prefix
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		lineageTag: 76c4fe23-5b71-4241-b6f3-460da3daa317
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column state
+		dataType: string
+		lineageTag: 71581bd4-dbd2-4de1-aca8-70773824460e
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column region
+		dataType: string
+		lineageTag: 2216d392-250f-4444-bd75-4cbb322077cb
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = Automatic
+
+	column lat
+		dataType: double
+		lineageTag: ee410ed2-14c6-4fd5-89c5-d6f73cc152b9
+		summarizeBy: none
+		sourceColumn: lat
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column lng
+		dataType: double
+		lineageTag: d203f20f-4de8-43f3-a405-43a1ef87739c
+		summarizeBy: none
+		sourceColumn: lng
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition dim_seller = m
+		mode: import
+		source =
+				let
+				    Fonte = DatabricksMultiCloud.Catalogs("dbc-a48959b5-98b7.cloud.databricks.com", "/sql/1.0/warehouses/5bc0d92575b8996b", [Catalog=null, Database=null, QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    workspace_Database = Fonte{[Name="workspace",Kind="Database"]}[Data],
+				    olist_gold_Schema = workspace_Database{[Name="olist_gold",Kind="Schema"]}[Data],
+				    dim_seller_Table = olist_gold_Schema{[Name="dim_seller",Kind="Table"]}[Data]
+				in
+				    dim_seller_Table
+

@@ -1,0 +1,104 @@
+table fact_order_items
+	lineageTag: 5704da61-83ae-4743-bb79-02881cdb4c80
+
+	column order_id
+		dataType: string
+		lineageTag: 135e2a5e-4523-405f-a051-2e6a43b36317
+		summarizeBy: none
+		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_item_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 16fbcc83-2cf5-4ec5-ad9f-e90060714f90
+		summarizeBy: sum
+		sourceColumn: order_item_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: string
+		lineageTag: 944af8db-719d-4514-800e-276ef7589c78
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_id
+		dataType: string
+		lineageTag: f2e05ba0-3cf4-4b74-ad50-f74044a7f8b8
+		summarizeBy: none
+		sourceColumn: seller_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: string
+		lineageTag: d0265857-7715-4abb-a9b1-cfc5cfadb2d3
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column purchase_date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: e1012b9b-732b-4811-a71e-c37369bbb3f5
+		summarizeBy: sum
+		sourceColumn: purchase_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_status
+		dataType: string
+		lineageTag: 8f5c334c-3670-437e-80d2-b6516e1dc284
+		summarizeBy: none
+		sourceColumn: order_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column price
+		dataType: double
+		lineageTag: 3e09f183-ae7a-4854-a7a3-87c9e3eb302a
+		summarizeBy: sum
+		sourceColumn: price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column freight_value
+		dataType: double
+		lineageTag: 0c960792-be8c-474f-99d4-f708986085eb
+		summarizeBy: sum
+		sourceColumn: freight_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_value
+		dataType: double
+		lineageTag: cc9f54bb-36e5-42e9-85f7-e9e37d0dfbb7
+		summarizeBy: sum
+		sourceColumn: total_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition fact_order_items = m
+		mode: import
+		source =
+				let
+				    Fonte = DatabricksMultiCloud.Catalogs("dbc-a48959b5-98b7.cloud.databricks.com", "/sql/1.0/warehouses/5bc0d92575b8996b", [Catalog=null, Database=null, QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    workspace_Database = Fonte{[Name="workspace",Kind="Database"]}[Data],
+				    olist_gold_Schema = workspace_Database{[Name="olist_gold",Kind="Schema"]}[Data],
+				    fact_order_items_Table = olist_gold_Schema{[Name="fact_order_items",Kind="Table"]}[Data]
+				in
+				    fact_order_items_Table
+
+	annotation PBI_ResultType = Table
+

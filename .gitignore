@@ -12,6 +12,9 @@ __pycache__/
 .vscode/
 .idea/
 
-# Power BI: arquivos temporários
+# Power BI: o projeto .pbip é a fonte versionada; cache local e .pbix ficam fora
+*.pbix
 *.pbix.bak
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
 ~$*

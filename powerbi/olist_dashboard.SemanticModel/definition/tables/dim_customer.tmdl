@@ -1,0 +1,85 @@
+table dim_customer
+	lineageTag: da9083fc-0f4f-449a-95b9-331df3c72046
+
+	column customer_id
+		dataType: string
+		lineageTag: d74f823e-df60-49bc-8a9b-a31adf1efa91
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_unique_id
+		dataType: string
+		lineageTag: a9537356-160d-4a20-ba60-24039a0d74c8
+		summarizeBy: none
+		sourceColumn: customer_unique_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column zip_code_prefix
+		dataType: string
+		lineageTag: b94ac71d-65e1-4cdb-82f4-4bd1c282e380
+		summarizeBy: none
+		sourceColumn: zip_code_prefix
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		lineageTag: 8fe44686-aaf9-4328-9b84-76cbd37b58b1
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column state
+		dataType: string
+		lineageTag: 781ef9cd-c80c-48cd-bb57-0b47a144af90
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column region
+		dataType: string
+		lineageTag: 5348c56c-d523-4436-b409-95648a1c88ea
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = Automatic
+
+	column lat
+		dataType: double
+		lineageTag: 675d944d-72ff-4160-bb3c-b467f9a84c0b
+		dataCategory: Latitude
+		summarizeBy: sum
+		sourceColumn: lat
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column lng
+		dataType: double
+		lineageTag: 240ac2c8-be46-4b75-b22b-35e5da08a722
+		dataCategory: Longitude
+		summarizeBy: sum
+		sourceColumn: lng
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition dim_customer = m
+		mode: import
+		source =
+				let
+				    Fonte = DatabricksMultiCloud.Catalogs("dbc-a48959b5-98b7.cloud.databricks.com", "/sql/1.0/warehouses/5bc0d92575b8996b", [Catalog=null, Database=null, QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    workspace_Database = Fonte{[Name="workspace",Kind="Database"]}[Data],
+				    olist_gold_Schema = workspace_Database{[Name="olist_gold",Kind="Schema"]}[Data],
+				    dim_customer_Table = olist_gold_Schema{[Name="dim_customer",Kind="Table"]}[Data]
+				in
+				    dim_customer_Table
+

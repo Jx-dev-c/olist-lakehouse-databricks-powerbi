@@ -1,0 +1,125 @@
+table dim_date
+	lineageTag: 26906d48-37ba-42db-8a16-8483e27df03e
+	dataCategory: Time
+
+	column date_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 22a0f05f-366b-487f-a223-774e713309df
+		summarizeBy: sum
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column date
+		dataType: dateTime
+		isKey
+		formatString: Long Date
+		lineageTag: 91004331-2f3f-4651-a955-00d6590d2957
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: 6147cfd0-bc69-4a01-8747-8aff17c1bf70
+		summarizeBy: sum
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter
+		dataType: int64
+		formatString: 0
+		lineageTag: 8503fa03-808b-4622-b107-728fa4d9d09f
+		summarizeBy: sum
+		sourceColumn: quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column month
+		dataType: int64
+		formatString: 0
+		lineageTag: 634a044b-2a3a-4d86-93ad-cb4a2174ae6d
+		summarizeBy: sum
+		sourceColumn: month
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_name
+		dataType: string
+		lineageTag: 774b1b5f-8b0d-47a2-9f34-c4cefa28d3bd
+		summarizeBy: none
+		sourceColumn: month_name
+		sortByColumn: month
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_year
+		dataType: string
+		lineageTag: d12aacfb-e4b5-4434-bbd9-f420dee4dbf5
+		summarizeBy: none
+		sourceColumn: month_year
+		sortByColumn: year_month
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column year_month
+		dataType: int64
+		formatString: 0
+		lineageTag: 73cee904-4788-458c-9e75-ad367fcea3eb
+		summarizeBy: sum
+		sourceColumn: year_month
+
+		annotation SummarizationSetBy = Automatic
+
+	column weekday
+		dataType: int64
+		formatString: 0
+		lineageTag: 438ecee0-86e0-42c0-9cf1-748eed4d12cc
+		summarizeBy: sum
+		sourceColumn: weekday
+
+		annotation SummarizationSetBy = Automatic
+
+	column weekday_name
+		dataType: string
+		lineageTag: 6580e3ea-2413-409d-a31d-47b0b98011b1
+		summarizeBy: none
+		sourceColumn: weekday_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_weekend
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 2b976490-a139-4b42-af00-6ea346eb6b71
+		summarizeBy: none
+		sourceColumn: is_weekend
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_date = m
+		mode: import
+		source =
+				let
+				    Fonte = DatabricksMultiCloud.Catalogs("dbc-a48959b5-98b7.cloud.databricks.com", "/sql/1.0/warehouses/5bc0d92575b8996b", [Catalog=null, Database=null, QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    workspace_Database = Fonte{[Name="workspace",Kind="Database"]}[Data],
+				    olist_gold_Schema = workspace_Database{[Name="olist_gold",Kind="Schema"]}[Data],
+				    dim_date_Table = olist_gold_Schema{[Name="dim_date",Kind="Table"]}[Data],
+				    #"Tipo Alterado" = Table.TransformColumnTypes(dim_date_Table,{{"date", type date}})
+				in
+				    #"Tipo Alterado"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navegação
+

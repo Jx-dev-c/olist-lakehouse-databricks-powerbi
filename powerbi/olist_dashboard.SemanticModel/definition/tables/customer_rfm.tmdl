@@ -1,0 +1,87 @@
+table customer_rfm
+	lineageTag: 9bbaacfe-d178-42aa-9821-4dd795beb695
+
+	column customer_unique_id
+		dataType: string
+		lineageTag: 53ef45d8-f4d7-4700-ba66-e3f6c571a5ea
+		summarizeBy: none
+		sourceColumn: customer_unique_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column recency_days
+		dataType: int64
+		formatString: 0
+		lineageTag: 7f38170f-36dd-4521-8a34-c3afef1490cb
+		summarizeBy: none
+		sourceColumn: recency_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column frequency
+		dataType: int64
+		formatString: 0
+		lineageTag: 5f1a5532-9921-4616-a704-87f8e2f16872
+		summarizeBy: none
+		sourceColumn: frequency
+
+		annotation SummarizationSetBy = Automatic
+
+	column monetary
+		dataType: double
+		lineageTag: b1e82451-77ee-4056-a544-242511452a87
+		summarizeBy: none
+		sourceColumn: monetary
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column r_score
+		dataType: int64
+		formatString: 0
+		lineageTag: e80ad0d2-c829-43a5-8cef-94e62c406994
+		summarizeBy: none
+		sourceColumn: r_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column f_score
+		dataType: int64
+		formatString: 0
+		lineageTag: fa8f23d9-d083-4387-926d-83a54946fd4e
+		summarizeBy: none
+		sourceColumn: f_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column m_score
+		dataType: int64
+		formatString: 0
+		lineageTag: 39d86cad-ea77-47f7-93c9-ff461bb1ca84
+		summarizeBy: none
+		sourceColumn: m_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column segment
+		dataType: string
+		lineageTag: d1a47193-bf05-4392-a781-9d41861cf900
+		summarizeBy: none
+		sourceColumn: segment
+
+		annotation SummarizationSetBy = Automatic
+
+	partition customer_rfm = m
+		mode: import
+		source =
+				let
+				    Fonte = DatabricksMultiCloud.Catalogs("dbc-a48959b5-98b7.cloud.databricks.com", "/sql/1.0/warehouses/5bc0d92575b8996b", [Catalog=null, Database=null, QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    workspace_Database = Fonte{[Name="workspace",Kind="Database"]}[Data],
+				    olist_gold_Schema = workspace_Database{[Name="olist_gold",Kind="Schema"]}[Data],
+				    customer_rfm_Table = olist_gold_Schema{[Name="customer_rfm",Kind="Table"]}[Data]
+				in
+				    customer_rfm_Table
+
+	annotation PBI_ResultType = Table
+

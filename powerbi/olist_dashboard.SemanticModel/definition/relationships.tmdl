@@ -1,0 +1,47 @@
+relationship 13bab499-35ef-4166-aa2d-b65f9abdaf6f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fact_orders.purchased_at
+	toColumn: LocalDateTable_86f64ed5-1260-4738-adb4-be450fa900ee.Date
+
+relationship 412c651d-b17e-49a1-ac68-17371bc1dbee
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fact_orders.approved_at
+	toColumn: LocalDateTable_b266da6b-b50b-4f5f-baba-9ba6a25fa04d.Date
+
+relationship 8d2b278c-42c3-4e97-ac73-7973a6f32af3
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fact_orders.shipped_at
+	toColumn: LocalDateTable_c5433991-4f5b-4280-81b2-89eb83e87ccb.Date
+
+relationship 96d9ecd3-0d11-4e6e-8a6a-035724fc2631
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fact_orders.delivered_at
+	toColumn: LocalDateTable_417dcd35-8b00-4a68-8001-97df85684850.Date
+
+relationship 7d78d994-20fe-48c8-bbd8-44a6ad38595e
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fact_orders.estimated_delivery_at
+	toColumn: LocalDateTable_ba9cfc8a-98a0-4d67-b85f-be06e3f0490c.Date
+
+relationship AutoDetected_bd218851-6b8b-435b-8d18-45f40e279c97
+	fromColumn: fact_order_items.order_id
+	toColumn: fact_orders.order_id
+
+relationship AutoDetected_60530df8-fa72-4c21-a6f4-8a9b38c259e9
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: dim_customer.customer_id
+	toColumn: fact_orders.customer_id
+
+relationship AutoDetected_0c750a1a-6378-4285-8715-8b58470712ee
+	fromColumn: dim_customer.customer_unique_id
+	toColumn: customer_rfm.customer_unique_id
+
+relationship AutoDetected_0bc47a0a-1f04-4beb-bfdd-e205d6430892
+	fromColumn: fact_order_items.seller_id
+	toColumn: dim_seller.seller_id
+
+relationship AutoDetected_b288ba0d-26b7-4394-811b-39324d860df7
+	fromColumn: fact_order_items.product_id
+	toColumn: dim_product.product_id
+

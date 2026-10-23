@@ -1,0 +1,97 @@
+table dim_product
+	lineageTag: 89fd3656-e443-438c-907b-2734e12b1a57
+
+	column product_id
+		dataType: string
+		lineageTag: 871a4a22-d2b7-477e-a1d4-7b318a868180
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column category_pt
+		dataType: string
+		lineageTag: 4de281a2-81c1-45a0-8ba8-1a2aa750b0c1
+		summarizeBy: none
+		sourceColumn: category_pt
+
+		annotation SummarizationSetBy = Automatic
+
+	column category_en
+		dataType: string
+		lineageTag: 0b85897f-4832-44fa-b3a3-ddc215465387
+		summarizeBy: none
+		sourceColumn: category_en
+
+		annotation SummarizationSetBy = Automatic
+
+	column photos_qty
+		dataType: int64
+		formatString: 0
+		lineageTag: 19f342a9-a0b9-498d-8ffb-c254d04300e4
+		summarizeBy: none
+		sourceColumn: photos_qty
+
+		annotation SummarizationSetBy = Automatic
+
+	column weight_g
+		dataType: double
+		lineageTag: 18aa3185-0874-4efb-842a-82629c6708a2
+		summarizeBy: none
+		sourceColumn: weight_g
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column length_cm
+		dataType: double
+		lineageTag: baa72a3b-bc7c-41a0-9950-e54d74034897
+		summarizeBy: none
+		sourceColumn: length_cm
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column height_cm
+		dataType: double
+		lineageTag: 94c814b5-b5e1-4cbf-8c5a-605a9aa3fcaf
+		summarizeBy: none
+		sourceColumn: height_cm
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column width_cm
+		dataType: double
+		lineageTag: 5d2b72fb-b7ba-443d-8c24-f5b7b736c2ee
+		summarizeBy: none
+		sourceColumn: width_cm
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column volume_cm3
+		dataType: double
+		lineageTag: 1d37d750-aba0-4b90-b18c-9e7762955fa4
+		summarizeBy: none
+		sourceColumn: volume_cm3
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition dim_product = m
+		mode: import
+		source =
+				let
+				    Fonte = DatabricksMultiCloud.Catalogs("dbc-a48959b5-98b7.cloud.databricks.com", "/sql/1.0/warehouses/5bc0d92575b8996b", [Catalog=null, Database=null, QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    workspace_Database = Fonte{[Name="workspace",Kind="Database"]}[Data],
+				    olist_gold_Schema = workspace_Database{[Name="olist_gold",Kind="Schema"]}[Data],
+				    dim_product_Table = olist_gold_Schema{[Name="dim_product",Kind="Table"]}[Data]
+				in
+				    dim_product_Table
+
