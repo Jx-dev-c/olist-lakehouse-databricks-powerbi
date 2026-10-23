@@ -3,9 +3,9 @@
   "name": "filtro_regiao",
   "position": {
     "x": 1500,
-    "y": 20,
+    "y": 12,
     "z": 2000,
-    "height": 80,
+    "height": 76,
     "width": 380,
     "tabOrder": 2000
   },

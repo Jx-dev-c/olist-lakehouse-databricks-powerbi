@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "titulo",
   "position": {
-    "x": 40,
-    "y": 16,
+    "x": 30,
+    "y": 8,
     "z": 1000,
-    "height": 80,
-    "width": 1300,
+    "height": 86,
+    "width": 1400,
     "tabOrder": 1000
   },
   "visual": {
@@ -19,10 +19,19 @@
               {
                 "textRuns": [
                   {
+                    "value": "OLIST  ",
+                    "textStyle": {
+                      "fontSize": "24pt",
+                      "fontWeight": "bold",
+                      "color": "#22D3EE"
+                    }
+                  },
+                  {
                     "value": "Olist · Visão Executiva",
                     "textStyle": {
                       "fontSize": "24pt",
-                      "fontWeight": "bold"
+                      "fontWeight": "bold",
+                      "color": "#F8FAFC"
                     }
                   }
                 ]
@@ -32,8 +41,8 @@
                   {
                     "value": "Pedidos de jan/2017 a ago/2018",
                     "textStyle": {
-                      "fontSize": "12pt",
-                      "color": "#605E5C"
+                      "fontSize": "11pt",
+                      "color": "#94A3B8"
                     }
                   }
                 ]

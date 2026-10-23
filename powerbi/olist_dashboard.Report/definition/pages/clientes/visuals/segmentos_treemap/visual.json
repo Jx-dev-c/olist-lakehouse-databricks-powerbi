@@ -13,24 +13,6 @@
     "visualType": "treemap",
     "query": {
       "queryState": {
-        "Values": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Clientes RFM"
-                }
-              },
-              "queryRef": "_Medidas.Clientes RFM",
-              "nativeQueryRef": "Clientes RFM"
-            }
-          ]
-        },
         "Group": {
           "projections": [
             {
@@ -47,6 +29,24 @@
               "queryRef": "customer_rfm.segment",
               "nativeQueryRef": "segment",
               "active": true
+            }
+          ]
+        },
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Clientes RFM"
+                }
+              },
+              "queryRef": "_Medidas.Clientes RFM",
+              "nativeQueryRef": "Clientes RFM"
             }
           ]
         }

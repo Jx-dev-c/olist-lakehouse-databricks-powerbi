@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "vendedores_dispersao",
   "position": {
     "x": 880,
@@ -13,25 +13,6 @@
     "visualType": "scatterChart",
     "query": {
       "queryState": {
-        "Category": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "dim_seller"
-                    }
-                  },
-                  "Property": "seller_id"
-                }
-              },
-              "queryRef": "dim_seller.seller_id",
-              "nativeQueryRef": "seller_id",
-              "active": true
-            }
-          ]
-        },
         "Size": {
           "projections": [
             {
@@ -64,8 +45,7 @@
                 }
               },
               "queryRef": "_Medidas.Receita Produtos",
-              "nativeQueryRef": "Receita Produtos",
-              "active": true
+              "nativeQueryRef": "Receita Produtos"
             }
           ]
         },
@@ -84,6 +64,25 @@
               },
               "queryRef": "_Medidas.Nota Média Vendedor",
               "nativeQueryRef": "Nota Média Vendedor"
+            }
+          ]
+        },
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_seller"
+                    }
+                  },
+                  "Property": "seller_id"
+                }
+              },
+              "queryRef": "dim_seller.seller_id",
+              "nativeQueryRef": "seller_id",
+              "active": true
             }
           ]
         }
