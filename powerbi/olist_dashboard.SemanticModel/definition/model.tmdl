@@ -7,26 +7,21 @@ model Model
 		legacyRedirects
 		returnErrorValuesAsNull
 
-annotation __PBI_TimeIntelligenceEnabled = 1
+annotation __PBI_TimeIntelligenceEnabled = 0
 
 annotation PBI_QueryOrder = ["fact_orders","dim_customer","dim_seller","dim_product","dim_date","customer_rfm","agg_atraso_vs_avaliacao","fact_order_items"]
 
 annotation PBI_ProTooling = ["DevMode"]
 
+ref table _Medidas
 ref table fact_orders
-ref table DateTableTemplate_b24989fc-930a-4f73-9091-8f56d38ffd0d
-ref table LocalDateTable_86f64ed5-1260-4738-adb4-be450fa900ee
-ref table LocalDateTable_b266da6b-b50b-4f5f-baba-9ba6a25fa04d
-ref table LocalDateTable_c5433991-4f5b-4280-81b2-89eb83e87ccb
-ref table LocalDateTable_417dcd35-8b00-4a68-8001-97df85684850
-ref table LocalDateTable_ba9cfc8a-98a0-4d67-b85f-be06e3f0490c
+ref table fact_order_items
 ref table dim_customer
 ref table dim_seller
 ref table dim_product
 ref table dim_date
 ref table customer_rfm
 ref table agg_atraso_vs_avaliacao
-ref table fact_order_items
 
 ref cultureInfo pt-BR
 

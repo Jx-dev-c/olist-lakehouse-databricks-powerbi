@@ -41,11 +41,6 @@ table fact_orders
 		summarizeBy: none
 		sourceColumn: purchased_at
 
-		variation Variação
-			isDefault
-			relationship: 13bab499-35ef-4166-aa2d-b65f9abdaf6f
-			defaultHierarchy: LocalDateTable_86f64ed5-1260-4738-adb4-be450fa900ee.'Hierarquia de datas'
-
 		annotation SummarizationSetBy = Automatic
 
 	column approved_at
@@ -54,11 +49,6 @@ table fact_orders
 		lineageTag: 0e9d0bfd-50ec-452f-b74d-9a86534412d1
 		summarizeBy: none
 		sourceColumn: approved_at
-
-		variation Variação
-			isDefault
-			relationship: 412c651d-b17e-49a1-ac68-17371bc1dbee
-			defaultHierarchy: LocalDateTable_b266da6b-b50b-4f5f-baba-9ba6a25fa04d.'Hierarquia de datas'
 
 		annotation SummarizationSetBy = Automatic
 
@@ -69,11 +59,6 @@ table fact_orders
 		summarizeBy: none
 		sourceColumn: shipped_at
 
-		variation Variação
-			isDefault
-			relationship: 8d2b278c-42c3-4e97-ac73-7973a6f32af3
-			defaultHierarchy: LocalDateTable_c5433991-4f5b-4280-81b2-89eb83e87ccb.'Hierarquia de datas'
-
 		annotation SummarizationSetBy = Automatic
 
 	column delivered_at
@@ -83,11 +68,6 @@ table fact_orders
 		summarizeBy: none
 		sourceColumn: delivered_at
 
-		variation Variação
-			isDefault
-			relationship: 96d9ecd3-0d11-4e6e-8a6a-035724fc2631
-			defaultHierarchy: LocalDateTable_417dcd35-8b00-4a68-8001-97df85684850.'Hierarquia de datas'
-
 		annotation SummarizationSetBy = Automatic
 
 	column estimated_delivery_at
@@ -96,11 +76,6 @@ table fact_orders
 		lineageTag: 16739fc0-240b-4cda-aefe-ba26e110dbdf
 		summarizeBy: none
 		sourceColumn: estimated_delivery_at
-
-		variation Variação
-			isDefault
-			relationship: 7d78d994-20fe-48c8-bbd8-44a6ad38595e
-			defaultHierarchy: LocalDateTable_ba9cfc8a-98a0-4d67-b85f-be06e3f0490c.'Hierarquia de datas'
 
 		annotation SummarizationSetBy = Automatic
 

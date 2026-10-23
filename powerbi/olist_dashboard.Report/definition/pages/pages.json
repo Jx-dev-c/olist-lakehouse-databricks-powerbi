@@ -1,7 +1,10 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.1.0/schema.json",
   "pageOrder": [
-    "6d0967a578814a800335"
+    "visao_executiva",
+    "logistica",
+    "produtos_vendedores",
+    "clientes"
   ],
-  "activePageName": "6d0967a578814a800335"
+  "activePageName": "visao_executiva"
 }

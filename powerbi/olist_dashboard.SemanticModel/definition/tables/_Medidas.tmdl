@@ -1,0 +1,132 @@
+table _Medidas
+
+	/// Valor total pago pelos clientes
+	measure Receita = SUM ( fact_orders[payment_value] )
+		formatString: """R$"" #,0"
+		displayFolder: Vendas
+
+	measure Pedidos = COUNTROWS ( fact_orders )
+		formatString: #,0
+		displayFolder: Vendas
+
+	measure 'Ticket Médio' = DIVIDE ( [Receita], [Pedidos] )
+		formatString: """R$"" #,0.00"
+		displayFolder: Vendas
+
+	measure 'Clientes Únicos' = CALCULATE ( DISTINCTCOUNT ( dim_customer[customer_unique_id] ), fact_orders )
+		formatString: #,0
+		displayFolder: Vendas
+
+	measure 'Receita Produtos' = SUM ( fact_order_items[price] )
+		formatString: """R$"" #,0"
+		displayFolder: Vendas
+
+	measure 'Frete % do Pedido' = DIVIDE ( SUM ( fact_orders[freight_value] ), SUM ( fact_orders[items_value] ) + SUM ( fact_orders[freight_value] ) )
+		formatString: 0.0%
+		displayFolder: Vendas
+
+	measure 'Receita Mês Anterior' = CALCULATE ( [Receita], DATEADD ( dim_date[date], -1, MONTH ) )
+		formatString: """R$"" #,0"
+		displayFolder: Tempo
+
+	measure 'Receita MoM %' = DIVIDE ( [Receita] - [Receita Mês Anterior], [Receita Mês Anterior] )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: Tempo
+
+	measure 'Receita Ano Anterior' = CALCULATE ( [Receita], SAMEPERIODLASTYEAR ( dim_date[date] ) )
+		formatString: """R$"" #,0"
+		displayFolder: Tempo
+
+	measure 'Receita YoY %' = DIVIDE ( [Receita] - [Receita Ano Anterior], [Receita Ano Anterior] )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: Tempo
+
+	measure 'Receita Acumulada no Ano' = TOTALYTD ( [Receita], dim_date[date] )
+		formatString: """R$"" #,0"
+		displayFolder: Tempo
+
+	measure 'Pedidos Entregues' = CALCULATE ( [Pedidos], fact_orders[is_delivered] = TRUE () )
+		formatString: #,0
+		displayFolder: Logística
+
+	measure '% Entregas Atrasadas' = DIVIDE ( CALCULATE ( [Pedidos], fact_orders[is_late] = TRUE () ), [Pedidos Entregues] )
+		formatString: 0.0%
+		displayFolder: Logística
+
+	measure '% Entregas no Prazo' = 1 - [% Entregas Atrasadas]
+		formatString: 0.0%
+		displayFolder: Logística
+
+	measure 'Prazo Médio de Entrega (dias)' = CALCULATE ( AVERAGE ( fact_orders[delivery_days] ), fact_orders[is_delivered] = TRUE () )
+		formatString: 0.0
+		displayFolder: Logística
+
+	measure 'Prazo Médio Prometido (dias)' = AVERAGE ( fact_orders[estimated_days] )
+		formatString: 0.0
+		displayFolder: Logística
+
+	measure 'Nota Média' = AVERAGE ( fact_orders[review_score] )
+		formatString: 0.00
+		displayFolder: Satisfação
+
+	measure '% Avaliações Negativas' = DIVIDE ( CALCULATE ( COUNT ( fact_orders[review_score] ), fact_orders[review_score] <= 2 ), COUNT ( fact_orders[review_score] ) )
+		formatString: 0.0%
+		displayFolder: Satisfação
+
+	measure 'Nota Média - Atrasados' = CALCULATE ( [Nota Média], fact_orders[is_late] = TRUE () )
+		formatString: 0.00
+		displayFolder: Satisfação
+
+	measure 'Nota Média - No Prazo' = CALCULATE ( [Nota Média], fact_orders[is_late] = FALSE () )
+		formatString: 0.00
+		displayFolder: Satisfação
+
+	measure 'Impacto do Atraso na Nota' = [Nota Média - Atrasados] - [Nota Média - No Prazo]
+		formatString: +0.00;-0.00;0.00
+		displayFolder: Satisfação
+
+	/// Tabela agregada no Databricks (gold.agg_atraso_vs_avaliacao), sem relacionamentos
+	measure 'Nota Média (faixa de entrega)' = AVERAGE ( agg_atraso_vs_avaliacao[nota_media] )
+		formatString: 0.00
+		displayFolder: Satisfação
+
+	measure '% Avaliações Negativas (faixa de entrega)' = AVERAGE ( agg_atraso_vs_avaliacao[pct_avaliacao_negativa] ) / 100
+		formatString: 0.0%
+		displayFolder: Satisfação
+
+	/// dim_seller filtra só fact_order_items; TREATAS leva os pedidos do vendedor até fact_orders
+	measure 'Pedidos Vendedor' = DISTINCTCOUNT ( fact_order_items[order_id] )
+		formatString: #,0
+		displayFolder: Vendedores
+
+	measure 'Nota Média Vendedor' = CALCULATE ( [Nota Média], TREATAS ( VALUES ( fact_order_items[order_id] ), fact_orders[order_id] ) )
+		formatString: 0.00
+		displayFolder: Vendedores
+
+	measure '% Atraso Vendedor' = CALCULATE ( [% Entregas Atrasadas], TREATAS ( VALUES ( fact_order_items[order_id] ), fact_orders[order_id] ) )
+		formatString: 0.0%
+		displayFolder: Vendedores
+
+	measure 'Clientes RFM' = COUNTROWS ( customer_rfm )
+		formatString: #,0
+		displayFolder: Clientes
+
+	measure 'Receita Clientes' = SUM ( customer_rfm[monetary] )
+		formatString: """R$"" #,0"
+		displayFolder: Clientes
+
+	measure '% Clientes Recorrentes' = DIVIDE ( CALCULATE ( [Clientes RFM], customer_rfm[frequency] >= 2 ), [Clientes RFM] )
+		formatString: 0.0%
+		displayFolder: Clientes
+
+	column Coluna
+		dataType: string
+		isHidden
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Coluna]
+
+	partition _Medidas = calculated
+		mode: import
+		source = ROW ( "Coluna", "" )
+

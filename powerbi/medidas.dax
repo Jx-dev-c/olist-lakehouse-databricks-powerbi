@@ -77,9 +77,30 @@ CALCULATE ( [Nota Média], fact_orders[is_late] = FALSE () )
 Impacto do Atraso na Nota =
 [Nota Média - Atrasados] - [Nota Média - No Prazo]
 
+// ---------- Atraso x avaliação (tabela agregada, sem relacionamentos) ----------
+Nota Média (faixa de entrega) =
+AVERAGE ( agg_atraso_vs_avaliacao[nota_media] )
+
+% Avaliações Negativas (faixa de entrega) =
+AVERAGE ( agg_atraso_vs_avaliacao[pct_avaliacao_negativa] ) / 100
+
+// ---------- Vendedores ----------
+// dim_seller filtra só fact_order_items; TREATAS leva os pedidos do vendedor até fact_orders
+Pedidos Vendedor =
+DISTINCTCOUNT ( fact_order_items[order_id] )
+
+Nota Média Vendedor =
+CALCULATE ( [Nota Média], TREATAS ( VALUES ( fact_order_items[order_id] ), fact_orders[order_id] ) )
+
+% Atraso Vendedor =
+CALCULATE ( [% Entregas Atrasadas], TREATAS ( VALUES ( fact_order_items[order_id] ), fact_orders[order_id] ) )
+
 // ---------- Clientes (RFM) ----------
 Clientes RFM =
 COUNTROWS ( customer_rfm )
+
+Receita Clientes =
+SUM ( customer_rfm[monetary] )
 
 % Clientes Recorrentes =
 DIVIDE ( CALCULATE ( [Clientes RFM], customer_rfm[frequency] >= 2 ), [Clientes RFM] )

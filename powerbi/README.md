@@ -1,5 +1,9 @@
 # Power BI: conexão, modelo e páginas
 
+O relatório está versionado como **projeto do Power BI** (`olist_dashboard.pbip`): o modelo semântico fica em TMDL (`olist_dashboard.SemanticModel/definition`) e as páginas em JSON (PBIR, `olist_dashboard.Report/definition`). Basta abrir o `.pbip` no Power BI Desktop, informar o token do Databricks e clicar em **Atualizar**.
+
+O passo a passo abaixo documenta como o modelo foi montado.
+
 ## 1. Conectar ao Databricks
 
 1. No Databricks: **SQL Warehouses** > seu warehouse > **Connection details**. Copie *Server hostname* e *HTTP path*.
