@@ -285,7 +285,7 @@ export class Visual implements IVisual {
         const valores: DataViewValueColumn[] = dataView.categorical.values ? [...dataView.categorical.values] : [];
         const colAltura = valores.find(v => v.source.roles?.altura);
         const colCor = valores.find(v => v.source.roles?.cor);
-        const formatar = (col: DataViewValueColumn) => valueFormatter.create({ format: col.source.format });
+        const formatar = (col: DataViewValueColumn) => valueFormatter.create({ format: col.source.format, cultureSelector: this.host.locale });
         const colunasDica = valores.map(col => ({ col, fmt: formatar(col) }));
 
         categoria.values.forEach((valor, i) => {
@@ -309,7 +309,7 @@ export class Visual implements IVisual {
         if (!mostrar) return;
         const valores = dataView.categorical.values;
         const col = valores.find(v => v.source.roles?.cor) ?? valores.find(v => v.source.roles?.altura);
-        const fmt = valueFormatter.create({ format: col.source.format });
+        const fmt = valueFormatter.create({ format: col.source.format, cultureSelector: this.host.locale });
         while (this.legenda.firstChild) this.legenda.removeChild(this.legenda.firstChild);
         this.criarDiv(this.legenda, "titulo").textContent = col.source.displayName;
         const barra = this.criarDiv(this.legenda, "barra");

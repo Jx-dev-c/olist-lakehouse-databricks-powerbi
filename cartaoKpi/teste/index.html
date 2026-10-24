@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Cartão KPI: teste</title>
+<!-- Página de teste fora do Power BI: carrega o bundle de .tmp/drop com um host simulado.
+     Rode "npm run package" e depois "node teste/servidor.mjs" → http://localhost:8766/teste/ -->
+<link rel="stylesheet" href="../.tmp/drop/visual.css">
+<style>
+  body { margin: 0; background: #F5F7FA; font-family: "Segoe UI", sans-serif; }
+  header { height: 44px; display: flex; gap: 8px; align-items: center; padding: 0 16px; }
+  button { font: inherit; font-size: 12px; border: 1px solid #CBD5E1; background: #fff; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+  .linha { display: flex; gap: 16px; padding: 16px; }
+  .slot { position: relative; width: 200px; height: 104px; }
+</style>
+</head>
+<body>
+<header>
+  <button id="filtrar">Simular filtro (SP)</button>
+  <button id="voltar">Sem filtro</button>
+</header>
+<div class="linha" id="linha"></div>
+
+<script>window.powerbi = {};</script>
+<script src="../.tmp/drop/visual.js"></script>
+<script>
+// números reais (gold, jan/2017–ago/2018); série = últimos 12 meses
+const KPIS = [
+  { nome: "Receita", fmt: "\"R$\" #,0", v: 15786204, sp: 5921000, d: 0.041, dfmt: "+0.0%;-0.0%;0.0%", bom: true,
+    serie: "1023000;1105000;1004000;1381000;985000;1160000;1093000;1120000;1029000;1088000;1062000;1003000" },
+  { nome: "Pedidos", fmt: "#,0", v: 98353, sp: 41044, d: 0.035, dfmt: "+0.0%;-0.0%;0.0%", bom: true,
+    serie: "4285;4631;7544;5673;7269;6728;7211;6939;6873;6167;6292;6512" },
+  { nome: "Ticket Médio", fmt: "\"R$\" #,0.00", v: 160.51, sp: 144.26, d: -0.012, dfmt: "+0.0%;-0.0%;0.0%", bom: true,
+    serie: "158;157;155;161;158;162;160;163;161;164;160;158" },
+  { nome: "Nota Média", fmt: "0.00", v: 4.09, sp: 4.18, d: 0.08, dfmt: "+0.00;-0.00;0.00", bom: true,
+    serie: "4.1;4.0;3.9;4.0;3.9;3.8;3.7;3.9;4.1;4.2;4.3;4.2" },
+  { nome: "% Atraso", fmt: "0.0%", v: 0.068, sp: 0.045, d: -0.011, dfmt: "+0.0%;-0.0%;0.0%", bom: false,
+    serie: "0.05;0.06;0.12;0.07;0.10;0.14;0.19;0.08;0.04;0.03;0.04;0.07" }
+];
+
+const host = {
+  locale: "pt-BR",
+  eventService: { renderingStarted() {}, renderingFinished() {}, renderingFailed(o, e) { console.error(e); } }
+};
+const visuais = KPIS.map(() => {
+  const slot = document.createElement("div");
+  slot.className = "slot";
+  document.getElementById("linha").appendChild(slot);
+  return { el: slot, v: cartaoKpi11141578A8AA47AB972EA4E95E3FC9D6.default.create({ element: slot, host }) };
+});
+
+function atualizar(filtro) {
+  KPIS.forEach((k, i) => {
+    const col = (role, valor, format) => ({ source: { displayName: k.nome, roles: { [role]: true }, format }, values: [valor] });
+    const serie = filtro ? k.serie.split(";").map(x => (+x * (0.85 + Math.random() * 0.3)).toFixed(4)).join(";") : k.serie;
+    visuais[i].v.update({
+      type: 2 | 4,
+      viewport: { width: 200, height: 104 },
+      dataViews: [{
+        metadata: { columns: [], objects: { cartao: { subirEhBom: k.bom } } },
+        categorical: { values: [
+          col("valor", filtro ? k.sp : k.v, k.fmt),
+          col("variacao", filtro ? -k.d * 0.7 : k.d, k.dfmt),
+          col("comparacao", "jul/18"),
+          col("serie", serie)
+        ] }
+      }]
+    });
+  });
+}
+document.getElementById("filtrar").onclick = () => atualizar(true);
+document.getElementById("voltar").onclick = () => atualizar(false);
+atualizar(false);
+</script>
+</body>
+</html>

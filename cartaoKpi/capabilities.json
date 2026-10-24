@@ -1,0 +1,39 @@
+{
+    "dataRoles": [
+        { "displayName": "Valor", "name": "valor", "kind": "Measure", "description": "Número principal do cartão (ex.: Receita)" },
+        { "displayName": "Variação", "name": "variacao", "kind": "Measure", "description": "Variação contra o período anterior (ex.: Receita Δ%). O formato da medida é usado no texto." },
+        { "displayName": "Comparação (texto)", "name": "comparacao", "kind": "Measure", "description": "Texto após a variação, ex.: [Mês Anterior] → \"vs jul/18\"" },
+        { "displayName": "Série (texto)", "name": "serie", "kind": "Measure", "description": "Valores do minigráfico separados por ponto e vírgula: \"10;12.5;9\"" }
+    ],
+    "objects": {
+        "cartao": {
+            "properties": {
+                "titulo": { "type": { "text": true } },
+                "subirEhBom": { "type": { "bool": true } },
+                "corDestaque": { "type": { "fill": { "solid": { "color": true } } } },
+                "corBom": { "type": { "fill": { "solid": { "color": true } } } },
+                "corRuim": { "type": { "fill": { "solid": { "color": true } } } },
+                "mostrarSerie": { "type": { "bool": true } },
+                "animar": { "type": { "bool": true } }
+            }
+        }
+    },
+    "dataViewMappings": [
+        {
+            "conditions": [ { "valor": { "max": 1 }, "variacao": { "max": 1 }, "comparacao": { "max": 1 }, "serie": { "max": 1 } } ],
+            "categorical": {
+                "values": {
+                    "select": [
+                        { "bind": { "to": "valor" } },
+                        { "bind": { "to": "variacao" } },
+                        { "bind": { "to": "comparacao" } },
+                        { "bind": { "to": "serie" } }
+                    ]
+                }
+            }
+        }
+    ],
+    "supportsLandingPage": true,
+    "supportsEmptyDataView": true,
+    "privileges": []
+}
