@@ -4,11 +4,12 @@ Pipeline de dados ponta a ponta sobre o **e-commerce brasileiro Olist** (~100 mi
 ingestão incremental no Databricks com arquitetura medalhão, modelo estrela no Unity Catalog,
 testes de qualidade automatizados e dashboard no Power BI.
 
-![Olist City 3D no Power BI: cidade isométrica em three.js com um prédio por área do negócio](docs/img/olist_city_powerbi.png)
+[![Olist City de noite: cidade isométrica em three.js com um prédio por área do negócio e KPIs reais do lakehouse](docs/img/olist_city_noite.png)](https://jx-dev-c.github.io/olist-lakehouse-databricks-powerbi/olist-city/)
 
-**🌐 [Abrir a Olist City ao vivo](https://jx-dev-c.github.io/olist-lakehouse-databricks-powerbi/olist-city/)**: a versão web da cidade, que roda no navegador sem instalar nada.
-
-*Página **Olist City 3D** do relatório: visual personalizado em three.js. Cada prédio é uma área do negócio, e os números das etiquetas, do painel e do letreiro vêm de medidas DAX.*
+**🌐 [Abrir a Olist City ao vivo](https://jx-dev-c.github.io/olist-lakehouse-databricks-powerbi/olist-city/)**: roda no navegador, sem instalar nada.
+- **Prédios:** cada prédio é uma área do negócio. Clique num deles para ver os KPIs, os gráficos e o insight da área.
+- **Números reais:** vêm do Databricks.
+- **Extras:** modo noite, passaporte do tour e letreiro de insights.
 
 ## Arquitetura
 
@@ -123,6 +124,10 @@ São cinco páginas, cada uma aberta por uma pergunta de negócio:
 - **KPIs do mês de referência.** Cada KPI mostra a variação contra o mês anterior (m/m) e contra o mesmo mês do ano anterior (a/a). Taxas aparecem em pontos percentuais, e uma variação que arredonda para zero fica neutra (■), nunca "▲ 0,00".
 - **Insights dinâmicos.** Os textos são medidas DAX recalculadas a cada filtro. Quando a amostra é pequena (menos de 30 avaliações ou estados com menos de 500 pedidos), o insight avisa em vez de concluir.
 - **Gráfico de receita.** Mostra a série do ano anterior junto (só nos meses com amostra suficiente) e marca o pico automaticamente.
+
+![Página Olist City 3D dentro do Power BI](docs/img/olist_city_powerbi.png)
+
+*Página **Olist City 3D** do relatório: a mesma cidade como visual personalizado do Power BI. Os números das etiquetas, do painel e do letreiro vêm de medidas DAX e acompanham os filtros.*
 
 ### Visuais personalizados (TypeScript)
 
