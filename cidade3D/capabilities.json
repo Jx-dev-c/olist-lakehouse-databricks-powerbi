@@ -1,0 +1,47 @@
+{
+    "dataRoles": [
+        { "displayName": "Prédio", "name": "predio", "kind": "Grouping", "description": "Id do prédio: torre, shopping, galpao, bairro, feira, banco, praca" },
+        { "displayName": "Ordem", "name": "ordem", "kind": "Grouping", "description": "0 = número da etiqueta; 1 a 4 = KPIs do painel; 8 = manchete do insight; 9 = texto do insight" },
+        { "displayName": "Item", "name": "item", "kind": "Grouping", "description": "Nome do indicador" },
+        { "displayName": "Valor (texto)", "name": "valor", "kind": "Measure", "description": "Valor já formatado de cada item" },
+        { "displayName": "Detalhe", "name": "detalhe", "kind": "Measure", "description": "Texto pequeno abaixo do valor" },
+        { "displayName": "Série", "name": "serie", "kind": "Measure", "description": "Valores mensais separados por ; (minigráfico)" },
+        { "displayName": "Tom", "name": "tom", "kind": "Measure", "description": "1 = bom, 0 = neutro, -1 = ruim" }
+    ],
+    "objects": {
+        "cidade": {
+            "properties": {
+                "noite": { "type": { "bool": true } },
+                "permitirZoom": { "type": { "bool": true } },
+                "animar": { "type": { "bool": true } },
+                "letreiro": { "type": { "bool": true } }
+            }
+        }
+    },
+    "dataViewMappings": [
+        {
+            "conditions": [ { "predio": { "max": 1 }, "ordem": { "max": 1 }, "item": { "max": 1 }, "valor": { "max": 1 }, "detalhe": { "max": 1 }, "serie": { "max": 1 }, "tom": { "max": 1 } } ],
+            "table": {
+                "rows": {
+                    "select": [
+                        { "for": { "in": "predio" } },
+                        { "for": { "in": "ordem" } },
+                        { "for": { "in": "item" } },
+                        { "for": { "in": "valor" } },
+                        { "for": { "in": "detalhe" } },
+                        { "for": { "in": "serie" } },
+                        { "for": { "in": "tom" } }
+                    ],
+                    "dataReductionAlgorithm": { "top": { "count": 500 } }
+                }
+            }
+        }
+    ],
+    "tooltips": {
+        "supportedTypes": { "default": true, "canvas": true },
+        "roles": []
+    },
+    "supportsLandingPage": true,
+    "supportsEmptyDataView": true,
+    "privileges": []
+}

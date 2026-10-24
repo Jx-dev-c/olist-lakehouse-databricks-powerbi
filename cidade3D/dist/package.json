@@ -1,0 +1,17 @@
+{
+		"version": "1.0.0.0",
+		"author": {"name":"João Batista","email":"joaobatistademacedojunior97@gmail.com"},
+		"resources": [
+			{
+				"resourceId": "rId0",
+				"sourceType": 5,
+				"file": "resources/cidade3DDFA3070DBE4841539B4DC45A73CB1FA2.pbiviz.json"
+			}
+		],
+		"visual": {"name":"cidade3D","displayName":"Olist City 3D","guid":"cidade3DDFA3070DBE4841539B4DC45A73CB1FA2","visualClassName":"Visual","version":"1.0.0.0","description":"Cidade isométrica 3D (three.js): cada prédio é uma área do negócio; etiquetas, painel com KPIs, minigráficos e insight vêm de medidas do modelo e acompanham os filtros.","supportUrl":"https://github.com/","gitHubUrl":""},
+		"metadata": {
+			"pbivizjson": {
+				"resourceId": "rId0"
+			}
+		}
+	}

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Olist City 3D: teste</title>
+<!-- Página de teste fora do Power BI: carrega o bundle de .tmp/drop com um host simulado.
+     Rode "npm run package" e depois "node teste/servidor.mjs" → http://localhost:8771/teste/ -->
+<link rel="stylesheet" href="../.tmp/drop/visual.css">
+<style>
+  body { margin: 0; background: #0B1630; font-family: "Segoe UI", sans-serif; }
+  header { height: 40px; display: flex; gap: 8px; align-items: center; padding: 0 16px; }
+  button { font: inherit; font-size: 12px; border: 1px solid #CBD5E1; background: #fff; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+  #slot { position: relative; width: 1248px; height: 648px; margin: 0 16px; }
+</style>
+</head>
+<body>
+<header>
+  <button id="filtrar">Simular filtro (só 2018)</button>
+  <button id="voltar">Sem filtro</button>
+  <button id="estreito">Visual estreito</button>
+</header>
+<div id="slot"></div>
+
+<script>window.powerbi = {};</script>
+<script src="../.tmp/drop/visual.js"></script>
+<script>
+// [prédio, ordem, item, valor, detalhe, série, tom] como as medidas 'Cidade *' devolvem (números reais do gold)
+const S = "1.37;2.84;4.26;4.06;5.83;5;5.79;6.62;7.17;7.65;11.72;8.62;11.02;9.79;11.53;11.56;11.46;10.2;10.4;9.97";
+const LINHAS = [
+  ["torre", 0, "Receita", "R$ 15,7 mi", "", "", 0],
+  ["torre", 1, "Receita", "R$ 15,7 mi", "jan/17–ago/18", S, 0],
+  ["torre", 2, "Pedidos", "98.199", "pedidos válidos", S, 0],
+  ["torre", 3, "Ticket médio", "R$ 160,24", "itens + frete", "", 0],
+  ["torre", 4, "Acumulado vs ano anterior", "+140%", "jan–ago/18 vs jan–ago/17", "", 1],
+  ["torre", 8, "Insight", "Receita 2018 cresce 140% sobre 2017 no acumulado", "", "", 0],
+  ["torre", 9, "Insight", "Pico em nov/17 (R$ 1,17 mi). Nos últimos 6 meses a receita ficou estável: platô mensal.", "", "", 0],
+  ["shopping", 0, "Ticket", "R$ 160", "", "", 0],
+  ["shopping", 1, "Ticket médio", "R$ 160,24", "itens + frete", S, 0],
+  ["shopping", 2, "Itens por pedido", "1,14", "média", "", 0],
+  ["shopping", 3, "Frete / receita", "14,1%", "do faturamento", "", 0],
+  ["shopping", 4, "Categoria líder", "Beleza e Saúde", "R$ 1,4 mi", "", 0],
+  ["shopping", 8, "Insight", "Beleza e Saúde lidera, sem dono absoluto", "", "", 0],
+  ["galpao", 0, "% atraso", "6,8%", "", "", -1],
+  ["galpao", 1, "% atraso", "6,8%", "entregues após o prazo", "0.03;0.03;0.05;0.07;0.03;0.03;0.03;0.03;0.04;0.04;0.12;0.07;0.06;0.14;0.19;0.04;0.07;0.01;0.03", -1],
+  ["galpao", 2, "Tempo de entrega", "12,5 dias", "compra → entrega", "", 0],
+  ["galpao", 3, "Prazo prometido", "23,7 dias", "média", "", 0],
+  ["galpao", 4, "Atraso dos atrasados", "9,7 dias", "média", "", -1],
+  ["galpao", 8, "Insight", "MA atrasa 4× mais que SP", "", "", 0],
+  ["galpao", 9, "Insight", "O atraso não é nacional: MA (17%), AL e PI puxam a média.", "", "", 0],
+  ["bairro", 0, "Clientes", "94.983", "", "", 0],
+  ["bairro", 1, "Clientes únicos", "94.983", "com pedido válido", S, 0],
+  ["bairro", 2, "% recompra", "3,0%", "2+ pedidos", "", -1],
+  ["praca", 0, "Nota", "4,12", "", "", 1],
+  ["praca", 1, "Nota média", "4,12", "de 1 a 5", "4.09;4.1;4.13;4.07;4.18;4.18;4.23;4.27;4.22;4.17;3.95;4.04;4.07;3.86;3.76;4.17;4.21;4.29;4.29;4.29", 0],
+  ["praca", 2, "% avaliações negativas", "13,7%", "notas 1 e 2", "", -1],
+  ["praca", 8, "Insight", "O atraso derruba a nota de 4,29 para 2,27", "", "", 0],
+  ["feira", 0, "Vendedores", "3.053", "", "", 0],
+  ["feira", 1, "Top 20% vendedores", "82%", "da receita", "", -1],
+  ["banco", 0, "Cartão", "75%", "", "", 0],
+  ["banco", 1, "Cartão de crédito", "75%", "dos pedidos", "", 0],
+];
+const COLS = ["predio", "ordem", "item", "valor", "detalhe", "serie", "tom"].map(r => ({ displayName: r, roles: { [r]: true } }));
+const host = {
+  locale: "pt-BR",
+  eventService: { renderingStarted() {}, renderingFinished() {}, renderingFailed(o, e) { console.error(e); } },
+  tooltipService: { show(o) { console.log("dica", o.dataItems.map(d => d.displayName + "=" + d.value).join(" | ")); }, hide() {} },
+};
+const slot = document.getElementById("slot");
+const visual = cidade3DDFA3070DBE4841539B4DC45A73CB1FA2.default.create({ element: slot, host });
+let largura = 1248;
+function atualizar(filtro) {
+  const linhas = LINHAS.map(l => filtro && l[1] === 0 ? [...l.slice(0, 3), l[3] + "*", ...l.slice(4)] : l);
+  slot.style.width = largura + "px";
+  visual.update({ type: 2 | 4, viewport: { width: largura, height: 648 }, dataViews: [{ metadata: { columns: COLS, objects: {} }, table: { columns: COLS, rows: linhas } }] });
+}
+document.getElementById("filtrar").onclick = () => atualizar(true);
+document.getElementById("voltar").onclick = () => atualizar(false);
+document.getElementById("estreito").onclick = () => { largura = largura === 1248 ? 480 : 1248; atualizar(false); };
+atualizar(false);
+</script>
+</body>
+</html>
