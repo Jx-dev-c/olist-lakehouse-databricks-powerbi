@@ -99,6 +99,10 @@ export class Visual implements IVisual {
             const cfg = this.formattingSettings.cartaoCard;
             const animar = cfg.animar.value;
             this.cartao.classList.toggle("animado", animar);
+            const escuro = cfg.destaque.value;
+            this.cartao.classList.toggle("escuro", escuro);
+            // no cartão escuro o minigráfico vai para ciano (contraste com o azul-marinho)
+            const corSerie = escuro ? "#22D3EE" : cfg.corDestaque.value.value;
 
             const colunas: DataViewValueColumn[] = dataView?.categorical?.values ? [...dataView.categorical.values] : [];
             const col = (papel: string) => colunas.find(c => c.source.roles?.[papel]);
@@ -129,8 +133,16 @@ export class Visual implements IVisual {
                 const bom = variacao === 0 ? null : (variacao > 0) === cfg.subirEhBom.value;
                 this.pilula.textContent = `${variacao > 0 ? "▲" : variacao < 0 ? "▼" : "■"} ${texto}`;
                 this.pilula.style.display = "";
-                this.pilula.style.color = bom === null ? "#64748B" : bom ? cfg.corBom.value.value : cfg.corRuim.value.value;
-                this.pilula.style.background = bom === null ? "#F1F5F9" : this.transparente(bom ? cfg.corBom.value.value : cfg.corRuim.value.value, 0.12);
+                const corPilula = bom === null ? "#64748B" : bom ? cfg.corBom.value.value : cfg.corRuim.value.value;
+                this.pilula.style.color = escuro ? this.clarear(corPilula) : corPilula;
+                this.pilula.style.background = bom === null ? (escuro ? "rgba(255,255,255,.1)" : "#F1F5F9") : this.transparente(corPilula, escuro ? 0.22 : 0.12);
+                this.pilula.style.setProperty("--cor-pilula", corPilula);
+                // variação ruim: a pílula pulsa duas vezes para puxar o olho, depois fica parada
+                this.pilula.classList.remove("alerta");
+                if (bom === false && animar) {
+                    void this.pilula.offsetWidth;
+                    this.pilula.classList.add("alerta");
+                }
             } else {
                 this.pilula.style.display = "none";
             }
@@ -139,7 +151,7 @@ export class Visual implements IVisual {
 
             // minigráfico
             const pontos = String(colSerie?.values[0] ?? "").split(";").map(s => parseFloat(s.replace(",", "."))).filter(v => isFinite(v));
-            this.desenharSerie(cfg.mostrarSerie.value ? pontos : [], cfg.corDestaque.value.value, animar);
+            this.desenharSerie(cfg.mostrarSerie.value ? pontos : [], corSerie, animar);
 
             this.events.renderingFinished(options);
         } catch (erro) {
@@ -205,6 +217,13 @@ export class Visual implements IVisual {
             this.serie.classList.add("desenhar");
         }
         this.assinaturaSerie = assinatura;
+    }
+
+    /** Mistura a cor com branco (texto da pílula sobre fundo escuro). */
+    private clarear(hex: string): string {
+        const n = parseInt(hex.replace("#", ""), 16);
+        const c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(v => Math.round(v + (255 - v) * 0.45));
+        return `rgb(${c.join(",")})`;
     }
 
     private transparente(hex: string, alfa: number): string {

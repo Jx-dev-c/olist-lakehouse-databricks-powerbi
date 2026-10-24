@@ -2,18 +2,18 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "kpi_4",
   "position": {
-    "x": 1072,
-    "y": 76,
-    "z": 1500,
-    "height": 68,
-    "width": 184,
-    "tabOrder": 1500
+    "x": 1064.0,
+    "y": 72,
+    "z": 5140,
+    "height": 104,
+    "width": 200.0,
+    "tabOrder": 5140
   },
   "visual": {
-    "visualType": "card",
+    "visualType": "cartaoKpi11141578A8AA47AB972EA4E95E3FC9D6",
     "query": {
       "queryState": {
-        "Values": {
+        "valor": {
           "projections": [
             {
               "field": {
@@ -30,17 +30,159 @@
               "nativeQueryRef": "% Atraso"
             }
           ]
+        },
+        "variacao": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "% Atraso Δ"
+                }
+              },
+              "queryRef": "_Medidas.% Atraso Δ",
+              "nativeQueryRef": "% Atraso Δ"
+            }
+          ]
+        },
+        "comparacao": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Mês Anterior"
+                }
+              },
+              "queryRef": "_Medidas.Mês Anterior",
+              "nativeQueryRef": "Mês Anterior"
+            }
+          ]
+        },
+        "serie": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "% Atraso Série"
+                }
+              },
+              "queryRef": "_Medidas.% Atraso Série",
+              "nativeQueryRef": "% Atraso Série"
+            }
+          ]
         }
       }
     },
     "objects": {
-      "categoryLabels": [
+      "cartao": [
+        {
+          "properties": {
+            "subirEhBom": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "background": [
         {
           "properties": {
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

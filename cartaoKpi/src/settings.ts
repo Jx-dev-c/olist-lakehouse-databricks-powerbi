@@ -8,6 +8,7 @@ import FormattingSettingsModel = formattingSettings.Model;
 
 class CartaoCardSettings extends FormattingSettingsCard {
     titulo = new formattingSettings.TextInput({ name: "titulo", displayName: "Título (vazio = nome da medida)", value: "", placeholder: "Receita" });
+    destaque = new formattingSettings.ToggleSwitch({ name: "destaque", displayName: "Cartão em destaque (fundo escuro)", value: false });
     subirEhBom = new formattingSettings.ToggleSwitch({ name: "subirEhBom", displayName: "Subir é bom", value: true });
     corDestaque = new formattingSettings.ColorPicker({ name: "corDestaque", displayName: "Cor de destaque", value: { value: "#2563EB" } });
     corBom = new formattingSettings.ColorPicker({ name: "corBom", displayName: "Cor de variação boa", value: { value: "#10B981" } });
@@ -17,7 +18,7 @@ class CartaoCardSettings extends FormattingSettingsCard {
 
     name: string = "cartao";
     displayName: string = "Cartão KPI";
-    slices: Array<FormattingSettingsSlice> = [this.titulo, this.subirEhBom, this.corDestaque, this.corBom, this.corRuim, this.mostrarSerie, this.animar];
+    slices: Array<FormattingSettingsSlice> = [this.titulo, this.destaque, this.subirEhBom, this.corDestaque, this.corBom, this.corRuim, this.mostrarSerie, this.animar];
 }
 
 export class VisualFormattingSettingsModel extends FormattingSettingsModel {

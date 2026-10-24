@@ -1,5 +1,5 @@
 {
-		"version": "1.0.0.0",
+		"version": "1.1.0.0",
 		"author": {"name":"João Batista","email":"joaobatistademacedojunior97@gmail.com"},
 		"resources": [
 			{
@@ -8,7 +8,7 @@
 				"file": "resources/cartaoKpi11141578A8AA47AB972EA4E95E3FC9D6.pbiviz.json"
 			}
 		],
-		"visual": {"name":"cartaoKpi","displayName":"Cartão KPI","guid":"cartaoKpi11141578A8AA47AB972EA4E95E3FC9D6","visualClassName":"Visual","version":"1.0.0.0","description":"Cartão de KPI em HTML/CSS: valor com contagem animada, pílula de variação ▲▼ com cor de bom/ruim e minigráfico que se desenha.","supportUrl":"https://github.com/","gitHubUrl":""},
+		"visual": {"name":"cartaoKpi","displayName":"Cartão KPI","guid":"cartaoKpi11141578A8AA47AB972EA4E95E3FC9D6","visualClassName":"Visual","version":"1.1.0.0","description":"Cartão de KPI em HTML/CSS: valor com contagem animada, pílula de variação ▲▼ com cor de bom/ruim e minigráfico que se desenha.","supportUrl":"https://github.com/","gitHubUrl":""},
 		"metadata": {
 			"pbivizjson": {
 				"resourceId": "rId0"

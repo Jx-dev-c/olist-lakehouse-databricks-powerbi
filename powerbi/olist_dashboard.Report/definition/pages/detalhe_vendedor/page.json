@@ -21,7 +21,7 @@
               "name": {
                 "expr": {
                   "Literal": {
-                    "Value": "'fundo_kpi4.png'"
+                    "Value": "'fundo_base.png'"
                   }
                 }
               },
@@ -30,7 +30,7 @@
                   "ResourcePackageItem": {
                     "PackageName": "RegisteredResources",
                     "PackageType": 1,
-                    "ItemName": "fundo_kpi4.png"
+                    "ItemName": "fundo_base.png"
                   }
                 }
               },

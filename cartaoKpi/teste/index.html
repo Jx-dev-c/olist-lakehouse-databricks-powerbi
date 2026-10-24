@@ -57,7 +57,7 @@ function atualizar(filtro) {
       type: 2 | 4,
       viewport: { width: 200, height: 104 },
       dataViews: [{
-        metadata: { columns: [], objects: { cartao: { subirEhBom: k.bom } } },
+        metadata: { columns: [], objects: { cartao: { subirEhBom: k.bom, destaque: i === 0 } } },
         categorical: { values: [
           col("valor", filtro ? k.sp : k.v, k.fmt),
           col("variacao", filtro ? -k.d * 0.7 : k.d, k.dfmt),

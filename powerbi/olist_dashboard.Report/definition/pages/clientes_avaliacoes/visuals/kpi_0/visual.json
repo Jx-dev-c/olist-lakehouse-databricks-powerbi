@@ -2,18 +2,18 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "kpi_0",
   "position": {
-    "x": 208,
-    "y": 76,
-    "z": 700,
-    "height": 96,
-    "width": 238,
-    "tabOrder": 700
+    "x": 200.0,
+    "y": 72,
+    "z": 5100,
+    "height": 104,
+    "width": 254.0,
+    "tabOrder": 5100
   },
   "visual": {
-    "visualType": "card",
+    "visualType": "cartaoKpi11141578A8AA47AB972EA4E95E3FC9D6",
     "query": {
       "queryState": {
-        "Values": {
+        "valor": {
           "projections": [
             {
               "field": {
@@ -30,17 +30,166 @@
               "nativeQueryRef": "Nota Média"
             }
           ]
+        },
+        "variacao": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Nota Média Δ"
+                }
+              },
+              "queryRef": "_Medidas.Nota Média Δ",
+              "nativeQueryRef": "Nota Média Δ"
+            }
+          ]
+        },
+        "comparacao": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Mês Anterior"
+                }
+              },
+              "queryRef": "_Medidas.Mês Anterior",
+              "nativeQueryRef": "Mês Anterior"
+            }
+          ]
+        },
+        "serie": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Nota Média Série"
+                }
+              },
+              "queryRef": "_Medidas.Nota Média Série",
+              "nativeQueryRef": "Nota Média Série"
+            }
+          ]
         }
       }
     },
     "objects": {
-      "categoryLabels": [
+      "cartao": [
+        {
+          "properties": {
+            "subirEhBom": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "destaque": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "background": [
         {
           "properties": {
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

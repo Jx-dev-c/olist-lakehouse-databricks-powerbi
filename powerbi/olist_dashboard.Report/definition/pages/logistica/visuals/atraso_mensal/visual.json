@@ -41,11 +41,11 @@
                       "Entity": "dim_date"
                     }
                   },
-                  "Property": "month_year"
+                  "Property": "mes"
                 }
               },
-              "queryRef": "dim_date.month_year",
-              "nativeQueryRef": "month_year",
+              "queryRef": "dim_date.mes",
+              "nativeQueryRef": "mes",
               "active": true
             }
           ]
@@ -61,7 +61,7 @@
                     "Entity": "dim_date"
                   }
                 },
-                "Property": "month_year"
+                "Property": "mes"
               }
             },
             "direction": "Ascending"
@@ -85,6 +85,9 @@
                 }
               }
             }
+          },
+          "selector": {
+            "metadata": "_Medidas.% Atraso"
           }
         }
       ],
@@ -128,6 +131,26 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            },
+            "gridlineShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryAxis": [
+        {
+          "properties": {
+            "axisType": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Continuous'"
                 }
               }
             },

@@ -30,6 +30,33 @@
     }
 
     &.animado { animation: kpi-entrada .5s cubic-bezier(.2, .8, .2, 1) both; }
+
+    // reflexo de luz que atravessa o cartão uma vez na entrada
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0; bottom: 0; left: -60%;
+        width: 50%;
+        background: linear-gradient(105deg, transparent 0%, rgba(255, 255, 255, .55) 50%, transparent 100%);
+        transform: skewX(-12deg);
+        pointer-events: none;
+        opacity: 0;
+    }
+    &.animado::after { animation: kpi-brilho 1.1s .55s ease-out both; }
+
+    // variante em destaque: o ponto focal da página
+    &.escuro {
+        background: linear-gradient(135deg, #1B2A4A 0%, #1E3A8A 100%);
+        border-color: #1E3A8A;
+        color: #FFFFFF;
+        box-shadow: 0 4px 10px rgba(30, 58, 138, .25), 0 12px 28px rgba(30, 58, 138, .22);
+        &::before { background: #22D3EE; }
+        &::after { background: linear-gradient(105deg, transparent 0%, rgba(255, 255, 255, .22) 50%, transparent 100%); }
+        &:hover { box-shadow: 0 6px 14px rgba(30, 58, 138, .3), 0 18px 36px rgba(30, 58, 138, .3); }
+        .kpi-rotulo { color: #BFDBFE; }
+        .kpi-comparacao { color: #93A4C3; }
+        .kpi-serie .ponto { border-color: #1E3A8A; }
+    }
 }
 
 .kpi-cabecalho {
@@ -80,6 +107,8 @@
     font-size: 11px;
     font-weight: 600;
     font-variant-numeric: tabular-nums;
+
+    &.alerta { animation: kpi-alerta 1.2s .9s ease-out 2; }
 }
 
 .kpi-comparacao { font-size: 10px; color: #94A3B8; white-space: nowrap; flex-shrink: 0; }
@@ -121,6 +150,12 @@
 @keyframes kpi-entrada { from { opacity: 0; transform: translateY(8px); } }
 @keyframes kpi-desenhar { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes kpi-aparecer { from { opacity: 0; } }
+@keyframes kpi-brilho { 0% { left: -60%; opacity: 1; } 100% { left: 130%; opacity: 1; } }
+@keyframes kpi-alerta {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--cor-pilula) 55%, transparent); transform: scale(1); }
+    30% { transform: scale(1.08); }
+    100% { box-shadow: 0 0 0 9px color-mix(in srgb, var(--cor-pilula) 0%, transparent); transform: scale(1); }
+}
 // halo que se expande e some (o ponto em si não muda de tamanho)
 @keyframes kpi-pulso {
     0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--destaque) 45%, transparent); }

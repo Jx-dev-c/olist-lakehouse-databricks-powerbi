@@ -141,19 +141,14 @@
       "type": "RegisteredResources",
       "items": [
         {
-          "name": "fundo_kpi4.png",
-          "path": "fundo_kpi4.png",
-          "type": "Image"
-        },
-        {
-          "name": "fundo_kpi5.png",
-          "path": "fundo_kpi5.png",
-          "type": "Image"
-        },
-        {
           "name": "OlistLight.json",
           "path": "OlistLight.json",
           "type": "CustomTheme"
+        },
+        {
+          "name": "fundo_base.png",
+          "path": "fundo_base.png",
+          "type": "Image"
         }
       ]
     },
@@ -164,6 +159,17 @@
         {
           "name": "mapaBrasil3D827903E2CA9841A79D4FD691E907173A.pbiviz.json",
           "path": "mapaBrasil3D827903E2CA9841A79D4FD691E907173A.pbiviz.json",
+          "type": "CustomVisualMetadata"
+        }
+      ]
+    },
+    {
+      "name": "cartaoKpi11141578A8AA47AB972EA4E95E3FC9D6",
+      "type": "CustomVisual",
+      "items": [
+        {
+          "name": "cartaoKpi11141578A8AA47AB972EA4E95E3FC9D6.pbiviz.json",
+          "path": "cartaoKpi11141578A8AA47AB972EA4E95E3FC9D6.pbiviz.json",
           "type": "CustomVisualMetadata"
         }
       ]

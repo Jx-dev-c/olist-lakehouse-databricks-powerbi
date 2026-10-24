@@ -9,6 +9,7 @@
         "cartao": {
             "properties": {
                 "titulo": { "type": { "text": true } },
+                "destaque": { "type": { "bool": true } },
                 "subirEhBom": { "type": { "bool": true } },
                 "corDestaque": { "type": { "fill": { "solid": { "color": true } } } },
                 "corBom": { "type": { "fill": { "solid": { "color": true } } } },

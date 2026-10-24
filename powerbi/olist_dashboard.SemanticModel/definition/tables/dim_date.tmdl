@@ -107,6 +107,14 @@ table dim_date
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Primeiro dia do mês: eixo contínuo (cabe na largura do gráfico, sem barra de rolagem)
+	column mes = DATE ( YEAR ( dim_date[date] ), MONTH ( dim_date[date] ), 1 )
+		dataType: dateTime
+		formatString: mmm/yy
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
 	partition dim_date = m
 		mode: import
 		source =
