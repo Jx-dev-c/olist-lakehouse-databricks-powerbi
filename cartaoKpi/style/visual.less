@@ -119,12 +119,14 @@
 .kpi-aviso { display: none; font-size: 11px; color: #64748B; }
 
 // minigráfico ao lado do número (a linha de baixo fica livre para até duas pílulas)
-.kpi.com-serie .kpi-valor { max-width: 60%; }
+// o minigráfico ocupa 34% da caixa (padding incluso) a 12px da borda; o valor termina 6px antes dele:
+// 20 + máx ≤ 0,66 × (conteúdo + 36) − 18  →  máx = 66% − 15px (em % da área de conteúdo)
+.kpi.com-serie .kpi-valor { max-width: calc(66% - 15px); }
 .kpi-serie {
     position: absolute;
-    right: 14px;
+    right: 12px;
     top: 34px;
-    width: 36%;
+    width: 34%;
     height: 30px;
 
     svg { display: block; width: 100%; height: 100%; overflow: visible; }
