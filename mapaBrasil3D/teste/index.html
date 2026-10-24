@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Mapa Brasil 3D: teste</title>
+<!-- Página de teste fora do Power BI: carrega o bundle de .tmp/drop com um host simulado.
+     Rode "npm run package" e sirva a pasta mapaBrasil3D (ex.: node teste/servidor.mjs). -->
+<link rel="stylesheet" href="../.tmp/drop/visual.css">
+<style>
+  body { margin: 0; background: #F5F7FA; font-family: "Segoe UI", sans-serif; color: #1B2A4A; }
+  .card { position: absolute; inset: 56px 16px 16px 16px; background: #fff; border: 1px solid #E5E9F0; border-radius: 12px;
+          box-shadow: 0 2px 10px rgba(27, 42, 74, .1); overflow: hidden; }
+  .card h2 { position: absolute; top: 10px; left: 14px; margin: 0; font-size: 13px; font-weight: 600; z-index: 1; }
+  #visual { position: absolute; inset: 0; }
+  header { height: 44px; display: flex; gap: 8px; align-items: center; padding: 0 16px; }
+  button { font: inherit; font-size: 12px; border: 1px solid #CBD5E1; background: #fff; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+  #log { margin-left: auto; font-size: 12px; color: #64748B; }
+</style>
+</head>
+<body>
+<header>
+  <button data-cenario="atraso">Altura: pedidos · Cor: % atraso</button>
+  <button data-cenario="nota">Altura: pedidos · Cor: nota</button>
+  <button data-cenario="nordeste">Filtro: só Nordeste</button>
+  <button id="girar">Girar</button>
+  <span id="log"></span>
+</header>
+<div class="card"><h2>Pedidos (altura) e % de atraso (cor) por estado</h2><div id="visual"></div></div>
+
+<script>window.powerbi = {};</script>
+<script src="../.tmp/drop/visual.js"></script>
+<script>
+// gold.fact_orders × dim_customer, jan/2017 a ago/2018
+const DADOS = [["SP",41621,4.5,4.18],["RJ",12792,12.1,3.88],["MG",11591,4.6,4.14],["RS",5441,6.1,4.14],["PR",5025,4.1,4.18],
+  ["SC",3625,8.2,4.08],["BA",3376,12.2,3.86],["DF",2134,5.7,4.07],["ES",2029,10.7,4.04],["GO",2011,6.6,4.04],["PE",1645,9.6,4.01],
+  ["CE",1328,13.8,3.85],["PA",971,11.3,3.85],["MT",904,6.0,4.11],["MA",743,17.5,3.75],["MS",715,9.7,4.11],["PB",535,10.5,4.02],
+  ["PI",493,13.9,3.92],["RN",481,9.4,4.1],["AL",411,21.5,3.76],["SE",347,15.4,3.8],["TO",280,9.9,4.1],["RO",253,2.9,4.05],
+  ["AM",148,2.8,4.21],["AC",81,3.8,4.05],["AP",68,3.0,4.19],["RR",44,12.5,3.66]];
+const NORDESTE = ["MA","PI","CE","RN","PB","PE","AL","SE","BA"];
+
+const log = t => document.getElementById("log").textContent = t;
+let selecionados = [];
+const host = {
+  eventService: { renderingStarted() {}, renderingFinished() {}, renderingFailed(o, e) { log("ERRO: " + e); console.error(e); } },
+  createSelectionManager: () => ({
+    registerOnSelectCallback() {},
+    select: async (id, multi) => { selecionados = multi ? [...selecionados, id] : [id]; log("selecionado: " + selecionados.map(s => s.uf).join(", ")); return selecionados; },
+    clear: async () => { selecionados = []; log("seleção limpa"); },
+    getSelectionIds: () => selecionados,
+    showContextMenu() {}
+  }),
+  createSelectionIdBuilder() {
+    let uf;
+    return { withCategory(cat, i) { uf = cat.values[i]; return this; }, createSelectionId: () => ({ uf, equals: o => o.uf === uf }) };
+  },
+  tooltipService: { show: o => log(o.dataItems.map(d => `${d.displayName}: ${d.value}`).join(" · ")), move() {}, hide() {} }
+};
+
+const el = document.getElementById("visual");
+const visual = mapaBrasil3D827903E2CA9841A79D4FD691E907173A.default.create({ element: el, host });
+let objetos = {};
+
+function atualizar(cenario) {
+  const linhas = cenario === "nordeste" ? DADOS.filter(d => NORDESTE.includes(d[0])) : DADOS;
+  const corNota = cenario === "nota";
+  const coluna = (nome, role, format, idx, f = v => v) => ({ source: { displayName: nome, roles: { [role]: true }, format }, values: linhas.map(d => f(d[idx])) });
+  const values = [
+    coluna("Pedidos", "altura", "#,0", 1),
+    corNota ? coluna("Nota Média", "cor", "0.00", 3) : coluna("% Atraso", "cor", "0.0%", 2, v => v / 100),
+    coluna("Nota Média", "tooltips", "0.00", 3)
+  ];
+  const cor = corNota ? { corMin: { solid: { color: "#EF4444" } }, corMax: { solid: { color: "#2563EB" } } } : {};
+  visual.update({
+    type: 2 | 4,
+    viewport: { width: el.clientWidth, height: el.clientHeight },
+    dataViews: [{
+      metadata: { columns: [], objects: { mapa: { ...cor, ...objetos } } },
+      categorical: { categories: [{ source: { displayName: "state", roles: { estado: true } }, values: linhas.map(d => d[0]) }], values }
+    }]
+  });
+}
+
+document.querySelectorAll("[data-cenario]").forEach(b => b.onclick = () => atualizar(b.dataset.cenario));
+document.getElementById("girar").onclick = () => { objetos.autoRotacao = !objetos.autoRotacao; atualizar("atraso"); };
+window.onresize = () => atualizar("atraso");
+atualizar(new URLSearchParams(location.search).get("cenario") || "atraso");
+</script>
+</body>
+</html>

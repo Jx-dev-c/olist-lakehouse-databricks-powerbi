@@ -1,0 +1,48 @@
+{
+    "dataRoles": [
+        { "displayName": "Estado (UF)", "name": "estado", "kind": "Grouping", "description": "Sigla da UF: SP, RJ, MA..." },
+        { "displayName": "Altura", "name": "altura", "kind": "Measure", "description": "Valor que define a altura de cada estado" },
+        { "displayName": "Cor", "name": "cor", "kind": "Measure", "description": "Valor que define a cor (do menor ao maior). Se vazio, usa a altura." },
+        { "displayName": "Dicas de ferramenta", "name": "tooltips", "kind": "Measure" }
+    ],
+    "objects": {
+        "mapa": {
+            "properties": {
+                "corMin": { "type": { "fill": { "solid": { "color": true } } } },
+                "corMeio": { "type": { "fill": { "solid": { "color": true } } } },
+                "corMax": { "type": { "fill": { "solid": { "color": true } } } },
+                "corSemDados": { "type": { "fill": { "solid": { "color": true } } } },
+                "alturaMax": { "type": { "numeric": true } },
+                "escalaRaiz": { "type": { "bool": true } },
+                "rotulos": { "type": { "bool": true } },
+                "legenda": { "type": { "bool": true } },
+                "autoRotacao": { "type": { "bool": true } }
+            }
+        }
+    },
+    "dataViewMappings": [
+        {
+            "conditions": [ { "estado": { "max": 1 }, "altura": { "max": 1 }, "cor": { "max": 1 } } ],
+            "categorical": {
+                "categories": {
+                    "for": { "in": "estado" },
+                    "dataReductionAlgorithm": { "top": { "count": 100 } }
+                },
+                "values": {
+                    "select": [
+                        { "bind": { "to": "altura" } },
+                        { "bind": { "to": "cor" } },
+                        { "bind": { "to": "tooltips" } }
+                    ]
+                }
+            }
+        }
+    ],
+    "tooltips": {
+        "supportedTypes": { "default": true, "canvas": true },
+        "roles": [ "tooltips" ]
+    },
+    "supportsLandingPage": true,
+    "supportsEmptyDataView": true,
+    "privileges": []
+}

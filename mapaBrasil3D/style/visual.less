@@ -1,0 +1,38 @@
+.mapa3d {
+    position: relative;
+    overflow: hidden;
+    font-family: "Segoe UI", wf_segoe-ui_normal, helvetica, arial, sans-serif;
+
+    canvas {
+        display: block;
+        cursor: grab;
+        touch-action: none;
+
+        &:active { cursor: grabbing; }
+    }
+
+    .legenda {
+        position: absolute;
+        left: 12px;
+        bottom: 10px;
+        width: 150px;
+        pointer-events: none;
+        color: #64748B;
+        font-size: 10px;
+
+        .titulo { color: #1B2A4A; font-weight: 600; margin-bottom: 4px; }
+        .barra { height: 8px; border-radius: 4px; }
+        .escala { display: flex; justify-content: space-between; margin-top: 2px; }
+    }
+
+    .aviso {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        color: #64748B;
+        font-size: 11px;
+        pointer-events: none;
+    }
+}
