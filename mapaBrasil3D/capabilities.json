@@ -16,6 +16,7 @@
                 "escalaRaiz": { "type": { "bool": true } },
                 "rotulos": { "type": { "bool": true } },
                 "legenda": { "type": { "bool": true } },
+                "permitirZoom": { "type": { "bool": true } },
                 "autoRotacao": { "type": { "bool": true } }
             }
         }

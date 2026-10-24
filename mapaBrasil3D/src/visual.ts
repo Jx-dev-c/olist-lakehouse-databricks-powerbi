@@ -68,6 +68,7 @@ export class Visual implements IVisual {
     private quadro = 0;
     private hover: Estado | null = null;
     private ponteiroInicio: { x: number; y: number } | null = null;
+    private cliquePendente = 0;
 
     private legenda: HTMLElement;
     private aviso: HTMLElement;
@@ -99,6 +100,9 @@ export class Visual implements IVisual {
         this.controls.minDistance = 12;
         this.controls.maxDistance = 160;
         this.controls.autoRotateSpeed = 0.6;
+        this.controls.enablePan = false;
+        // a roda do mouse rola a página do relatório; zoom só quando o autor do relatório liga a opção
+        this.controls.enableZoom = false;
 
         this.ligarEventos();
         this.animar();
@@ -223,6 +227,11 @@ export class Visual implements IVisual {
             if (options.type & powerbi.VisualUpdateType.Resize || !this.inicioAnimacao) this.enquadrar();
 
             this.controls.autoRotate = cfg.autoRotacao.value;
+            this.controls.enableZoom = cfg.permitirZoom.value;
+            // giro limitado a ±70° para o mapa nunca ficar "de cabeça para baixo" (sem limite na rotação automática)
+            const giro = cfg.autoRotacao.value ? Infinity : THREE.MathUtils.degToRad(70);
+            this.controls.minAzimuthAngle = -giro;
+            this.controls.maxAzimuthAngle = giro;
 
             const dados = this.lerDados(dataView);
             this.aviso.style.display = dados.size ? "none" : "block";
@@ -315,17 +324,25 @@ export class Visual implements IVisual {
         const canvas = this.renderer.domElement;
         canvas.addEventListener("pointerdown", e => { this.ponteiroInicio = { x: e.clientX, y: e.clientY }; });
         canvas.addEventListener("pointermove", e => this.aoMover(e));
+        canvas.addEventListener("dblclick", () => {   // recentraliza a câmera (e cancela o clique simples pendente)
+            clearTimeout(this.cliquePendente);
+            this.enquadrar();
+        });
         canvas.addEventListener("pointerleave", () => this.esconderDica());
         canvas.addEventListener("pointerup", e => {
             const ini = this.ponteiroInicio;
             this.ponteiroInicio = null;
             if (!ini || Math.hypot(e.clientX - ini.x, e.clientY - ini.y) > 5) return;   // foi arraste, não clique
             const alvo = this.estadoEm(e);
-            if (alvo?.dado) {
-                this.selectionManager.select(alvo.dado.selectionId, e.ctrlKey || e.metaKey).then(() => this.aplicarSelecao());
-            } else {
-                this.selectionManager.clear().then(() => this.aplicarSelecao());
-            }
+            const multi = e.ctrlKey || e.metaKey;
+            clearTimeout(this.cliquePendente);
+            this.cliquePendente = window.setTimeout(() => {
+                if (alvo?.dado) {
+                    this.selectionManager.select(alvo.dado.selectionId, multi).then(() => this.aplicarSelecao());
+                } else {
+                    this.selectionManager.clear().then(() => this.aplicarSelecao());
+                }
+            }, 250);
         });
         canvas.addEventListener("contextmenu", e => {
             e.preventDefault();
@@ -382,10 +399,12 @@ export class Visual implements IVisual {
         const fovH = 2 * Math.atan(Math.tan(fovV / 2) * this.camera.aspect);
         const distancia = this.raio * 0.72 / Math.sin(Math.min(fovV, fovH) / 2);
         const direcao = new THREE.Vector3(0, 0.78, 0.63).normalize();
+        // sem amortecimento, update() consome a inércia restante de um arraste; senão o mapa continuaria girando após o reset
+        if (this.controls) { this.controls.enableDamping = false; this.controls.update(); }
         this.camera.position.copy(this.centro).addScaledVector(direcao, distancia);
         this.controls?.target.copy(this.centro);
         this.camera.lookAt(this.centro);
-        this.controls?.update();
+        if (this.controls) { this.controls.update(); this.controls.enableDamping = true; }
     }
 
     private animar = () => {

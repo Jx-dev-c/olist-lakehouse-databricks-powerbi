@@ -56,6 +56,9 @@ const host = {
   tooltipService: { show: o => log(o.dataItems.map(d => `${d.displayName}: ${d.value}`).join(" · ")), move() {}, hide() {} }
 };
 
+// ?w=300&h=380 simula o tamanho do card no relatório
+const params = new URLSearchParams(location.search);
+if (params.get("w")) Object.assign(document.querySelector(".card").style, { right: "auto", bottom: "auto", width: params.get("w") + "px", height: params.get("h") + "px" });
 const el = document.getElementById("visual");
 const visual = mapaBrasil3D827903E2CA9841A79D4FD691E907173A.default.create({ element: el, host });
 let objetos = {};
