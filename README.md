@@ -57,10 +57,10 @@ erDiagram
 
 ## Principais insights
 
-Período analisado: jan/2017 a ago/2018. São 99 mil pedidos, R$ 15,9 milhões em receita e ticket médio de R$ 160,91.
+Período analisado: jan/2017 a ago/2018. São 98 mil pedidos com itens, R$ 15,8 milhões em receita (preço + frete, mesma definição do dashboard) e ticket médio de R$ 160,51.
 
 - ⭐ **O atraso é o que mais derruba a satisfação.** Pedidos no prazo têm nota média **4,29**; atrasados, **2,27**. A partir de 6 dias de atraso, **78%** das avaliações são negativas (1–2 estrelas), contra 10% nas entregas no prazo.
-- 📦 **6,8% das entregas atrasam, mas o prazo prometido é muito folgado.** A entrega real leva em média **12,5 dias** contra **24,3 prometidos**. Mesmo assim, o atraso se concentra no Nordeste e no RJ: **MA (17,4%)**, CE (13,8%), BA (12,2%) e RJ (12,1%), o dobro da média nacional.
+- 📦 **6,8% das entregas atrasam, mas o prazo prometido é muito folgado.** A entrega real leva em média **12,5 dias** contra **24,3 prometidos**. Mesmo assim, o atraso se concentra no Nordeste e no RJ. Entre os estados com 500+ pedidos: **MA (17,5%)**, CE (13,8%), BA (12,2%) e RJ (12,1%), de 1,8× a 2,6× a média nacional. Sem corte mínimo, AL lidera com 21,5%, mas sobre apenas 396 pedidos.
 - 🔁 **Retenção é a maior oportunidade.** Só **3%** dos 93 mil clientes compraram mais de uma vez. O segmento RFM *Em risco (alto valor)* reúne 13,8 mil clientes que já gastaram R$ 4,2 milhões e não voltaram.
 - 🏷️ **A receita é pouco concentrada.** As 5 maiores categorias (Beleza & Saúde, Relógios & Presentes, Cama Mesa Banho, Esporte & Lazer, Informática) somam **39,8%** da receita de produtos.
 
@@ -100,6 +100,15 @@ Alternativa sem CLI: importe a pasta `notebooks/` no workspace, crie o volume pe
 
 Depois, siga o guia [`powerbi/README.md`](powerbi/README.md) para conectar o Power BI.
 
+## Visual personalizado: Mapa Brasil 3D
+
+O relatório usa um visual próprio, [`mapaBrasil3D`](mapaBrasil3D/README.md), escrito em TypeScript com **three.js**:
+- os 27 estados aparecem em 3D, com altura proporcional aos pedidos e cor pelo % de atraso;
+- animação em onda a cada mudança de filtro;
+- câmera que gira, dica de ferramenta e clique que filtra o restante da página.
+
+A geometria vem da malha oficial de UFs do IBGE. Não depende de visual pago nem tem marca d'água.
+
 ## Decisões técnicas
 
 - **Bronze toda em string.** A ingestão nunca falha por tipo inválido. A tipagem com `try_cast` na Silver transforma lixo em `NULL`, e os testes de qualidade apontam o problema.
@@ -118,7 +127,7 @@ Depois, siga o guia [`powerbi/README.md`](powerbi/README.md) para conectar o Pow
 
 ## Stack
 
-Databricks (Unity Catalog, Auto Loader, Delta Lake, Jobs, Asset Bundles, SQL Warehouse) · PySpark · Power BI (DAX) · PowerShell
+Databricks (Unity Catalog, Auto Loader, Delta Lake, Jobs, Asset Bundles, SQL Warehouse) · PySpark · Power BI (DAX, PBIP/TMDL, visual personalizado em TypeScript + three.js) · PowerShell
 
 ---
 Dados: [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (CC BY-NC-SA 4.0).

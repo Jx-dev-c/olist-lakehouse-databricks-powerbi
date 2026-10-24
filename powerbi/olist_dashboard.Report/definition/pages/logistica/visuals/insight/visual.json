@@ -43,7 +43,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "A entrega leva 12,5 dias contra 24,3 prometidos, e mesmo assim MA, CE, BA e RJ atrasam o dobro da média. O pico foi em mar/2018 (19%).",
+                    "value": "A entrega leva 12,5 dias contra 24,3 prometidos, e mesmo assim MA, CE, BA e RJ atrasam de 1,8× a 2,6× a média (estados com 500+ pedidos). O pico foi em mar/2018 (19%).",
                     "textStyle": {
                       "fontSize": "9pt",
                       "color": "#64748B"
