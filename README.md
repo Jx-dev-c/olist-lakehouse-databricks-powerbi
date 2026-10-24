@@ -4,8 +4,9 @@ Pipeline de dados ponta a ponta sobre o **e-commerce brasileiro Olist** (~100 mi
 ingestão incremental no Databricks com arquitetura medalhão, modelo estrela no Unity Catalog,
 testes de qualidade automatizados e dashboard no Power BI.
 
-![Dashboard](docs/img/dashboard.png)
-<!-- substitua pela captura de tela do seu dashboard -->
+![Olist City 3D no Power BI: cidade isométrica em three.js com um prédio por área do negócio](docs/img/olist_city_powerbi.png)
+
+*Página **Olist City 3D** do relatório: visual personalizado em three.js. Cada prédio é uma área do negócio, e os números das etiquetas, do painel e do letreiro vêm de medidas DAX.*
 
 ## Arquitetura
 
