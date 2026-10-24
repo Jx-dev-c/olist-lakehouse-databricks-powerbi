@@ -47,7 +47,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#1B2A4A'"
+                      "Value": "'#FFFFFF'"
                     }
                   }
                 }
@@ -56,7 +56,7 @@
             "transparency": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "90D"
                 }
               }
             }
@@ -79,7 +79,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#2B3C63'"
+                      "Value": "'#FFFFFF'"
                     }
                   }
                 }
@@ -88,7 +88,7 @@
             "transparency": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "78D"
                 }
               }
             }
@@ -170,7 +170,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#CBD5E1'"
+                      "Value": "'#E2E8F0'"
                     }
                   }
                 }

@@ -141,14 +141,34 @@
       "type": "RegisteredResources",
       "items": [
         {
-          "name": "fundo_base.png",
-          "path": "fundo_base.png",
-          "type": "Image"
-        },
-        {
           "name": "OlistLight.json",
           "path": "OlistLight.json",
           "type": "CustomTheme"
+        },
+        {
+          "name": "hero_visao_geral.png",
+          "path": "hero_visao_geral.png",
+          "type": "Image"
+        },
+        {
+          "name": "hero_vendas_produtos.png",
+          "path": "hero_vendas_produtos.png",
+          "type": "Image"
+        },
+        {
+          "name": "hero_logistica.png",
+          "path": "hero_logistica.png",
+          "type": "Image"
+        },
+        {
+          "name": "hero_clientes_avaliacoes.png",
+          "path": "hero_clientes_avaliacoes.png",
+          "type": "Image"
+        },
+        {
+          "name": "hero_detalhe_vendedor.png",
+          "path": "hero_detalhe_vendedor.png",
+          "type": "Image"
         }
       ]
     },

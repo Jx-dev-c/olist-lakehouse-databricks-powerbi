@@ -2,8 +2,8 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "f_periodo",
   "position": {
-    "x": 15.983350676378773,
-    "y": 95.900104058272632,
+    "x": 16,
+    "y": 232,
     "z": 200,
     "height": 155.83766909469304,
     "width": 151.84183142559834,

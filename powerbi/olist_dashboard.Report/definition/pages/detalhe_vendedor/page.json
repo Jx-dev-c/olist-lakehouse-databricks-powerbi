@@ -21,7 +21,7 @@
               "name": {
                 "expr": {
                   "Literal": {
-                    "Value": "'fundo_base.png'"
+                    "Value": "'hero_detalhe_vendedor.png'"
                   }
                 }
               },
@@ -30,7 +30,7 @@
                   "ResourcePackageItem": {
                     "PackageName": "RegisteredResources",
                     "PackageType": 1,
-                    "ItemName": "fundo_base.png"
+                    "ItemName": "hero_detalhe_vendedor.png"
                   }
                 }
               },

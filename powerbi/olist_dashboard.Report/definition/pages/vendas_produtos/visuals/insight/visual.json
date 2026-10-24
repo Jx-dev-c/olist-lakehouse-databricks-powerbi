@@ -23,7 +23,7 @@
                     "textStyle": {
                       "fontSize": "8pt",
                       "fontWeight": "bold",
-                      "color": "#2563EB"
+                      "color": "#22D3EE"
                     }
                   }
                 ]
@@ -33,9 +33,9 @@
                   {
                     "value": "20% dos vendedores = 82% da receita",
                     "textStyle": {
-                      "fontSize": "12pt",
+                      "fontSize": "13pt",
                       "fontWeight": "bold",
-                      "color": "#1B2A4A"
+                      "color": "#FFFFFF"
                     }
                   }
                 ]
@@ -46,7 +46,7 @@
                     "value": "Concentração alta: perder um grande vendedor pesa. Programa de retenção dos top sellers e de desenvolvimento da cauda longa.",
                     "textStyle": {
                       "fontSize": "9pt",
-                      "color": "#64748B"
+                      "color": "#CBD5E1"
                     }
                   }
                 ]
@@ -60,21 +60,28 @@
       "background": [
         {
           "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
             "color": {
               "solid": {
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#EFF6FF'"
+                      "Value": "'#0F1E3D'"
                     }
                   }
                 }
               }
             },
-            "show": {
+            "transparency": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "0D"
                 }
               }
             }
@@ -96,7 +103,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#BFDBFE'"
+                      "Value": "'#1E3A8A'"
                     }
                   }
                 }
@@ -140,6 +147,72 @@
               "expr": {
                 "Literal": {
                   "Value": "14D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#1E3A8A'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "70D"
+                }
+              }
+            },
+            "preset": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Custom'"
+                }
+              }
+            },
+            "shadowBlur": {
+              "expr": {
+                "Literal": {
+                  "Value": "14D"
+                }
+              }
+            },
+            "shadowDistance": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            },
+            "angle": {
+              "expr": {
+                "Literal": {
+                  "Value": "90D"
+                }
+              }
+            },
+            "position": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Outer'"
                 }
               }
             }
