@@ -6,6 +6,8 @@ testes de qualidade automatizados e dashboard no Power BI.
 
 ![Olist City 3D no Power BI: cidade isométrica em three.js com um prédio por área do negócio](docs/img/olist_city_powerbi.png)
 
+**🌐 [Abrir a Olist City ao vivo](https://jx-dev-c.github.io/olist-lakehouse-databricks-powerbi/olist-city/)**: a versão web da cidade, que roda no navegador sem instalar nada.
+
 *Página **Olist City 3D** do relatório: visual personalizado em three.js. Cada prédio é uma área do negócio, e os números das etiquetas, do painel e do letreiro vêm de medidas DAX.*
 
 ## Arquitetura
