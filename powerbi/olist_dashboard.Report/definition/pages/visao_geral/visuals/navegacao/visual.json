@@ -3,9 +3,9 @@
   "name": "navegacao",
   "position": {
     "x": 640,
-    "y": 12,
+    "y": 6,
     "z": 100,
-    "height": 32,
+    "height": 44,
     "width": 624,
     "tabOrder": 100
   },
@@ -304,6 +304,22 @@
               "expr": {
                 "Literal": {
                   "Value": "8L"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "default"
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

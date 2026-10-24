@@ -10,7 +10,7 @@
     "tabOrder": 1300
   },
   "visual": {
-    "visualType": "clusteredColumnChart",
+    "visualType": "areaChart",
     "query": {
       "queryState": {
         "Y": {
@@ -71,6 +71,43 @@
       }
     },
     "objects": {
+      "dataPoint": [
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#EF4444'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "lineStyles": [
+        {
+          "properties": {
+            "strokeWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "2L"
+                }
+              }
+            },
+            "showMarker": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
       "labels": [
         {
           "properties": {
@@ -84,20 +121,20 @@
           }
         }
       ],
-      "categoryAxis": [
+      "valueAxis": [
         {
           "properties": {
-            "preferredCategoryWidth": {
+            "show": {
               "expr": {
                 "Literal": {
-                  "Value": "12D"
+                  "Value": "true"
                 }
               }
             },
-            "innerPadding": {
+            "gridlineShow": {
               "expr": {
                 "Literal": {
-                  "Value": "25L"
+                  "Value": "false"
                 }
               }
             }

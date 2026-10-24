@@ -62,7 +62,7 @@ export class Visual implements IVisual {
     private mapa = new THREE.Group();
     private estados: Estado[] = [];
     private centro = new THREE.Vector3();
-    private raio = 1;
+    private caixa = new THREE.Box3();
 
     private inicioAnimacao = 0;
     private quadro = 0;
@@ -101,8 +101,7 @@ export class Visual implements IVisual {
         this.controls.maxDistance = 160;
         this.controls.autoRotateSpeed = 0.6;
         this.controls.enablePan = false;
-        // a roda do mouse rola a página do relatório; zoom só quando o autor do relatório liga a opção
-        this.controls.enableZoom = false;
+        this.controls.enableZoom = true;   // configurável em "Permitir zoom"; clique duplo desfaz
 
         this.ligarEventos();
         this.animar();
@@ -111,8 +110,9 @@ export class Visual implements IVisual {
     // ---------------------------------------------------------------- cena
 
     private montarCena() {
-        this.scene.add(new THREE.HemisphereLight(0xffffff, 0x94a3b8, 1.1));
-        const sol = new THREE.DirectionalLight(0xffffff, 1.9);
+        // ambiente mais baixo e sol mais forte: cores saturadas e laterais com sombra (mais volume)
+        this.scene.add(new THREE.HemisphereLight(0xffffff, 0x64748b, 0.85));
+        const sol = new THREE.DirectionalLight(0xffffff, 2.3);
         sol.position.set(-18, 40, 22);
         sol.castShadow = true;
         sol.shadow.mapSize.set(2048, 2048);
@@ -171,11 +171,10 @@ export class Visual implements IVisual {
             material.color.set(0xe2e8f0);
         }
 
-        // centro e raio do mapa, para enquadrar a câmera
-        const caixa = new THREE.Box3().setFromObject(this.mapa);
-        const esfera = caixa.getBoundingSphere(new THREE.Sphere());
-        this.centro.copy(esfera.center).setY(0);
-        this.raio = esfera.radius;
+        // caixa do mapa no mundo (com a rotação do grupo aplicada), para enquadrar a câmera
+        this.mapa.updateMatrixWorld(true);
+        this.caixa = new THREE.Box3().setFromObject(this.mapa);
+        this.caixa.getCenter(this.centro).setY(0);
     }
 
     private pontos(anel: number[]): THREE.Vector2[] {
@@ -192,9 +191,10 @@ export class Visual implements IVisual {
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.lineWidth = 8;
-        ctx.strokeStyle = "rgba(255,255,255,0.95)";
+        // texto branco com contorno escuro: legível sobre azul, violeta e vermelho saturados
+        ctx.strokeStyle = "rgba(15,23,42,0.85)";
         ctx.strokeText(texto, 64, 34);
-        ctx.fillStyle = "#1B2A4A";
+        ctx.fillStyle = "#FFFFFF";
         ctx.fillText(texto, 64, 34);
         const textura = new THREE.CanvasTexture(canvas);
         textura.colorSpace = THREE.SRGBColorSpace;
@@ -224,7 +224,7 @@ export class Visual implements IVisual {
             this.renderer.setSize(width, height);
             this.camera.aspect = width / Math.max(height, 1);
             this.camera.updateProjectionMatrix();
-            if (options.type & powerbi.VisualUpdateType.Resize || !this.inicioAnimacao) this.enquadrar();
+            const reenquadrar = !!(options.type & powerbi.VisualUpdateType.Resize) || !this.inicioAnimacao;
 
             this.controls.autoRotate = cfg.autoRotacao.value;
             this.controls.enableZoom = cfg.permitirZoom.value;
@@ -267,6 +267,7 @@ export class Visual implements IVisual {
                 }
                 e.rotulo.visible = cfg.rotulos.value;
             }
+            if (reenquadrar) this.enquadrar();   // depois das alturas finais, para o topo de SP caber no card
             this.inicioAnimacao = performance.now();
 
             this.desenharLegenda(dataView, cfg.legenda.value && cores.length > 0, minCor, maxCor, [corMin, corMeio, corMax]);
@@ -394,13 +395,31 @@ export class Visual implements IVisual {
     // ---------------------------------------------------------------- câmera e animação
 
     private enquadrar() {
-        // câmera ao sul, olhando para o mapa a ~50°; distância calculada para o mapa caber na menor dimensão
-        const fovV = THREE.MathUtils.degToRad(this.camera.fov);
-        const fovH = 2 * Math.atan(Math.tan(fovV / 2) * this.camera.aspect);
-        const distancia = this.raio * 0.72 / Math.sin(Math.min(fovV, fovH) / 2);
-        const direcao = new THREE.Vector3(0, 0.78, 0.63).normalize();
+        // câmera ao sul, inclinada ~45° (as alturas aparecem); a distância é ajustada até os cantos do mapa
+        // (com a altura máxima) ocuparem ~94% do card na dimensão mais apertada
+        const direcao = new THREE.Vector3(0, 0.7, 0.71).normalize();
+        // contorno real dos estados (base e topo na altura final); os cantos da caixa sobrariam, o Sul é estreito
+        const cantos: THREE.Vector3[] = [];
+        for (const e of this.estados) for (const aneis of e.geo.poligonos) {
+            const anel = aneis[0];
+            for (let i = 0; i < anel.length; i += 6) {
+                cantos.push(new THREE.Vector3(anel[i], 0, -anel[i + 1]), new THREE.Vector3(anel[i], e.alturaPara, -anel[i + 1]));
+            }
+        }
+
         // sem amortecimento, update() consome a inércia restante de um arraste; senão o mapa continuaria girando após o reset
         if (this.controls) { this.controls.enableDamping = false; this.controls.update(); }
+        let distancia = 60;
+        for (let i = 0; i < 4; i++) {
+            this.camera.position.copy(this.centro).addScaledVector(direcao, distancia);
+            this.camera.lookAt(this.centro);
+            this.camera.updateMatrixWorld(true);
+            const extensao = Math.max(...cantos.map(c => {
+                const p = c.clone().project(this.camera);
+                return Math.max(Math.abs(p.x), Math.abs(p.y));
+            }));
+            distancia *= extensao / 0.94;
+        }
         this.camera.position.copy(this.centro).addScaledVector(direcao, distancia);
         this.controls?.target.copy(this.centro);
         this.camera.lookAt(this.centro);
