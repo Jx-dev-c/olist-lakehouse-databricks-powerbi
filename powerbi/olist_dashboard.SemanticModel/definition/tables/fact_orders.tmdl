@@ -201,14 +201,17 @@ table fact_orders
 	/// Faixa de pontualidade da entrega (prefixo numérico garante a ordem no eixo)
 	column faixa_entrega = SWITCH ( TRUE (), fact_orders[is_delivered] = FALSE (), "6. Não entregue", fact_orders[delay_days] <= -10, "1. 10+ dias adiantado", fact_orders[delay_days] <= 0, "2. No prazo", fact_orders[delay_days] <= 5, "3. 1–5 dias de atraso", fact_orders[delay_days] <= 15, "4. 6–15 dias de atraso", "5. 15+ dias de atraso" )
 		dataType: string
+		lineageTag: d482b6f5-97db-4240-8a2d-375ba1bd5191
 		summarizeBy: none
 
 	column forma_pagamento = SWITCH ( fact_orders[main_payment_type], "credit_card", "Cartão de crédito", "boleto", "Boleto", "voucher", "Voucher", "debit_card", "Cartão de débito", "Outros" )
 		dataType: string
+		lineageTag: 63b6490e-4cb6-43f8-81f6-976883af3b16
 		summarizeBy: none
 
 	column faixa_parcelas = SWITCH ( TRUE (), fact_orders[installments] <= 1, "1. À vista", fact_orders[installments] <= 3, "2. 2–3x", fact_orders[installments] <= 6, "3. 4–6x", fact_orders[installments] <= 10, "4. 7–10x", "5. 11x ou mais" )
 		dataType: string
+		lineageTag: 328c88fe-e3d6-473a-8ede-5337131c3a35
 		summarizeBy: none
 
 	partition fact_orders = m

@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "kpi_0_delta",
   "position": {
-    "x": 208.0,
+    "x": 208,
     "y": 144,
     "z": 800,
     "height": 28,
-    "width": 184.0,
+    "width": 184,
     "tabOrder": 800
   },
   "visual": {

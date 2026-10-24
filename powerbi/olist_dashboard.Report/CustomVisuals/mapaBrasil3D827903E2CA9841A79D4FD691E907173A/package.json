@@ -1,0 +1,29 @@
+{
+  "version": "1.0.1.0",
+  "author": {
+    "name": "João Batista",
+    "email": "joaobatistademacedojunior97@gmail.com"
+  },
+  "resources": [
+    {
+      "resourceId": "rId0",
+      "sourceType": 5,
+      "file": "resources/mapaBrasil3D827903E2CA9841A79D4FD691E907173A.pbiviz.json"
+    }
+  ],
+  "visual": {
+    "guid": "mapaBrasil3D827903E2CA9841A79D4FD691E907173A",
+    "name": "mapaBrasil3D",
+    "displayName": "Mapa Brasil 3D",
+    "version": "1.0.1.0",
+    "description": "Mapa 3D dos estados brasileiros (three.js): altura e cor por medida, com animação, rotação, dicas de ferramenta e filtro cruzado.",
+    "supportUrl": "https://github.com/",
+    "gitHubUrl": "",
+    "visualClassName": "Visual"
+  },
+  "metadata": {
+    "pbivizjson": {
+      "resourceId": "rId0"
+    }
+  }
+}

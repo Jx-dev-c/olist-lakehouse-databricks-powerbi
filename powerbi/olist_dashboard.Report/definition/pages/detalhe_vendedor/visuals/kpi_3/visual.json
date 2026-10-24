@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "kpi_3",
   "position": {
-    "x": 1018.0,
+    "x": 1018,
     "y": 76,
     "z": 400,
     "height": 96,
-    "width": 238.0,
+    "width": 238,
     "tabOrder": 400
   },
   "visual": {

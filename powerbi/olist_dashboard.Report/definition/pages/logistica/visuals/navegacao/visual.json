@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "navegacao",
   "position": {
-    "x": 640,
-    "y": 12,
+    "x": 640.66597294484916,
+    "y": 11.987513007284079,
     "z": 100,
-    "height": 32,
-    "width": 624,
+    "height": 50.613943808532781,
+    "width": 623.35067637877216,
     "tabOrder": 100
   },
   "visual": {

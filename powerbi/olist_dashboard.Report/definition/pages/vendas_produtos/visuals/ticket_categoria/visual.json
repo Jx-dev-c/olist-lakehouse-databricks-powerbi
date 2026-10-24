@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "ticket_categoria",
   "position": {
     "x": 632,
@@ -13,21 +13,22 @@
     "visualType": "scatterChart",
     "query": {
       "queryState": {
-        "Y": {
+        "Category": {
           "projections": [
             {
               "field": {
-                "Measure": {
+                "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "_Medidas"
+                      "Entity": "dim_product"
                     }
                   },
-                  "Property": "Ticket Médio"
+                  "Property": "category_pt"
                 }
               },
-              "queryRef": "_Medidas.Ticket Médio",
-              "nativeQueryRef": "Ticket Médio"
+              "queryRef": "dim_product.category_pt",
+              "nativeQueryRef": "category_pt",
+              "active": true
             }
           ]
         },
@@ -45,26 +46,26 @@
                 }
               },
               "queryRef": "_Medidas.Receita",
-              "nativeQueryRef": "Receita"
+              "nativeQueryRef": "Receita",
+              "active": true
             }
           ]
         },
-        "Category": {
+        "Y": {
           "projections": [
             {
               "field": {
-                "Column": {
+                "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "dim_product"
+                      "Entity": "_Medidas"
                     }
                   },
-                  "Property": "category_pt"
+                  "Property": "Ticket Médio"
                 }
               },
-              "queryRef": "dim_product.category_pt",
-              "nativeQueryRef": "category_pt",
-              "active": true
+              "queryRef": "_Medidas.Ticket Médio",
+              "nativeQueryRef": "Ticket Médio"
             }
           ]
         }

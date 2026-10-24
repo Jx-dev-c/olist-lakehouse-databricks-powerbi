@@ -2,43 +2,84 @@
 /// TREATAS leva o filtro de uma para a outra, então categoria/vendedor (itens) e pagamento/status (pedidos)
 /// filtram todas as medidas.
 table _Medidas
+	lineageTag: e31df32b-a77d-48d2-b2df-8691fa519dac
 
 	/// Preço + frete dos itens. Responde a filtros de dimensões e de colunas de fact_orders.
 	measure Receita = CALCULATE ( SUM ( fact_order_items[total_value] ), TREATAS ( VALUES ( fact_orders[order_id] ), fact_order_items[order_id] ) )
 		formatString: "R$" #,0
 		displayFolder: 1. Vendas
-
-	measure 'Receita Produtos' = CALCULATE ( SUM ( fact_order_items[price] ), TREATAS ( VALUES ( fact_orders[order_id] ), fact_order_items[order_id] ) )
-		formatString: "R$" #,0
-		displayFolder: 1. Vendas
-
-	measure Frete = CALCULATE ( SUM ( fact_order_items[freight_value] ), TREATAS ( VALUES ( fact_orders[order_id] ), fact_order_items[order_id] ) )
-		formatString: "R$" #,0
-		displayFolder: 1. Vendas
-
-	measure 'Frete % da Receita' = DIVIDE ( [Frete], [Receita] )
-		formatString: 0.0%
-		displayFolder: 1. Vendas
+		lineageTag: 2d0a6009-9f1c-48e4-beef-3bc2379c4588
 
 	measure Pedidos = CALCULATE ( DISTINCTCOUNT ( fact_orders[order_id] ), TREATAS ( VALUES ( fact_order_items[order_id] ), fact_orders[order_id] ) )
 		formatString: #,0
 		displayFolder: 1. Vendas
+		lineageTag: 86701da5-9ceb-4792-a9c5-092f5e2ce362
 
 	measure 'Ticket Médio' = DIVIDE ( [Receita], [Pedidos] )
 		formatString: "R$" #,0.00
 		displayFolder: 1. Vendas
-
-	measure 'Itens por Pedido' = DIVIDE ( CALCULATE ( COUNTROWS ( fact_order_items ), TREATAS ( VALUES ( fact_orders[order_id] ), fact_order_items[order_id] ) ), [Pedidos] )
-		formatString: 0.00
-		displayFolder: 1. Vendas
+		lineageTag: b8228336-a7ca-4f65-98e4-df125d512432
 
 	measure 'Clientes Únicos' = COUNTROWS ( SUMMARIZE ( CALCULATETABLE ( fact_order_items, TREATAS ( VALUES ( fact_orders[order_id] ), fact_order_items[order_id] ) ), dim_customer[customer_unique_id] ) )
 		formatString: #,0
 		displayFolder: 1. Vendas
+		lineageTag: b74e1609-3ef3-4cac-9112-cccc5913b1ac
+
+	measure 'Receita Produtos' = CALCULATE ( SUM ( fact_order_items[price] ), TREATAS ( VALUES ( fact_orders[order_id] ), fact_order_items[order_id] ) )
+		formatString: "R$" #,0
+		displayFolder: 1. Vendas
+		lineageTag: 49ce369c-1b8e-4747-ba37-771a66b18cc2
+
+	measure 'Pedidos Entregues' = CALCULATE ( [Pedidos], fact_orders[is_delivered] = TRUE () )
+		formatString: #,0
+		displayFolder: 3. Logística
+		lineageTag: 06e81823-90c9-4d5d-808a-4cee40e207c4
+
+	measure 'Nota Média' = CALCULATE ( AVERAGE ( fact_orders[review_score] ), TREATAS ( VALUES ( fact_order_items[order_id] ), fact_orders[order_id] ) )
+		formatString: 0.00
+		displayFolder: 4. Satisfação
+		lineageTag: dece4c35-ed9f-4ffb-876d-dae645d48060
+
+	measure '% Avaliações Negativas' = DIVIDE ( CALCULATE ( [Avaliações], fact_orders[review_score] <= 2 ), [Avaliações] )
+		formatString: 0.0%
+		displayFolder: 4. Satisfação
+		lineageTag: eaffe398-968d-4561-8458-a21805a49c4e
+
+	measure 'Nota Média - Atrasados' = CALCULATE ( [Nota Média], fact_orders[is_late] = TRUE () )
+		formatString: 0.00
+		displayFolder: 4. Satisfação
+		lineageTag: 16b96754-c576-41c4-b4fc-a0b026f3d398
+
+	measure 'Nota Média - No Prazo' = CALCULATE ( [Nota Média], fact_orders[is_late] = FALSE () )
+		formatString: 0.00
+		displayFolder: 4. Satisfação
+		lineageTag: 47d3dafb-c238-45ed-9ab2-f3bb34786af1
+
+	/// Segmentação RFM: retrato da base inteira, não responde ao filtro de período
+	measure 'Clientes RFM' = COUNTROWS ( customer_rfm )
+		formatString: #,0
+		displayFolder: 5. Clientes
+		lineageTag: ae26bb9e-048f-4c1c-a6c0-3b6a74de248f
+
+	measure Frete = CALCULATE ( SUM ( fact_order_items[freight_value] ), TREATAS ( VALUES ( fact_orders[order_id] ), fact_order_items[order_id] ) )
+		formatString: "R$" #,0
+		displayFolder: 1. Vendas
+		lineageTag: 3b64ee5e-ffc9-4b03-9b8c-b66585a77938
+
+	measure 'Frete % da Receita' = DIVIDE ( [Frete], [Receita] )
+		formatString: 0.0%
+		displayFolder: 1. Vendas
+		lineageTag: 0e9c1973-e4f8-44e0-92f5-2c1d8f3e0107
+
+	measure 'Itens por Pedido' = DIVIDE ( CALCULATE ( COUNTROWS ( fact_order_items ), TREATAS ( VALUES ( fact_orders[order_id] ), fact_order_items[order_id] ) ), [Pedidos] )
+		formatString: 0.00
+		displayFolder: 1. Vendas
+		lineageTag: bb93c95c-ccfc-4b95-8963-a12cf8194e29
 
 	measure 'Vendedores Ativos' = DISTINCTCOUNT ( fact_order_items[seller_id] )
 		formatString: #,0
 		displayFolder: 2. Vendedores
+		lineageTag: 1bcefdbf-e340-479e-a1ca-847257951a3c
 
 	/// Curva de Pareto: receita acumulada dos vendedores com receita >= à do vendedor atual
 	measure '% Receita Acumulada' =
@@ -48,6 +89,7 @@ table _Medidas
 			RETURN DIVIDE ( acumulado, SUMX ( vendedores, [@receita] ) )
 		formatString: 0%
 		displayFolder: 2. Vendedores
+		lineageTag: 034a1aee-d511-4b19-923b-f00159542570
 
 	measure '% Receita Top 20% Vendedores' =
 			VAR vendedores = CALCULATETABLE ( ADDCOLUMNS ( VALUES ( fact_order_items[seller_id] ), "@receita", [Receita] ), REMOVEFILTERS ( dim_seller ) )
@@ -55,55 +97,43 @@ table _Medidas
 			RETURN DIVIDE ( SUMX ( topo, [@receita] ), SUMX ( vendedores, [@receita] ) )
 		formatString: 0.0%
 		displayFolder: 2. Vendedores
-
-	measure 'Pedidos Entregues' = CALCULATE ( [Pedidos], fact_orders[is_delivered] = TRUE () )
-		formatString: #,0
-		displayFolder: 3. Logística
+		lineageTag: 564cb779-ea10-4824-b369-292337eb9f97
 
 	/// Entregue depois da data prometida ao cliente
 	measure '% Atraso' = DIVIDE ( CALCULATE ( [Pedidos], fact_orders[is_late] = TRUE () ), [Pedidos Entregues] )
 		formatString: 0.0%
 		displayFolder: 3. Logística
+		lineageTag: 855da71a-6068-4b06-b7d0-410f92d31165
 
 	measure '% No Prazo' = 1 - [% Atraso]
 		formatString: 0.0%
 		displayFolder: 3. Logística
+		lineageTag: 1b6afa1c-7580-4395-aca4-ff69b966a804
 
 	measure 'Tempo Médio de Entrega (dias)' = CALCULATE ( AVERAGE ( fact_orders[delivery_days] ), fact_orders[is_delivered] = TRUE (), TREATAS ( VALUES ( fact_order_items[order_id] ), fact_orders[order_id] ) )
 		formatString: 0.0
 		displayFolder: 3. Logística
+		lineageTag: 619d4815-d02a-4432-9abe-faea07cf6d93
 
 	measure 'Prazo Estimado (dias)' = CALCULATE ( AVERAGE ( fact_orders[estimated_days] ), fact_orders[is_delivered] = TRUE (), TREATAS ( VALUES ( fact_order_items[order_id] ), fact_orders[order_id] ) )
 		formatString: 0.0
 		displayFolder: 3. Logística
+		lineageTag: 6151955c-700d-414b-83dd-2d8fb23aae01
 
 	measure 'Folga Média (dias)' = [Prazo Estimado (dias)] - [Tempo Médio de Entrega (dias)]
 		formatString: 0.0
 		displayFolder: 3. Logística
+		lineageTag: 3761d5d3-6621-45de-933b-17fa23ad00f7
 
 	measure 'Atraso Médio dos Atrasados (dias)' = CALCULATE ( AVERAGE ( fact_orders[delay_days] ), fact_orders[is_late] = TRUE (), TREATAS ( VALUES ( fact_order_items[order_id] ), fact_orders[order_id] ) )
 		formatString: 0.0
 		displayFolder: 3. Logística
+		lineageTag: cc97de92-0dd1-4825-86f1-2b80feb79314
 
 	measure Avaliações = CALCULATE ( COUNT ( fact_orders[review_score] ), TREATAS ( VALUES ( fact_order_items[order_id] ), fact_orders[order_id] ) )
 		formatString: #,0
 		displayFolder: 4. Satisfação
-
-	measure 'Nota Média' = CALCULATE ( AVERAGE ( fact_orders[review_score] ), TREATAS ( VALUES ( fact_order_items[order_id] ), fact_orders[order_id] ) )
-		formatString: 0.00
-		displayFolder: 4. Satisfação
-
-	measure '% Avaliações Negativas' = DIVIDE ( CALCULATE ( [Avaliações], fact_orders[review_score] <= 2 ), [Avaliações] )
-		formatString: 0.0%
-		displayFolder: 4. Satisfação
-
-	measure 'Nota Média - No Prazo' = CALCULATE ( [Nota Média], fact_orders[is_late] = FALSE () )
-		formatString: 0.00
-		displayFolder: 4. Satisfação
-
-	measure 'Nota Média - Atrasados' = CALCULATE ( [Nota Média], fact_orders[is_late] = TRUE () )
-		formatString: 0.00
-		displayFolder: 4. Satisfação
+		lineageTag: 2414f185-1df8-4d7d-8941-339f7ddd778c
 
 	/// Clientes (customer_unique_id) com 2+ pedidos no contexto filtrado
 	measure '% Recompra' =
@@ -111,22 +141,21 @@ table _Medidas
 			RETURN DIVIDE ( COUNTROWS ( FILTER ( clientes, [@pedidos] >= 2 ) ), COUNTROWS ( clientes ) )
 		formatString: 0.0%
 		displayFolder: 5. Clientes
-
-	/// Segmentação RFM: retrato da base inteira, não responde ao filtro de período
-	measure 'Clientes RFM' = COUNTROWS ( customer_rfm )
-		formatString: #,0
-		displayFolder: 5. Clientes
+		lineageTag: 0c8d59ad-8d4f-498f-b357-ea4b9f7a3714
 
 	measure 'Receita Clientes RFM' = SUM ( customer_rfm[monetary] )
 		formatString: "R$" #,0
 		displayFolder: 5. Clientes
+		lineageTag: e934f8f6-746c-4055-83df-a4a1c8078a48
 
 	/// Último mês com vendas no contexto e o mês anterior a ele (base dos cards de variação)
 	measure 'Mês de Referência' = FORMAT ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), "mmm/yy" )
 		displayFolder: 6. Variação mensal
+		lineageTag: 95276943-0892-49a1-a0ed-422ff28f7988
 
 	measure 'Mês Anterior' = FORMAT ( EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), -1 ), "mmm/yy" )
 		displayFolder: 6. Variação mensal
+		lineageTag: c122a388-226d-4f44-83e3-c9e865bde35d
 
 	measure 'Receita Δ%' =
 			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
@@ -135,6 +164,7 @@ table _Medidas
 			RETURN DIVIDE ( atual - anterior, anterior )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 6. Variação mensal
+		lineageTag: dd8efd5c-5f50-43b8-8a43-63d9c077eacf
 
 	measure 'Pedidos Δ%' =
 			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
@@ -143,6 +173,7 @@ table _Medidas
 			RETURN DIVIDE ( atual - anterior, anterior )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 6. Variação mensal
+		lineageTag: 1e2b0d9a-3b77-423f-9300-7704f45e4b82
 
 	measure 'Ticket Médio Δ%' =
 			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
@@ -151,6 +182,7 @@ table _Medidas
 			RETURN DIVIDE ( atual - anterior, anterior )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 6. Variação mensal
+		lineageTag: 0c14f2f6-a4b4-4466-8fb9-c5eb8c70b1ef
 
 	/// Nota: diferença absoluta em pontos (escala 1 a 5)
 	measure 'Nota Média Δ' =
@@ -160,6 +192,7 @@ table _Medidas
 			RETURN IF ( NOT ISBLANK ( anterior ), atual - anterior )
 		formatString: +0.00;-0.00;0.00
 		displayFolder: 6. Variação mensal
+		lineageTag: 80cc271a-8e40-4c50-b81b-f71a47dfe397
 
 	/// % Atraso: diferença em pontos percentuais
 	measure '% Atraso Δ' =
@@ -169,51 +202,63 @@ table _Medidas
 			RETURN IF ( NOT ISBLANK ( anterior ), atual - anterior )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 6. Variação mensal
+		lineageTag: a3c91eae-154a-426e-87c2-0fcea7e9019c
 
 	measure 'Receita Δ Texto' =
 			VAR d = [Receita Δ%]
 			RETURN IF ( NOT ISBLANK ( d ), IF ( d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( d ), "0.0%" ) & "  vs " & [Mês Anterior] )
 		displayFolder: 6. Variação mensal
+		lineageTag: 0bb3d880-c667-41eb-a03e-255b7cacc4a8
 
 	measure 'Pedidos Δ Texto' =
 			VAR d = [Pedidos Δ%]
 			RETURN IF ( NOT ISBLANK ( d ), IF ( d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( d ), "0.0%" ) & "  vs " & [Mês Anterior] )
 		displayFolder: 6. Variação mensal
+		lineageTag: bab50613-4108-48b1-82bb-1b8324c1dbfc
 
 	measure 'Ticket Médio Δ Texto' =
 			VAR d = [Ticket Médio Δ%]
 			RETURN IF ( NOT ISBLANK ( d ), IF ( d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( d ), "0.0%" ) & "  vs " & [Mês Anterior] )
 		displayFolder: 6. Variação mensal
+		lineageTag: a6f1c842-03b6-4424-8872-d7c47b78c2df
 
 	measure 'Nota Média Δ Texto' =
 			VAR d = [Nota Média Δ]
 			RETURN IF ( NOT ISBLANK ( d ), IF ( d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( d ), "0.00" ) & " pts  vs " & [Mês Anterior] )
 		displayFolder: 6. Variação mensal
+		lineageTag: 4b142cfd-450b-42c9-a84c-ae9ea5f528d8
 
 	measure '% Atraso Δ Texto' =
 			VAR d = [% Atraso Δ]
 			RETURN IF ( NOT ISBLANK ( d ), IF ( d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( d ) * 100, "0.0" ) & " p.p.  vs " & [Mês Anterior] )
 		displayFolder: 6. Variação mensal
+		lineageTag: 02612349-1e66-4712-9ae1-1a2586de93bb
 
 	measure 'Receita Δ Cor' = IF ( [Receita Δ%] >= 0, "#10B981", "#EF4444" )
 		displayFolder: 6. Variação mensal
+		lineageTag: 7b381670-3498-4d39-8cb5-9612850b76ae
 
 	measure 'Pedidos Δ Cor' = IF ( [Pedidos Δ%] >= 0, "#10B981", "#EF4444" )
 		displayFolder: 6. Variação mensal
+		lineageTag: cc65ad82-8fe7-40db-9e28-b744a816924d
 
 	measure 'Ticket Médio Δ Cor' = IF ( [Ticket Médio Δ%] >= 0, "#10B981", "#EF4444" )
 		displayFolder: 6. Variação mensal
+		lineageTag: 817a9d20-7ff9-4903-bd81-254ada09b408
 
 	measure 'Nota Média Δ Cor' = IF ( [Nota Média Δ] >= 0, "#10B981", "#EF4444" )
 		displayFolder: 6. Variação mensal
+		lineageTag: c0bff338-4683-4f33-ae34-7bc63d089a3b
 
 	/// Para atraso, subir é ruim: a cor é invertida
 	measure '% Atraso Δ Cor' = IF ( [% Atraso Δ] <= 0, "#10B981", "#EF4444" )
 		displayFolder: 6. Variação mensal
+		lineageTag: e96708e8-0a73-4225-abf0-70ad9e102b23
 
 	column Coluna
 		dataType: string
 		isHidden
+		lineageTag: a4f50cdb-6854-44ce-9259-dbc6a9454780
 		summarizeBy: none
 		isNameInferred
 		sourceColumn: [Coluna]
