@@ -106,12 +106,7 @@
         ],
         "subTitle": [
           {
-            "fontColor": {
-              "solid": {
-                "color": "#64748B"
-              }
-            },
-            "fontSize": 9
+            "show": false
           }
         ],
         "visualHeader": [

@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "9ceee320fe2325a4d074",
   "position": {
-    "x": 857.77315296566087,
-    "y": 193.1321540062435,
+    "x": 864,
+    "y": 192,
     "z": 1401,
-    "height": 510.13527575442248,
-    "width": 406.24349635796051,
+    "height": 512,
+    "width": 400,
     "tabOrder": 1401
   },
   "visual": {
@@ -118,62 +118,6 @@
         ],
         "isDefaultSort": true
       }
-    },
-    "objects": {
-      "mapa": [
-        {
-          "properties": {
-            "corMin": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#2563EB'"
-                    }
-                  }
-                }
-              }
-            },
-            "corMeio": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "ThemeDataColor": {
-                      "ColorId": 2,
-                      "Percent": 0.2
-                    }
-                  }
-                }
-              }
-            },
-            "corMax": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#EF4444'"
-                    }
-                  }
-                }
-              }
-            },
-            "alturaMax": {
-              "expr": {
-                "Literal": {
-                  "Value": "6D"
-                }
-              }
-            },
-            "autoRotacao": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ]
     },
     "visualContainerObjects": {
       "title": [
