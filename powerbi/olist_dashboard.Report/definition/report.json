@@ -141,14 +141,14 @@
       "type": "RegisteredResources",
       "items": [
         {
-          "name": "OlistLight.json",
-          "path": "OlistLight.json",
-          "type": "CustomTheme"
-        },
-        {
           "name": "fundo_base.png",
           "path": "fundo_base.png",
           "type": "Image"
+        },
+        {
+          "name": "OlistLight.json",
+          "path": "OlistLight.json",
+          "type": "CustomTheme"
         }
       ]
     },

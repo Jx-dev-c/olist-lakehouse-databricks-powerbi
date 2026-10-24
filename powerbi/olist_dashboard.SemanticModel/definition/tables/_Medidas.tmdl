@@ -258,50 +258,62 @@ table _Medidas
 	/// Minigráfico do Cartão KPI: valor de cada mês do período filtrado, separados por ";"
 	measure 'Receita Série' = CONCATENATEX ( ADDCOLUMNS ( SUMMARIZE ( ALLSELECTED ( dim_date ), dim_date[year_month] ), "@v", [Receita] ), FORMAT ( [@v], "0.######", "en-US" ), ";", dim_date[year_month], ASC )
 		displayFolder: 7. Séries (minigráficos)
+		lineageTag: 74f2808f-d922-4d7d-947b-750f164dd87b
 
 	/// Minigráfico do Cartão KPI: valor de cada mês do período filtrado, separados por ";"
 	measure 'Pedidos Série' = CONCATENATEX ( ADDCOLUMNS ( SUMMARIZE ( ALLSELECTED ( dim_date ), dim_date[year_month] ), "@v", [Pedidos] ), FORMAT ( [@v], "0.######", "en-US" ), ";", dim_date[year_month], ASC )
 		displayFolder: 7. Séries (minigráficos)
+		lineageTag: 657bcf96-678f-444c-91de-acacf053cf67
 
 	/// Minigráfico do Cartão KPI: valor de cada mês do período filtrado, separados por ";"
 	measure 'Ticket Médio Série' = CONCATENATEX ( ADDCOLUMNS ( SUMMARIZE ( ALLSELECTED ( dim_date ), dim_date[year_month] ), "@v", [Ticket Médio] ), FORMAT ( [@v], "0.######", "en-US" ), ";", dim_date[year_month], ASC )
 		displayFolder: 7. Séries (minigráficos)
+		lineageTag: bd55df68-35ca-488d-b762-c6b7391503a1
 
 	/// Minigráfico do Cartão KPI: valor de cada mês do período filtrado, separados por ";"
 	measure 'Nota Média Série' = CONCATENATEX ( ADDCOLUMNS ( SUMMARIZE ( ALLSELECTED ( dim_date ), dim_date[year_month] ), "@v", [Nota Média] ), FORMAT ( [@v], "0.######", "en-US" ), ";", dim_date[year_month], ASC )
 		displayFolder: 7. Séries (minigráficos)
+		lineageTag: eea9625f-7f12-4945-a649-8d0744eebebe
 
 	/// Minigráfico do Cartão KPI: valor de cada mês do período filtrado, separados por ";"
 	measure '% Atraso Série' = CONCATENATEX ( ADDCOLUMNS ( SUMMARIZE ( ALLSELECTED ( dim_date ), dim_date[year_month] ), "@v", [% Atraso] ), FORMAT ( [@v], "0.######", "en-US" ), ";", dim_date[year_month], ASC )
 		displayFolder: 7. Séries (minigráficos)
+		lineageTag: eec83cd8-70b5-42ec-8145-496dee0d96e7
 
 	/// Minigráfico do Cartão KPI: valor de cada mês do período filtrado, separados por ";"
 	measure 'Itens por Pedido Série' = CONCATENATEX ( ADDCOLUMNS ( SUMMARIZE ( ALLSELECTED ( dim_date ), dim_date[year_month] ), "@v", [Itens por Pedido] ), FORMAT ( [@v], "0.######", "en-US" ), ";", dim_date[year_month], ASC )
 		displayFolder: 7. Séries (minigráficos)
+		lineageTag: 1f493e3b-4e51-4663-b83e-8ba6f9bcc40d
 
 	/// Minigráfico do Cartão KPI: valor de cada mês do período filtrado, separados por ";"
 	measure 'Tempo Médio de Entrega (dias) Série' = CONCATENATEX ( ADDCOLUMNS ( SUMMARIZE ( ALLSELECTED ( dim_date ), dim_date[year_month] ), "@v", [Tempo Médio de Entrega (dias)] ), FORMAT ( [@v], "0.######", "en-US" ), ";", dim_date[year_month], ASC )
 		displayFolder: 7. Séries (minigráficos)
+		lineageTag: 2424659e-3499-4aee-b8a7-9a63a1f8b485
 
 	/// Minigráfico do Cartão KPI: valor de cada mês do período filtrado, separados por ";"
 	measure 'Prazo Estimado (dias) Série' = CONCATENATEX ( ADDCOLUMNS ( SUMMARIZE ( ALLSELECTED ( dim_date ), dim_date[year_month] ), "@v", [Prazo Estimado (dias)] ), FORMAT ( [@v], "0.######", "en-US" ), ";", dim_date[year_month], ASC )
 		displayFolder: 7. Séries (minigráficos)
+		lineageTag: b2275305-40bd-4bdf-86ab-a0cfaa03c300
 
 	/// Minigráfico do Cartão KPI: valor de cada mês do período filtrado, separados por ";"
 	measure 'Atraso Médio dos Atrasados (dias) Série' = CONCATENATEX ( ADDCOLUMNS ( SUMMARIZE ( ALLSELECTED ( dim_date ), dim_date[year_month] ), "@v", [Atraso Médio dos Atrasados (dias)] ), FORMAT ( [@v], "0.######", "en-US" ), ";", dim_date[year_month], ASC )
 		displayFolder: 7. Séries (minigráficos)
+		lineageTag: c3d9dfdd-6eef-4563-b3e8-3e9d92a94e18
 
 	/// Minigráfico do Cartão KPI: valor de cada mês do período filtrado, separados por ";"
 	measure '% Avaliações Negativas Série' = CONCATENATEX ( ADDCOLUMNS ( SUMMARIZE ( ALLSELECTED ( dim_date ), dim_date[year_month] ), "@v", [% Avaliações Negativas] ), FORMAT ( [@v], "0.######", "en-US" ), ";", dim_date[year_month], ASC )
 		displayFolder: 7. Séries (minigráficos)
+		lineageTag: 23c06ce9-4405-4634-be5c-0ae79b6b196d
 
 	/// Minigráfico do Cartão KPI: valor de cada mês do período filtrado, separados por ";"
 	measure 'Clientes Únicos Série' = CONCATENATEX ( ADDCOLUMNS ( SUMMARIZE ( ALLSELECTED ( dim_date ), dim_date[year_month] ), "@v", [Clientes Únicos] ), FORMAT ( [@v], "0.######", "en-US" ), ";", dim_date[year_month], ASC )
 		displayFolder: 7. Séries (minigráficos)
+		lineageTag: d324633f-1f16-4fd8-9d90-9be1bc27b28f
 
 	/// Minigráfico do Cartão KPI: valor de cada mês do período filtrado, separados por ";"
 	measure '% Recompra Série' = CONCATENATEX ( ADDCOLUMNS ( SUMMARIZE ( ALLSELECTED ( dim_date ), dim_date[year_month] ), "@v", [% Recompra] ), FORMAT ( [@v], "0.######", "en-US" ), ";", dim_date[year_month], ASC )
 		displayFolder: 7. Séries (minigráficos)
+		lineageTag: 528b3d47-323d-4dab-92b0-a8e82439c4f5
 
 	column Coluna
 		dataType: string

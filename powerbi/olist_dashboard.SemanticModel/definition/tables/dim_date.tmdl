@@ -111,6 +111,7 @@ table dim_date
 	column mes = DATE ( YEAR ( dim_date[date] ), MONTH ( dim_date[date] ), 1 )
 		dataType: dateTime
 		formatString: mmm/yy
+		lineageTag: 93727c3b-6909-4355-bb1c-1a1fa092902c
 		summarizeBy: none
 
 		annotation SummarizationSetBy = Automatic

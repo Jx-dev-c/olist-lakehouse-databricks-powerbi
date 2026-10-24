@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "atraso_mensal",
   "position": {
     "x": 200,
@@ -13,24 +13,6 @@
     "visualType": "areaChart",
     "query": {
       "queryState": {
-        "Y": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "% Atraso"
-                }
-              },
-              "queryRef": "_Medidas.% Atraso",
-              "nativeQueryRef": "% Atraso"
-            }
-          ]
-        },
         "Category": {
           "projections": [
             {
@@ -47,6 +29,24 @@
               "queryRef": "dim_date.mes",
               "nativeQueryRef": "mes",
               "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "% Atraso"
+                }
+              },
+              "queryRef": "_Medidas.% Atraso",
+              "nativeQueryRef": "% Atraso"
             }
           ]
         }
@@ -150,7 +150,7 @@
             "axisType": {
               "expr": {
                 "Literal": {
-                  "Value": "'Continuous'"
+                  "Value": "'Scalar'"
                 }
               }
             },
