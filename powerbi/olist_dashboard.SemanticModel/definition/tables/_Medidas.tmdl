@@ -392,6 +392,7 @@ table _Medidas
 			RETURN IF ( pedidosAnt >= 500, CALCULATE ( [Receita], DATEADD ( dim_date[date], -12, MONTH ) ) )
 		formatString: "R$" #,0
 		displayFolder: 7. Gráficos
+		lineageTag: 4368fff0-de11-4fbb-96a0-11911d1840e3
 
 	/// Só o mês de maior receita do período (marcador + rótulo de anotação)
 	measure 'Receita Pico' =
@@ -400,6 +401,7 @@ table _Medidas
 			RETURN IF ( NOT ISBLANK ( atual ) && atual = maximo, atual )
 		formatString: "R$" #,0
 		displayFolder: 7. Gráficos
+		lineageTag: 72740026-877f-47d1-9f2e-b3cecf7b2eef
 
 	/// Manchete dinâmica da Visão Geral: crescimento acumulado do ano
 	measure 'Insight Visão Título' =
