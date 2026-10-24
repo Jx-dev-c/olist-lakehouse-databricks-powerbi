@@ -57,12 +57,17 @@ erDiagram
 
 ## Principais insights
 
-Período analisado: jan/2017 a ago/2018. São 98 mil pedidos com itens, R$ 15,8 milhões em receita (preço + frete, mesma definição do dashboard) e ticket médio de R$ 160,51.
+Período analisado: jan/2017 a ago/2018. São **97,9 mil pedidos válidos**, **R$ 15,7 milhões** em receita e ticket médio de **R$ 160,19**.
 
-- ⭐ **O atraso é o que mais derruba a satisfação.** Pedidos no prazo têm nota média **4,29**; atrasados, **2,27**. A partir de 6 dias de atraso, **78%** das avaliações são negativas (1–2 estrelas), contra 10% nas entregas no prazo.
-- 📦 **6,8% das entregas atrasam, mas o prazo prometido é muito folgado.** A entrega real leva em média **12,5 dias** contra **24,3 prometidos**. Mesmo assim, o atraso se concentra no Nordeste e no RJ. Entre os estados com 500+ pedidos: **MA (17,5%)**, CE (13,8%), BA (12,2%) e RJ (12,1%), de 1,8× a 2,6× a média nacional. Sem corte mínimo, AL lidera com 21,5%, mas sobre apenas 396 pedidos.
-- 🔁 **Retenção é a maior oportunidade.** Só **3%** dos 93 mil clientes compraram mais de uma vez. O segmento RFM *Em risco (alto valor)* reúne 13,8 mil clientes que já gastaram R$ 4,2 milhões e não voltaram.
-- 🏷️ **A receita é pouco concentrada.** As 5 maiores categorias (Beleza e Saúde; Relógios e Presentes; Cama, Mesa e Banho; Esporte e Lazer; Informática e Acessórios) somam **39,8%** da receita de produtos.
+**Definição de receita** (a mesma no dashboard e na Olist City): preço + frete dos itens de pedidos válidos. Pedidos `canceled` e `unavailable` ficam fora.
+
+- 📈 **Crescimento forte, mas em platô.** De jan a ago/18, a receita foi **+140%** maior que no mesmo período de 2017. Desde jan/18, porém, a receita mensal fica entre R$ 0,98 e 1,16 milhão: o recorde continua sendo **nov/17** (Black Friday, R$ 1,17 milhão). Em ago/18, a alta sobre ago/17 caiu para +51%. O crescimento anual está desacelerando.
+- ⭐ **O atraso derruba a satisfação.** Pedidos no prazo têm nota média **4,29**; atrasados, **2,27**. A partir de 6 dias de atraso, **78%** das avaliações são negativas (1–2 estrelas), contra 9% nas entregas no prazo.
+- 📦 **6,8% das entregas atrasam, mas o prazo prometido é muito folgado.** A entrega real leva em média **12,5 dias** contra **24,3 prometidos**. O atraso se concentra no Nordeste e no RJ. Entre os estados com 500+ pedidos entregues: **MA (17,5%)**, CE (13,8%), BA (12,2%) e RJ (12,2%), de 1,8× a 2,6× a média nacional.
+- 🔁 **Retenção é a maior oportunidade.** Só **3,0%** dos 94,7 mil clientes compraram mais de uma vez. O segmento RFM *Em risco (alto valor)* reúne 13,8 mil clientes que já gastaram R$ 4,2 milhões e não voltaram.
+- 🏷️ **Categorias pulverizadas, vendedores concentrados.** As 5 maiores categorias (Beleza e Saúde; Relógios e Presentes; Cama, Mesa e Banho; Esporte e Lazer; Informática e Acessórios) somam **39,9%** da receita de produtos. Já entre vendedores, **20% dos 3.029** respondem por **82%** da receita.
+
+Nota da base completa (2016–2018) por faixa de entrega:
 
 | Faixa de entrega | Pedidos | Nota média | % avaliações negativas |
 |---|---:|---:|---:|
@@ -100,14 +105,45 @@ Alternativa sem CLI: importe a pasta `notebooks/` no workspace, crie o volume pe
 
 Depois, siga o guia [`powerbi/README.md`](powerbi/README.md) para conectar o Power BI.
 
-## Visual personalizado: Mapa Brasil 3D
+## Dashboard
 
-O relatório usa um visual próprio, [`mapaBrasil3D`](mapaBrasil3D/README.md), escrito em TypeScript com **three.js**:
-- os 27 estados aparecem em 3D, com altura proporcional aos pedidos e cor pelo % de atraso;
-- animação em onda a cada mudança de filtro;
-- câmera que gira, dica de ferramenta e clique que filtra o restante da página.
+São cinco páginas, cada uma aberta por uma pergunta de negócio:
 
-A geometria vem da malha oficial de UFs do IBGE. Não depende de visual pago nem tem marca d'água.
+| Página | Pergunta |
+|---|---|
+| Visão Geral | O negócio está crescendo? |
+| Vendas & Produtos | O que vende e quem concentra a receita? |
+| Logística | Onde e quando atrasamos? |
+| Clientes & Avaliações | O que derruba a satisfação? |
+| Olist City 3D | A operação inteira numa cidade |
+
+- **KPIs do mês de referência.** Cada KPI mostra a variação contra o mês anterior (m/m) e contra o mesmo mês do ano anterior (a/a). Taxas aparecem em pontos percentuais, e uma variação que arredonda para zero fica neutra (■), nunca "▲ 0,00".
+- **Insights dinâmicos.** Os textos são medidas DAX recalculadas a cada filtro. Quando a amostra é pequena (menos de 30 avaliações ou estados com menos de 500 pedidos), o insight avisa em vez de concluir.
+- **Gráfico de receita.** Mostra a série do ano anterior junto (só nos meses com amostra suficiente) e marca o pico automaticamente.
+
+### Visuais personalizados (TypeScript)
+
+Todos são visuais próprios: nenhum depende de visual pago, e nenhum tem marca d'água.
+
+| Visual | O que faz |
+|---|---|
+| [`mapaBrasil3D`](mapaBrasil3D/README.md) | Os 27 estados em 3D com **three.js**: altura pelos pedidos, cor pelo % de atraso, animação em onda, dica de ferramenta e filtro cruzado. Geometria da malha oficial de UFs do IBGE. |
+| [`cidade3D`](cidade3D) | **Olist City 3D**: cidade isométrica em three.js, com um prédio por área do negócio. Etiquetas, painel com KPIs, minigráficos, insight e letreiro vêm de medidas do modelo (tabela `Cidade Itens` + medidas `Cidade *`) e acompanham os filtros. |
+| [`cartaoKpi`](cartaoKpi) | Cartão em HTML/CSS: contagem animada, pílulas m/m e a/a com cor de bom/ruim e minigráfico que se desenha. |
+| [`cartaoInsight`](cartaoInsight) | Cartão escuro cuja manchete e texto vêm de medidas DAX. |
+
+## Olist City (versão web)
+
+[`olist-city/`](olist-city) é a mesma cidade como página web estática (three.js, sem build):
+- **Painel por prédio:** clicar num prédio abre um painel lateral com gráficos (mapa de calor dia × hora, receita 2018 × 2017, rankings).
+- **Extras:** passaporte do tour, letreiro de insights, modo noite e layout para celular.
+
+Os números vêm do lakehouse. O script [`olist-city/scripts/exportar_dados.ps1`](olist-city/scripts/exportar_dados.ps1) roda [`dados/consultas.sql`](olist-city/dados/consultas.sql) no SQL Warehouse e grava um JSON. Nenhum número é digitado à mão.
+
+```powershell
+.\olist-city\scripts\exportar_dados.ps1          # atualiza dados/olist_city.json
+node .\olist-city\scripts\servidor.mjs           # http://localhost:8770/
+```
 
 ## Decisões técnicas
 
@@ -127,7 +163,7 @@ A geometria vem da malha oficial de UFs do IBGE. Não depende de visual pago nem
 
 ## Stack
 
-Databricks (Unity Catalog, Auto Loader, Delta Lake, Jobs, Asset Bundles, SQL Warehouse) · PySpark · Power BI (DAX, PBIP/TMDL, visual personalizado em TypeScript + three.js) · PowerShell
+Databricks (Unity Catalog, Auto Loader, Delta Lake, Jobs, Asset Bundles, SQL Warehouse) · PySpark · Power BI (DAX, PBIP/TMDL/PBIR, visuais personalizados em TypeScript + three.js + HTML/CSS) · three.js na web · PowerShell
 
 ---
 Dados: [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (CC BY-NC-SA 4.0).
