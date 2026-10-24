@@ -92,7 +92,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Receita por categoria (top 10)'"
+                  "Value": "'Receita por categoria (top 8)'"
                 }
               }
             },
@@ -173,7 +173,7 @@
                         }
                       }
                     ],
-                    "Top": 10
+                    "Top": 8
                   }
                 }
               },

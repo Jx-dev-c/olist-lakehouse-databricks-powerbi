@@ -76,6 +76,11 @@ table _Medidas
 		displayFolder: 1. Vendas
 		lineageTag: bb93c95c-ccfc-4b95-8963-a12cf8194e29
 
+	/// Participação no total de pedidos do contexto (ex.: forma de pagamento)
+	measure '% dos Pedidos' = DIVIDE ( [Pedidos], CALCULATE ( [Pedidos], REMOVEFILTERS ( fact_orders[forma_pagamento] ) ) )
+		formatString: 0.0%
+		displayFolder: 1. Vendas
+
 	measure 'Vendedores Ativos' = DISTINCTCOUNT ( fact_order_items[seller_id] )
 		formatString: #,0
 		displayFolder: 2. Vendedores
