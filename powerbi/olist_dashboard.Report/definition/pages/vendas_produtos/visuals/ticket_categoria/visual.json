@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "ticket_categoria",
   "position": {
-    "x": 632,
+    "x": 740,
     "y": 192,
     "z": 1200,
     "height": 256,
-    "width": 416,
+    "width": 524,
     "tabOrder": 1200
   },
   "visual": {

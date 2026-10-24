@@ -122,7 +122,7 @@ São cinco páginas, cada uma aberta por uma pergunta de negócio:
 | Olist City 3D | A operação inteira numa cidade |
 
 - **KPIs do mês de referência.** Cada KPI mostra a variação contra o mês anterior (m/m) e contra o mesmo mês do ano anterior (a/a). Taxas aparecem em pontos percentuais, e uma variação que arredonda para zero fica neutra (■), nunca "▲ 0,00".
-- **Insights dinâmicos.** Os textos são medidas DAX recalculadas a cada filtro. Quando a amostra é pequena (menos de 30 avaliações ou estados com menos de 500 pedidos), o insight avisa em vez de concluir.
+- **Insights dinâmicos na Olist City.** As páginas analíticas ficam só com gráficos e KPIs. As conclusões em texto aparecem no painel e no letreiro da cidade. Elas são medidas DAX recalculadas a cada filtro, e quando a amostra é pequena (menos de 30 avaliações ou estados com menos de 500 pedidos), o insight avisa em vez de concluir.
 - **Gráfico de receita.** Mostra a série do ano anterior junto (só nos meses com amostra suficiente) e marca o pico automaticamente.
 
 ![Página Olist City 3D dentro do Power BI](docs/img/olist_city_powerbi.png)
@@ -138,7 +138,7 @@ Todos são visuais próprios: nenhum depende de visual pago, e nenhum tem marca 
 | [`mapaBrasil3D`](mapaBrasil3D/README.md) | Os 27 estados em 3D com **three.js**: altura pelos pedidos, cor pelo % de atraso, animação em onda, dica de ferramenta e filtro cruzado. Geometria da malha oficial de UFs do IBGE. |
 | [`cidade3D`](cidade3D) | **Olist City 3D**: cidade isométrica em three.js, com um prédio por área do negócio. Etiquetas, painel com KPIs, minigráficos, insight e letreiro vêm de medidas do modelo (tabela `Cidade Itens` + medidas `Cidade *`) e acompanham os filtros. |
 | [`cartaoKpi`](cartaoKpi) | Cartão em HTML/CSS: contagem animada, pílulas m/m e a/a com cor de bom/ruim e minigráfico que se desenha. |
-| [`cartaoInsight`](cartaoInsight) | Cartão escuro cuja manchete e texto vêm de medidas DAX. |
+| [`cartaoInsight`](cartaoInsight) | Cartão escuro cuja manchete e texto vêm de medidas DAX. Hoje está fora das páginas, mas continua disponível no relatório. |
 
 ## Olist City (versão web)
 

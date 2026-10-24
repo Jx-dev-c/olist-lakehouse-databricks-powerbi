@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "nota_por_entrega",
   "position": {
-    "x": 528,
+    "x": 596,
     "y": 192,
     "z": 1200,
     "height": 248,
-    "width": 520,
+    "width": 668,
     "tabOrder": 1200
   },
   "visual": {
