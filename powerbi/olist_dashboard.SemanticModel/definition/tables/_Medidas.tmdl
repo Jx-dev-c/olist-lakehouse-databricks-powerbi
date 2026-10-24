@@ -482,6 +482,219 @@ table _Medidas
 		displayFolder: 8. Insights
 		lineageTag: fe26903d-8b66-4de4-911c-9469bbf3840f
 
+	/// Cidade 3D: receita curta (R$ x,x mi / R$ x mil)
+	measure 'Cidade Receita Texto' =
+			VAR r = [Receita]
+			RETURN IF ( ISBLANK ( r ), BLANK (), IF ( r >= 1000000, "R$ " & FORMAT ( r / 1000000, "0.0" ) & " mi", "R$ " & FORMAT ( r / 1000, "#,0" ) & " mil" ) )
+		displayFolder: 9. Cidade 3D
+		isHidden
+
+	measure 'Cidade Categoria Líder' =
+			VAR t = ADDCOLUMNS ( VALUES ( dim_product[category_pt] ), "@r", [Receita] )
+			RETURN MAXX ( TOPN ( 1, t, [@r], DESC ), dim_product[category_pt] )
+		displayFolder: 9. Cidade 3D
+		isHidden
+
+	measure 'Cidade Categoria Líder %' =
+			VAR t = ADDCOLUMNS ( VALUES ( dim_product[category_pt] ), "@r", [Receita] )
+			RETURN DIVIDE ( MAXX ( TOPN ( 1, t, [@r], DESC ), [@r] ), [Receita] )
+		formatString: 0.0%
+		displayFolder: 9. Cidade 3D
+		isHidden
+
+	measure 'Cidade Estado Líder' =
+			VAR t = ADDCOLUMNS ( VALUES ( dim_customer[state] ), "@n", [Pedidos] )
+			RETURN MAXX ( TOPN ( 1, t, [@n], DESC ), dim_customer[state] )
+		displayFolder: 9. Cidade 3D
+		isHidden
+
+	measure 'Cidade Estado Líder %' =
+			VAR t = ADDCOLUMNS ( VALUES ( dim_customer[state] ), "@n", [Pedidos] )
+			RETURN DIVIDE ( MAXX ( TOPN ( 1, t, [@n], DESC ), [@n] ), [Pedidos] )
+		formatString: 0%
+		displayFolder: 9. Cidade 3D
+		isHidden
+
+	measure 'Cidade Estado Vendedores' =
+			VAR t = ADDCOLUMNS ( VALUES ( dim_seller[state] ), "@n", [Vendedores Ativos] )
+			RETURN MAXX ( TOPN ( 1, t, [@n], DESC ), dim_seller[state] )
+		displayFolder: 9. Cidade 3D
+		isHidden
+
+	measure 'Cidade Estado Vendedores N' =
+			VAR t = ADDCOLUMNS ( VALUES ( dim_seller[state] ), "@n", [Vendedores Ativos] )
+			RETURN MAXX ( TOPN ( 1, t, [@n], DESC ), [@n] )
+		formatString: #,0
+		displayFolder: 9. Cidade 3D
+		isHidden
+
+	measure 'Cidade % Cartão' = DIVIDE ( CALCULATE ( [Pedidos], fact_orders[main_payment_type] = "credit_card" ), [Pedidos] )
+		formatString: 0%
+		displayFolder: 9. Cidade 3D
+		isHidden
+
+	measure 'Cidade % Boleto' = DIVIDE ( CALCULATE ( [Pedidos], fact_orders[main_payment_type] = "boleto" ), [Pedidos] )
+		formatString: 0%
+		displayFolder: 9. Cidade 3D
+		isHidden
+
+	measure 'Cidade Parcelas Cartão' =
+			CALCULATE ( AVERAGE ( fact_orders[installments] ), fact_orders[main_payment_type] = "credit_card", fact_orders[pedido_valido] = TRUE (), TREATAS ( VALUES ( fact_order_items[order_id] ), fact_orders[order_id] ) )
+		formatString: 0.0
+		displayFolder: 9. Cidade 3D
+		isHidden
+
+	measure 'Cidade Ticket Cartão' = CALCULATE ( [Ticket Médio], fact_orders[main_payment_type] = "credit_card" )
+		formatString: "R$" #,0.00
+		displayFolder: 9. Cidade 3D
+		isHidden
+
+	measure 'Cidade Ticket Boleto' = CALCULATE ( [Ticket Médio], fact_orders[main_payment_type] = "boleto" )
+		formatString: "R$" #,0.00
+		displayFolder: 9. Cidade 3D
+		isHidden
+
+	/// Segmento RFM sobre a base toda (a tabela RFM não depende do período)
+	measure 'Cidade Em Risco' = CALCULATE ( [Clientes RFM], customer_rfm[segment] = "Em risco (alto valor)", REMOVEFILTERS () )
+		formatString: #,0
+		displayFolder: 9. Cidade 3D
+		isHidden
+
+	/// Cidade 3D: valor já formatado de cada item de 'Cidade Itens' (etiqueta, KPIs e insight)
+	measure 'Cidade Valor' =
+			VAR k = SELECTEDVALUE ( 'Cidade Itens'[predio] ) & "|" & SELECTEDVALUE ( 'Cidade Itens'[ordem] )
+			RETURN
+			SWITCH ( k,
+				"torre|0", [Cidade Receita Texto],
+				"torre|1", [Cidade Receita Texto],
+				"torre|2", FORMAT ( [Pedidos], "#,0" ),
+				"torre|3", "R$ " & FORMAT ( [Ticket Médio], "#,0.00" ),
+				"torre|4", FORMAT ( [Receita Acumulada vs Ano Anterior], "+0%;-0%;0%" ),
+				"torre|8", [Insight Visão Título],
+				"torre|9", [Insight Visão Texto],
+				"shopping|0", "R$ " & FORMAT ( [Ticket Médio], "#,0" ),
+				"shopping|1", "R$ " & FORMAT ( [Ticket Médio], "#,0.00" ),
+				"shopping|2", FORMAT ( [Itens por Pedido], "0.00" ),
+				"shopping|3", FORMAT ( [Frete % da Receita], "0.0%" ),
+				"shopping|4", [Cidade Categoria Líder],
+				"shopping|8", [Cidade Categoria Líder] & " lidera as vendas",
+				"shopping|9", "A líder responde por " & FORMAT ( [Cidade Categoria Líder %], "0.0%" ) & " da receita. Cada pedido rende R$ " & FORMAT ( [Ticket Médio], "#,0.00" ) & " com " & FORMAT ( [Itens por Pedido], "0.00" ) & " itens, e o frete pesa " & FORMAT ( [Frete % da Receita], "0.0%" ) & " do faturamento.",
+				"galpao|0", FORMAT ( [% Atraso], "0.0%" ),
+				"galpao|1", FORMAT ( [% Atraso], "0.0%" ),
+				"galpao|2", FORMAT ( [Tempo Médio de Entrega (dias)], "0.0" ) & " dias",
+				"galpao|3", FORMAT ( [Prazo Estimado (dias)], "0.0" ) & " dias",
+				"galpao|4", FORMAT ( [Atraso Médio dos Atrasados (dias)], "0.0" ) & " dias",
+				"galpao|8", [Insight Logística Título],
+				"galpao|9", [Insight Logística Texto],
+				"bairro|0", FORMAT ( [Clientes Únicos], "#,0" ),
+				"bairro|1", FORMAT ( [Clientes Únicos], "#,0" ),
+				"bairro|2", FORMAT ( [% Recompra], "0.0%" ),
+				"bairro|3", [Cidade Estado Líder],
+				"bairro|4", FORMAT ( [Cidade Em Risco], "#,0" ),
+				"bairro|8", "Só " & FORMAT ( [% Recompra], "0.0%" ) & " dos clientes voltam a comprar",
+				"bairro|9", FORMAT ( [Clientes Únicos], "#,0" ) & " clientes no período; " & [Cidade Estado Líder] & " concentra " & FORMAT ( [Cidade Estado Líder %], "0%" ) & " dos pedidos. O segmento RFM 'Em risco (alto valor)' tem " & FORMAT ( [Cidade Em Risco], "#,0" ) & " clientes: público natural de uma campanha de reativação.",
+				"feira|0", FORMAT ( [Vendedores Ativos], "#,0" ),
+				"feira|1", FORMAT ( [Vendedores Ativos], "#,0" ),
+				"feira|2", FORMAT ( [% Receita Top 20% Vendedores], "0%" ),
+				"feira|3", "R$ " & FORMAT ( DIVIDE ( [Receita], [Vendedores Ativos] ), "#,0" ),
+				"feira|4", [Cidade Estado Vendedores],
+				"feira|8", [Insight Vendas Título],
+				"feira|9", [Insight Vendas Texto],
+				"banco|0", FORMAT ( [Cidade % Cartão], "0%" ),
+				"banco|1", FORMAT ( [Cidade % Cartão], "0%" ),
+				"banco|2", FORMAT ( [Cidade % Boleto], "0%" ),
+				"banco|3", FORMAT ( [Cidade Parcelas Cartão], "0.0" ) & "x",
+				"banco|4", "R$ " & FORMAT ( [Cidade Ticket Cartão], "#,0.00" ),
+				"banco|8", "Cartão de crédito em " & FORMAT ( [Cidade % Cartão], "0%" ) & " dos pedidos",
+				"banco|9", "Ticket no cartão de R$ " & FORMAT ( [Cidade Ticket Cartão], "#,0.00" ) & " contra R$ " & FORMAT ( [Cidade Ticket Boleto], "#,0.00" ) & " no boleto, com média de " & FORMAT ( [Cidade Parcelas Cartão], "0.0" ) & " parcelas: condições de parcelamento mexem direto na receita.",
+				"praca|0", FORMAT ( [Nota Média], "0.00" ),
+				"praca|1", FORMAT ( [Nota Média], "0.00" ),
+				"praca|2", FORMAT ( [% Avaliações Negativas], "0.0%" ),
+				"praca|3", FORMAT ( [Nota Média - No Prazo], "0.00" ),
+				"praca|4", FORMAT ( [Nota Média - Atrasados], "0.00" ),
+				"praca|8", [Insight Clientes Título],
+				"praca|9", [Insight Clientes Texto]
+			)
+		displayFolder: 9. Cidade 3D
+
+	/// Cidade 3D: texto pequeno abaixo do valor de cada KPI
+	measure 'Cidade Detalhe' =
+			VAR k = SELECTEDVALUE ( 'Cidade Itens'[predio] ) & "|" & SELECTEDVALUE ( 'Cidade Itens'[ordem] )
+			RETURN
+			SWITCH ( k,
+				"torre|1", [Período Selecionado],
+				"torre|2", "pedidos válidos",
+				"torre|3", "itens + frete por pedido",
+				"torre|4", "acumulado do ano vs anterior",
+				"shopping|1", "itens + frete",
+				"shopping|2", "média por pedido",
+				"shopping|3", "do faturamento",
+				"shopping|4", FORMAT ( [Cidade Categoria Líder %], "0.0%" ) & " da receita",
+				"galpao|1", "entregues após o prazo",
+				"galpao|2", "compra → entrega",
+				"galpao|3", "prometido ao cliente",
+				"galpao|4", "média dos atrasados",
+				"bairro|1", "com pedido válido",
+				"bairro|2", "fizeram 2+ pedidos",
+				"bairro|3", FORMAT ( [Cidade Estado Líder %], "0%" ) & " dos pedidos",
+				"bairro|4", "segmento RFM, base toda",
+				"feira|1", "com venda no período",
+				"feira|2", "da receita",
+				"feira|3", "receita média",
+				"feira|4", FORMAT ( [Cidade Estado Vendedores N], "#,0" ) & " vendedores",
+				"banco|1", "dos pedidos",
+				"banco|2", "dos pedidos",
+				"banco|3", "média por pedido",
+				"banco|4", "boleto: R$ " & FORMAT ( [Cidade Ticket Boleto], "#,0.00" ),
+				"praca|1", "de 1 a 5",
+				"praca|2", "notas 1 e 2",
+				"praca|3", "entregas no prazo",
+				"praca|4", "entregas atrasadas"
+			)
+		displayFolder: 9. Cidade 3D
+
+	/// Cidade 3D: minigráfico (valores mensais separados por ;)
+	measure 'Cidade Série' =
+			VAR k = SELECTEDVALUE ( 'Cidade Itens'[predio] ) & "|" & SELECTEDVALUE ( 'Cidade Itens'[ordem] )
+			RETURN
+			SWITCH ( k,
+				"torre|1", [Receita Série],
+				"torre|2", [Pedidos Série],
+				"torre|3", [Ticket Médio Série],
+				"shopping|1", [Ticket Médio Série],
+				"shopping|2", [Itens por Pedido Série],
+				"galpao|1", [% Atraso Série],
+				"galpao|2", [Tempo Médio de Entrega (dias) Série],
+				"galpao|3", [Prazo Estimado (dias) Série],
+				"galpao|4", [Atraso Médio dos Atrasados (dias) Série],
+				"bairro|1", [Clientes Únicos Série],
+				"bairro|2", [% Recompra Série],
+				"praca|1", [Nota Média Série],
+				"praca|2", [% Avaliações Negativas Série]
+			)
+		displayFolder: 9. Cidade 3D
+
+	/// Cidade 3D: 1 = bom (verde), 0 = neutro, -1 = ruim (vermelho)
+	measure 'Cidade Tom' =
+			VAR k = SELECTEDVALUE ( 'Cidade Itens'[predio] ) & "|" & SELECTEDVALUE ( 'Cidade Itens'[ordem] )
+			VAR atraso = IF ( [% Atraso] > 0.08, -1, IF ( [% Atraso] < 0.05, 1, 0 ) )
+			VAR nota = IF ( [Nota Média] >= 4.2, 1, IF ( [Nota Média] < 4, -1, 0 ) )
+			RETURN
+			SWITCH ( k,
+				"torre|4", SIGN ( [Receita Acumulada vs Ano Anterior] ),
+				"galpao|0", atraso,
+				"galpao|1", atraso,
+				"galpao|4", -1,
+				"bairro|2", -1,
+				"feira|2", IF ( [% Receita Top 20% Vendedores] > 0.75, -1, 0 ),
+				"praca|0", nota,
+				"praca|1", nota,
+				"praca|2", IF ( [% Avaliações Negativas] > 0.15, -1, 0 ),
+				"praca|4", -1,
+				0
+			)
+		formatString: 0
+		displayFolder: 9. Cidade 3D
 	column Coluna
 		dataType: string
 		isHidden

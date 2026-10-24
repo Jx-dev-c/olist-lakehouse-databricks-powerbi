@@ -1,0 +1,29 @@
+/// Itens da Olist City 3D: cada linha é um número de um prédio (0 = etiqueta, 1–4 = KPIs do painel, 8–9 = insight)
+table 'Cidade Itens'
+	lineageTag: 437a2f63-72e8-48cf-a544-ac9a13bdae4f
+
+	column predio
+		dataType: string
+		lineageTag: 0c3dcf9c-c271-4c59-8d4d-3f2dd3cacba9
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [predio]
+
+	column ordem
+		dataType: int64
+		formatString: 0
+		lineageTag: c15a418f-b728-458f-9315-8113feb5a423
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [ordem]
+
+	column item
+		dataType: string
+		lineageTag: aeb54f85-455f-4c24-b6d7-768cb92dd451
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [item]
+
+	partition 'Cidade Itens' = calculated
+		mode: import
+		source = DATATABLE ( "predio", STRING, "ordem", INTEGER, "item", STRING, { { "torre", 0, "Receita" }, { "torre", 1, "Receita" }, { "torre", 2, "Pedidos" }, { "torre", 3, "Ticket médio" }, { "torre", 4, "Acumulado vs ano anterior" }, { "torre", 8, "Insight" }, { "torre", 9, "Insight" }, { "shopping", 0, "Ticket" }, { "shopping", 1, "Ticket médio" }, { "shopping", 2, "Itens por pedido" }, { "shopping", 3, "Frete / receita" }, { "shopping", 4, "Categoria líder" }, { "shopping", 8, "Insight" }, { "shopping", 9, "Insight" }, { "galpao", 0, "% atraso" }, { "galpao", 1, "% atraso" }, { "galpao", 2, "Tempo de entrega" }, { "galpao", 3, "Prazo prometido" }, { "galpao", 4, "Atraso dos atrasados" }, { "galpao", 8, "Insight" }, { "galpao", 9, "Insight" }, { "bairro", 0, "Clientes" }, { "bairro", 1, "Clientes únicos" }, { "bairro", 2, "% recompra" }, { "bairro", 3, "Estado líder" }, { "bairro", 4, "Em risco (alto valor)" }, { "bairro", 8, "Insight" }, { "bairro", 9, "Insight" }, { "feira", 0, "Vendedores" }, { "feira", 1, "Vendedores ativos" }, { "feira", 2, "Receita do top 20%" }, { "feira", 3, "Receita por vendedor" }, { "feira", 4, "Estado com mais vendedores" }, { "feira", 8, "Insight" }, { "feira", 9, "Insight" }, { "banco", 0, "Cartão" }, { "banco", 1, "Cartão de crédito" }, { "banco", 2, "Boleto" }, { "banco", 3, "Parcelas no cartão" }, { "banco", 4, "Ticket no cartão" }, { "banco", 8, "Insight" }, { "banco", 9, "Insight" }, { "praca", 0, "Nota" }, { "praca", 1, "Nota média" }, { "praca", 2, "% avaliações negativas" }, { "praca", 3, "Nota no prazo" }, { "praca", 4, "Nota com atraso" }, { "praca", 8, "Insight" }, { "praca", 9, "Insight" } } )

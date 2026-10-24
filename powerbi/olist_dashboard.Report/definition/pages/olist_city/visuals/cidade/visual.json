@@ -1,0 +1,237 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "cidade",
+  "position": {
+    "x": 16,
+    "y": 68,
+    "z": 1100,
+    "height": 640,
+    "width": 1248,
+    "tabOrder": 1100
+  },
+  "visual": {
+    "visualType": "cidade3DDFA3070DBE4841539B4DC45A73CB1FA2",
+    "query": {
+      "queryState": {
+        "predio": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Cidade Itens"
+                    }
+                  },
+                  "Property": "predio"
+                }
+              },
+              "queryRef": "Cidade Itens.predio",
+              "nativeQueryRef": "predio",
+              "active": true
+            }
+          ]
+        },
+        "ordem": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Cidade Itens"
+                    }
+                  },
+                  "Property": "ordem"
+                }
+              },
+              "queryRef": "Cidade Itens.ordem",
+              "nativeQueryRef": "ordem",
+              "active": true
+            }
+          ]
+        },
+        "item": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Cidade Itens"
+                    }
+                  },
+                  "Property": "item"
+                }
+              },
+              "queryRef": "Cidade Itens.item",
+              "nativeQueryRef": "item",
+              "active": true
+            }
+          ]
+        },
+        "valor": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Cidade Valor"
+                }
+              },
+              "queryRef": "_Medidas.Cidade Valor",
+              "nativeQueryRef": "Cidade Valor"
+            }
+          ]
+        },
+        "detalhe": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Cidade Detalhe"
+                }
+              },
+              "queryRef": "_Medidas.Cidade Detalhe",
+              "nativeQueryRef": "Cidade Detalhe"
+            }
+          ]
+        },
+        "serie": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Cidade Série"
+                }
+              },
+              "queryRef": "_Medidas.Cidade Série",
+              "nativeQueryRef": "Cidade Série"
+            }
+          ]
+        },
+        "tom": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Cidade Tom"
+                }
+              },
+              "queryRef": "_Medidas.Cidade Tom",
+              "nativeQueryRef": "Cidade Tom"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

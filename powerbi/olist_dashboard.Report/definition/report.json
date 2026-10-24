@@ -169,6 +169,11 @@
           "name": "OlistLight.json",
           "path": "OlistLight.json",
           "type": "CustomTheme"
+        },
+        {
+          "name": "hero_cidade.png",
+          "path": "hero_cidade.png",
+          "type": "Image"
         }
       ]
     },
@@ -201,6 +206,17 @@
         {
           "name": "cartaoInsight898E64C68D8B44F7AD62CC68A1C386EE.pbiviz.json",
           "path": "cartaoInsight898E64C68D8B44F7AD62CC68A1C386EE.pbiviz.json",
+          "type": "CustomVisualMetadata"
+        }
+      ]
+    },
+    {
+      "name": "cidade3DDFA3070DBE4841539B4DC45A73CB1FA2",
+      "type": "CustomVisual",
+      "items": [
+        {
+          "name": "cidade3DDFA3070DBE4841539B4DC45A73CB1FA2.pbiviz.json",
+          "path": "cidade3DDFA3070DBE4841539B4DC45A73CB1FA2.pbiviz.json",
           "type": "CustomVisualMetadata"
         }
       ]

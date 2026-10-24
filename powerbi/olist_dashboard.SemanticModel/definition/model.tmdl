@@ -21,6 +21,7 @@ ref table dim_date
 ref table customer_rfm
 ref table fact_order_items
 ref table _Medidas
+ref table 'Cidade Itens'
 
 ref cultureInfo pt-BR
 
