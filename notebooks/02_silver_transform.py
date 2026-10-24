@@ -106,13 +106,56 @@ translation = latest(read("category_translation"), ["product_category_name"]).se
     "product_category_name", "product_category_name_english"
 )
 
+# A origem traz o nome da categoria sem acento e com "_" (ex.: beleza_saude).
+# Nome de exibição em PT-BR; categoria nova fora da lista cai no initcap como antes.
+CATEGORIAS_PT = {
+    "agro_industria_e_comercio": "Agroindústria e Comércio", "alimentos": "Alimentos",
+    "alimentos_bebidas": "Alimentos e Bebidas", "artes": "Artes", "artes_e_artesanato": "Artes e Artesanato",
+    "artigos_de_festas": "Artigos de Festa", "artigos_de_natal": "Artigos de Natal", "audio": "Áudio",
+    "automotivo": "Automotivo", "bebes": "Bebês", "bebidas": "Bebidas", "beleza_saude": "Beleza e Saúde",
+    "brinquedos": "Brinquedos", "cama_mesa_banho": "Cama, Mesa e Banho", "casa_conforto": "Casa e Conforto",
+    "casa_conforto_2": "Casa e Conforto 2", "casa_construcao": "Casa e Construção",
+    "cds_dvds_musicais": "CDs e DVDs Musicais", "cine_foto": "Cinema e Foto", "climatizacao": "Climatização",
+    "consoles_games": "Consoles e Games", "construcao_ferramentas_construcao": "Construção: Materiais",
+    "construcao_ferramentas_ferramentas": "Construção: Ferramentas",
+    "construcao_ferramentas_iluminacao": "Construção: Iluminação", "construcao_ferramentas_jardim": "Construção: Jardim",
+    "construcao_ferramentas_seguranca": "Construção: Segurança", "cool_stuff": "Cool Stuff",
+    "dvds_blu_ray": "DVDs e Blu-ray", "eletrodomesticos": "Eletrodomésticos", "eletrodomesticos_2": "Eletrodomésticos 2",
+    "eletronicos": "Eletrônicos", "eletroportateis": "Eletroportáteis", "esporte_lazer": "Esporte e Lazer",
+    "fashion_bolsas_e_acessorios": "Moda: Bolsas e Acessórios", "fashion_calcados": "Moda: Calçados",
+    "fashion_esporte": "Moda: Esporte", "fashion_roupa_feminina": "Moda: Feminina",
+    "fashion_roupa_infanto_juvenil": "Moda: Infantojuvenil", "fashion_roupa_masculina": "Moda: Masculina",
+    "fashion_underwear_e_moda_praia": "Moda: Íntima e Praia", "ferramentas_jardim": "Ferramentas e Jardim",
+    "flores": "Flores", "fraldas_higiene": "Fraldas e Higiene",
+    "industria_comercio_e_negocios": "Indústria, Comércio e Negócios", "informatica_acessorios": "Informática e Acessórios",
+    "instrumentos_musicais": "Instrumentos Musicais", "la_cuisine": "La Cuisine", "livros_importados": "Livros Importados",
+    "livros_interesse_geral": "Livros de Interesse Geral", "livros_tecnicos": "Livros Técnicos",
+    "malas_acessorios": "Malas e Acessórios", "market_place": "Marketplace",
+    "moveis_colchao_e_estofado": "Móveis: Colchões e Estofados",
+    "moveis_cozinha_area_de_servico_jantar_e_jardim": "Móveis: Cozinha, Jantar e Jardim",
+    "moveis_decoracao": "Móveis e Decoração", "moveis_escritorio": "Móveis de Escritório",
+    "moveis_quarto": "Móveis de Quarto", "moveis_sala": "Móveis de Sala", "musica": "Música", "papelaria": "Papelaria",
+    "pc_gamer": "PC Gamer", "pcs": "PCs", "perfumaria": "Perfumaria", "pet_shop": "Pet Shop",
+    "portateis_casa_forno_e_cafe": "Portáteis: Forno e Café",
+    "portateis_cozinha_e_preparadores_de_alimentos": "Portáteis: Cozinha",
+    "relogios_presentes": "Relógios e Presentes", "seguros_e_servicos": "Seguros e Serviços",
+    "sinalizacao_e_seguranca": "Sinalização e Segurança", "tablets_impressao_imagem": "Tablets, Impressão e Imagem",
+    "telefonia": "Telefonia", "telefonia_fixa": "Telefonia Fixa", "utilidades_domesticas": "Utilidades Domésticas",
+}
+nomes_categoria = spark.createDataFrame(
+    list(CATEGORIAS_PT.items()), "product_category_name string, nome_exibicao string"
+)
+
 products = (
     latest(read("products"), ["product_id"])
     .join(translation, "product_category_name", "left")
+    .join(F.broadcast(nomes_categoria), "product_category_name", "left")
     .select(
         txt("product_id").alias("product_id"),
         F.coalesce(
-            F.initcap(F.regexp_replace("product_category_name", "_", " ")), F.lit("Sem categoria")
+            "nome_exibicao",
+            F.initcap(F.regexp_replace("product_category_name", "_", " ")),
+            F.lit("Sem categoria"),
         ).alias("category_pt"),
         F.coalesce(
             F.regexp_replace("product_category_name_english", "_", " "), F.lit("unknown")
