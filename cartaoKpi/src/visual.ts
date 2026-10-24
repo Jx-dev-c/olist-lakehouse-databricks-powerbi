@@ -101,8 +101,8 @@ export class Visual implements IVisual {
             this.cartao.classList.toggle("animado", animar);
             const escuro = cfg.destaque.value;
             this.cartao.classList.toggle("escuro", escuro);
-            // no cartão escuro o minigráfico vai para ciano (contraste com o azul-marinho)
-            const corSerie = escuro ? "#22D3EE" : cfg.corDestaque.value.value;
+            // no cartão em destaque (degradê azul → ciano) o minigráfico fica branco
+            const corSerie = escuro ? "#FFFFFF" : cfg.corDestaque.value.value;
 
             const colunas: DataViewValueColumn[] = dataView?.categorical?.values ? [...dataView.categorical.values] : [];
             const col = (papel: string) => colunas.find(c => c.source.roles?.[papel]);
@@ -134,8 +134,9 @@ export class Visual implements IVisual {
                 this.pilula.textContent = `${variacao > 0 ? "▲" : variacao < 0 ? "▼" : "■"} ${texto}`;
                 this.pilula.style.display = "";
                 const corPilula = bom === null ? "#64748B" : bom ? cfg.corBom.value.value : cfg.corRuim.value.value;
-                this.pilula.style.color = escuro ? this.clarear(corPilula) : corPilula;
-                this.pilula.style.background = bom === null ? (escuro ? "rgba(255,255,255,.1)" : "#F1F5F9") : this.transparente(corPilula, escuro ? 0.22 : 0.12);
+                // no cartão em destaque, pílula branca sólida com texto na cor (verde/vermelho sobre azul some)
+                this.pilula.style.color = corPilula;
+                this.pilula.style.background = escuro ? "#FFFFFF" : bom === null ? "#F1F5F9" : this.transparente(corPilula, 0.12);
                 this.pilula.style.setProperty("--cor-pilula", corPilula);
                 // variação ruim: a pílula pulsa duas vezes para puxar o olho, depois fica parada
                 this.pilula.classList.remove("alerta");
@@ -217,13 +218,6 @@ export class Visual implements IVisual {
             this.serie.classList.add("desenhar");
         }
         this.assinaturaSerie = assinatura;
-    }
-
-    /** Mistura a cor com branco (texto da pílula sobre fundo escuro). */
-    private clarear(hex: string): string {
-        const n = parseInt(hex.replace("#", ""), 16);
-        const c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(v => Math.round(v + (255 - v) * 0.45));
-        return `rgb(${c.join(",")})`;
     }
 
     private transparente(hex: string, alfa: number): string {
