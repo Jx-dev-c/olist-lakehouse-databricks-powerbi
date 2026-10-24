@@ -110,6 +110,19 @@
             "width": 234
           },
           "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1431.0096821635323,
+            "y": 230.203559709812
+          },
+          "nodeIndex": "Cidade Itens",
+          "nodeLineageTag": "437a2f63-72e8-48cf-a544-ac9a13bdae4f",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
         }
       ],
       "name": "Todas as tabelas",

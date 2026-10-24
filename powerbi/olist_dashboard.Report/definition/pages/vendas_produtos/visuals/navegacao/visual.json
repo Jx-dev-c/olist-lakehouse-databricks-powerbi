@@ -2,8 +2,8 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "navegacao",
   "position": {
-    "x": 488,
-    "y": 6,
+    "x": 488.2868525896414,
+    "y": 28.047808764940239,
     "z": 100,
     "height": 44,
     "width": 776,
@@ -306,6 +306,19 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "2D"
                 }
               }
             }

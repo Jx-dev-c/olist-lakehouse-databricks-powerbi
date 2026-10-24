@@ -3,9 +3,9 @@
   "name": "f_periodo",
   "position": {
     "x": 15.298804780876493,
-    "y": 232,
+    "y": 232.03187250996015,
     "z": 200,
-    "height": 120,
+    "height": 149.1633466135458,
     "width": 152.98804780876492,
     "tabOrder": 200
   },
@@ -38,13 +38,6 @@
       "data": [
         {
           "properties": {
-            "mode": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Between'"
-                }
-              }
-            },
             "startDate": {
               "expr": {
                 "Literal": {
@@ -56,6 +49,13 @@
               "expr": {
                 "Literal": {
                   "Value": "datetime'2018-08-31T00:00:00'"
+                }
+              }
+            },
+            "mode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Between'"
                 }
               }
             }

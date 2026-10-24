@@ -486,79 +486,91 @@ table _Medidas
 	measure 'Cidade Receita Texto' =
 			VAR r = [Receita]
 			RETURN IF ( ISBLANK ( r ), BLANK (), IF ( r >= 1000000, "R$ " & FORMAT ( r / 1000000, "0.0" ) & " mi", "R$ " & FORMAT ( r / 1000, "#,0" ) & " mil" ) )
-		displayFolder: 9. Cidade 3D
 		isHidden
+		displayFolder: 9. Cidade 3D
+		lineageTag: 869d4843-f2ed-4559-9397-c6d843a576c2
 
 	measure 'Cidade Categoria Líder' =
 			VAR t = ADDCOLUMNS ( VALUES ( dim_product[category_pt] ), "@r", [Receita] )
 			RETURN MAXX ( TOPN ( 1, t, [@r], DESC ), dim_product[category_pt] )
-		displayFolder: 9. Cidade 3D
 		isHidden
+		displayFolder: 9. Cidade 3D
+		lineageTag: cce45608-3303-46f3-97cb-13befb1d438d
 
 	measure 'Cidade Categoria Líder %' =
 			VAR t = ADDCOLUMNS ( VALUES ( dim_product[category_pt] ), "@r", [Receita] )
 			RETURN DIVIDE ( MAXX ( TOPN ( 1, t, [@r], DESC ), [@r] ), [Receita] )
 		formatString: 0.0%
-		displayFolder: 9. Cidade 3D
 		isHidden
+		displayFolder: 9. Cidade 3D
+		lineageTag: c5221996-40f7-4d48-897b-f428dd910a0b
 
 	measure 'Cidade Estado Líder' =
 			VAR t = ADDCOLUMNS ( VALUES ( dim_customer[state] ), "@n", [Pedidos] )
 			RETURN MAXX ( TOPN ( 1, t, [@n], DESC ), dim_customer[state] )
-		displayFolder: 9. Cidade 3D
 		isHidden
+		displayFolder: 9. Cidade 3D
+		lineageTag: 4ba9644a-23f1-432e-8b95-77a32e638081
 
 	measure 'Cidade Estado Líder %' =
 			VAR t = ADDCOLUMNS ( VALUES ( dim_customer[state] ), "@n", [Pedidos] )
 			RETURN DIVIDE ( MAXX ( TOPN ( 1, t, [@n], DESC ), [@n] ), [Pedidos] )
 		formatString: 0%
-		displayFolder: 9. Cidade 3D
 		isHidden
+		displayFolder: 9. Cidade 3D
+		lineageTag: 1332f40c-8996-489c-b673-a93d74cc4bc3
 
 	measure 'Cidade Estado Vendedores' =
 			VAR t = ADDCOLUMNS ( VALUES ( dim_seller[state] ), "@n", [Vendedores Ativos] )
 			RETURN MAXX ( TOPN ( 1, t, [@n], DESC ), dim_seller[state] )
-		displayFolder: 9. Cidade 3D
 		isHidden
+		displayFolder: 9. Cidade 3D
+		lineageTag: f52049bb-1604-4ce7-8c95-b404c32fb614
 
 	measure 'Cidade Estado Vendedores N' =
 			VAR t = ADDCOLUMNS ( VALUES ( dim_seller[state] ), "@n", [Vendedores Ativos] )
 			RETURN MAXX ( TOPN ( 1, t, [@n], DESC ), [@n] )
 		formatString: #,0
-		displayFolder: 9. Cidade 3D
 		isHidden
+		displayFolder: 9. Cidade 3D
+		lineageTag: 31c0d668-2240-46b2-9395-8461fe9a0187
 
 	measure 'Cidade % Cartão' = DIVIDE ( CALCULATE ( [Pedidos], fact_orders[main_payment_type] = "credit_card" ), [Pedidos] )
 		formatString: 0%
-		displayFolder: 9. Cidade 3D
 		isHidden
+		displayFolder: 9. Cidade 3D
+		lineageTag: 9e165577-35df-4aa2-9b2a-08b227898c86
 
 	measure 'Cidade % Boleto' = DIVIDE ( CALCULATE ( [Pedidos], fact_orders[main_payment_type] = "boleto" ), [Pedidos] )
 		formatString: 0%
-		displayFolder: 9. Cidade 3D
 		isHidden
+		displayFolder: 9. Cidade 3D
+		lineageTag: 00bf4e7e-0e7c-49fb-9c52-0c3eac54242f
 
-	measure 'Cidade Parcelas Cartão' =
-			CALCULATE ( AVERAGE ( fact_orders[installments] ), fact_orders[main_payment_type] = "credit_card", fact_orders[pedido_valido] = TRUE (), TREATAS ( VALUES ( fact_order_items[order_id] ), fact_orders[order_id] ) )
+	measure 'Cidade Parcelas Cartão' = CALCULATE ( AVERAGE ( fact_orders[installments] ), fact_orders[main_payment_type] = "credit_card", fact_orders[pedido_valido] = TRUE (), TREATAS ( VALUES ( fact_order_items[order_id] ), fact_orders[order_id] ) )
 		formatString: 0.0
-		displayFolder: 9. Cidade 3D
 		isHidden
+		displayFolder: 9. Cidade 3D
+		lineageTag: 1288a432-f249-492b-bc0f-871b1379ad68
 
 	measure 'Cidade Ticket Cartão' = CALCULATE ( [Ticket Médio], fact_orders[main_payment_type] = "credit_card" )
 		formatString: "R$" #,0.00
-		displayFolder: 9. Cidade 3D
 		isHidden
+		displayFolder: 9. Cidade 3D
+		lineageTag: 98d6f63a-1f76-4a7c-b805-5b0f48135d78
 
 	measure 'Cidade Ticket Boleto' = CALCULATE ( [Ticket Médio], fact_orders[main_payment_type] = "boleto" )
 		formatString: "R$" #,0.00
-		displayFolder: 9. Cidade 3D
 		isHidden
+		displayFolder: 9. Cidade 3D
+		lineageTag: 01a8d64b-dc59-42c4-82d2-9e92e5baa3b8
 
 	/// Segmento RFM sobre a base toda (a tabela RFM não depende do período)
 	measure 'Cidade Em Risco' = CALCULATE ( [Clientes RFM], customer_rfm[segment] = "Em risco (alto valor)", REMOVEFILTERS () )
 		formatString: #,0
-		displayFolder: 9. Cidade 3D
 		isHidden
+		displayFolder: 9. Cidade 3D
+		lineageTag: d97b9e64-80fc-488f-aabb-6e7b153ca604
 
 	/// Cidade 3D: valor já formatado de cada item de 'Cidade Itens' (etiqueta, KPIs e insight)
 	measure 'Cidade Valor' =
@@ -616,6 +628,7 @@ table _Medidas
 				"praca|9", [Insight Clientes Texto]
 			)
 		displayFolder: 9. Cidade 3D
+		lineageTag: be95fe7c-86d5-4136-9908-4af1524ebdd3
 
 	/// Cidade 3D: texto pequeno abaixo do valor de cada KPI
 	measure 'Cidade Detalhe' =
@@ -652,6 +665,7 @@ table _Medidas
 				"praca|4", "entregas atrasadas"
 			)
 		displayFolder: 9. Cidade 3D
+		lineageTag: b97b9cf9-17d4-4189-bb85-2de0328ad295
 
 	/// Cidade 3D: minigráfico (valores mensais separados por ;)
 	measure 'Cidade Série' =
@@ -673,6 +687,7 @@ table _Medidas
 				"praca|2", [% Avaliações Negativas Série]
 			)
 		displayFolder: 9. Cidade 3D
+		lineageTag: 4bbce7c1-e775-4aee-89ff-33d0f980f79d
 
 	/// Cidade 3D: 1 = bom (verde), 0 = neutro, -1 = ruim (vermelho)
 	measure 'Cidade Tom' =
@@ -695,6 +710,8 @@ table _Medidas
 			)
 		formatString: 0
 		displayFolder: 9. Cidade 3D
+		lineageTag: 81aa1ff5-826d-4b65-8ee6-cf44d598ba5b
+
 	column Coluna
 		dataType: string
 		isHidden

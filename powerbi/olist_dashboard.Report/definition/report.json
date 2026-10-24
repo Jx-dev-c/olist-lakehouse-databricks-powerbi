@@ -141,6 +141,11 @@
       "type": "RegisteredResources",
       "items": [
         {
+          "name": "hero_cidade.png",
+          "path": "hero_cidade.png",
+          "type": "Image"
+        },
+        {
           "name": "hero_clientes_avaliacoes.png",
           "path": "hero_clientes_avaliacoes.png",
           "type": "Image"
@@ -169,11 +174,6 @@
           "name": "OlistLight.json",
           "path": "OlistLight.json",
           "type": "CustomTheme"
-        },
-        {
-          "name": "hero_cidade.png",
-          "path": "hero_cidade.png",
-          "type": "Image"
         }
       ]
     },
