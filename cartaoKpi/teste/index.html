@@ -28,15 +28,15 @@
 <script>
 // números reais (gold, jan/2017–ago/2018); série = últimos 12 meses
 const KPIS = [
-  { nome: "Receita", fmt: "\"R$\" #,0", v: 15786204, sp: 5921000, d: 0.041, dfmt: "+0.0%;-0.0%;0.0%", bom: true,
+  { nome: "Receita", fmt: "\"R$\" #,0", v: 1003000, sp: 371000, d: -0.052, yoy: 0.501, dfmt: "+0.0%;-0.0%;0.0%", bom: true,
     serie: "1023000;1105000;1004000;1381000;985000;1160000;1093000;1120000;1029000;1088000;1062000;1003000" },
-  { nome: "Pedidos", fmt: "#,0", v: 98353, sp: 41044, d: 0.035, dfmt: "+0.0%;-0.0%;0.0%", bom: true,
+  { nome: "Pedidos", fmt: "#,0", v: 6452, sp: 2710, d: 0.029, yoy: 0.503, dfmt: "+0.0%;-0.0%;0.0%", bom: true,
     serie: "4285;4631;7544;5673;7269;6728;7211;6939;6873;6167;6292;6512" },
-  { nome: "Ticket Médio", fmt: "\"R$\" #,0.00", v: 160.51, sp: 144.26, d: -0.012, dfmt: "+0.0%;-0.0%;0.0%", bom: true,
+  { nome: "Ticket Médio", fmt: "\"R$\" #,0.00", v: 155.50, sp: 144.26, d: -0.079, yoy: -0.001, dfmt: "+0.0%;-0.0%;0.0%", bom: true,
     serie: "158;157;155;161;158;162;160;163;161;164;160;158" },
-  { nome: "Nota Média", fmt: "0.00", v: 4.09, sp: 4.18, d: 0.08, dfmt: "+0.00;-0.00;0.00", bom: true,
+  { nome: "Nota Média", fmt: "0.00", v: 4.256, sp: 4.18, d: -0.007, yoy: 0.12, dfmt: "+0.00;-0.00;0.00", bom: true,
     serie: "4.1;4.0;3.9;4.0;3.9;3.8;3.7;3.9;4.1;4.2;4.3;4.2" },
-  { nome: "% Atraso", fmt: "0.0%", v: 0.068, sp: 0.045, d: -0.011, dfmt: "+0.0%;-0.0%;0.0%", bom: false,
+  { nome: "% Atraso", fmt: "0.0%", v: 0.0619, sp: 0.045, d: 2.81, yoy: -0.9, dfmt: "+0.0\" p.p.\";-0.0\" p.p.\";0.0\" p.p.\"", bom: false,
     serie: "0.05;0.06;0.12;0.07;0.10;0.14;0.19;0.08;0.04;0.03;0.04;0.07" }
 ];
 
@@ -63,7 +63,8 @@ function atualizar(filtro) {
         categorical: { values: [
           col("valor", filtro ? k.sp : k.v, k.fmt),
           col("variacao", filtro ? -k.d * 0.7 : k.d, k.dfmt),
-          col("comparacao", "jul/18"),
+          col("variacao2", k.yoy, k.dfmt),
+          col("comparacao", "ago/18"),
           col("serie", serie)
         ] }
       }]

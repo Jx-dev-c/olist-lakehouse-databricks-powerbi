@@ -2,7 +2,8 @@
     "dataRoles": [
         { "displayName": "Valor", "name": "valor", "kind": "Measure", "description": "Número principal do cartão (ex.: Receita)" },
         { "displayName": "Variação", "name": "variacao", "kind": "Measure", "description": "Variação contra o período anterior (ex.: Receita Δ%). O formato da medida é usado no texto." },
-        { "displayName": "Comparação (texto)", "name": "comparacao", "kind": "Measure", "description": "Texto após a variação, ex.: [Mês Anterior] → \"vs jul/18\"" },
+        { "displayName": "Variação 2", "name": "variacao2", "kind": "Measure", "description": "Segunda variação (ex.: contra o mesmo mês do ano anterior)" },
+        { "displayName": "Referência (texto)", "name": "comparacao", "kind": "Measure", "description": "Texto no canto superior direito, ex.: [Mês de Referência] → \"ago/18\"" },
         { "displayName": "Série (texto)", "name": "serie", "kind": "Measure", "description": "Valores do minigráfico separados por ponto e vírgula: \"10;12.5;9\"" }
     ],
     "objects": {
@@ -11,6 +12,8 @@
                 "titulo": { "type": { "text": true } },
                 "destaque": { "type": { "bool": true } },
                 "subirEhBom": { "type": { "bool": true } },
+                "rotuloVar1": { "type": { "text": true } },
+                "rotuloVar2": { "type": { "text": true } },
                 "corDestaque": { "type": { "fill": { "solid": { "color": true } } } },
                 "corBom": { "type": { "fill": { "solid": { "color": true } } } },
                 "corRuim": { "type": { "fill": { "solid": { "color": true } } } },
@@ -21,12 +24,13 @@
     },
     "dataViewMappings": [
         {
-            "conditions": [ { "valor": { "max": 1 }, "variacao": { "max": 1 }, "comparacao": { "max": 1 }, "serie": { "max": 1 } } ],
+            "conditions": [ { "valor": { "max": 1 }, "variacao": { "max": 1 }, "variacao2": { "max": 1 }, "comparacao": { "max": 1 }, "serie": { "max": 1 } } ],
             "categorical": {
                 "values": {
                     "select": [
                         { "bind": { "to": "valor" } },
                         { "bind": { "to": "variacao" } },
+                        { "bind": { "to": "variacao2" } },
                         { "bind": { "to": "comparacao" } },
                         { "bind": { "to": "serie" } }
                     ]

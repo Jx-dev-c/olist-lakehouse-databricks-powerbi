@@ -1,0 +1,25 @@
+{
+    "dataRoles": [
+        { "displayName": "Manchete", "name": "titulo", "kind": "Measure", "description": "Medida de texto com a frase principal (com número)" },
+        { "displayName": "Texto", "name": "texto", "kind": "Measure", "description": "Medida de texto com o detalhe/ação" }
+    ],
+    "objects": {
+        "insight": {
+            "properties": {
+                "rotulo": { "type": { "text": true } },
+                "corRotulo": { "type": { "fill": { "solid": { "color": true } } } }
+            }
+        }
+    },
+    "dataViewMappings": [
+        {
+            "conditions": [ { "titulo": { "max": 1 }, "texto": { "max": 1 } } ],
+            "categorical": {
+                "values": { "select": [ { "bind": { "to": "titulo" } }, { "bind": { "to": "texto" } } ] }
+            }
+        }
+    ],
+    "supportsLandingPage": true,
+    "supportsEmptyDataView": true,
+    "privileges": []
+}

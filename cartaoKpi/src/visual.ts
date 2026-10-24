@@ -26,7 +26,7 @@ export class Visual implements IVisual {
     private cartao: HTMLElement;
     private rotulo: HTMLElement;
     private valor: HTMLElement;
-    private pilula: HTMLElement;
+    private pilulas: HTMLElement[];
     private comparacao: HTMLElement;
     private aviso: HTMLElement;
     private serie: HTMLElement;
@@ -45,13 +45,14 @@ export class Visual implements IVisual {
         this.locale = options.host.locale;
 
         this.cartao = this.el("div", "kpi", options.element);
-        // título à esquerda e "vs mês anterior" à direita; embaixo fica só a pílula (o minigráfico ocupa o canto)
+        // título à esquerda e o período de referência à direita (ex.: "ago/18")
         const cabecalho = this.el("div", "kpi-cabecalho", this.cartao);
         this.rotulo = this.el("div", "kpi-rotulo", cabecalho);
         this.comparacao = this.el("span", "kpi-comparacao", cabecalho);
         this.valor = this.el("div", "kpi-valor", this.cartao);
+        // até duas pílulas: variação contra o mês anterior (m/m) e contra o mesmo mês do ano anterior (a/a)
         const rodape = this.el("div", "kpi-rodape", this.cartao);
-        this.pilula = this.el("span", "kpi-pilula", rodape);
+        this.pilulas = [this.el("span", "kpi-pilula", rodape), this.el("span", "kpi-pilula", rodape)];
         this.aviso = this.el("div", "kpi-aviso", this.cartao);
         this.aviso.textContent = "Arraste uma medida para \"Valor\".";
 
@@ -125,30 +126,12 @@ export class Visual implements IVisual {
             }) : null;
             this.contar(isFinite(valor) ? valor : null, fmtValor, animar);
 
-            // pílula de variação: seta + valor sem sinal; cor pelo sentido bom/ruim
-            const variacao = colVar && colVar.values[0] != null ? Number(colVar.values[0]) : NaN;
-            if (isFinite(variacao)) {
-                const fmtVar = valueFormatter.create({ format: colVar.source.format, cultureSelector: this.locale });
-                const texto = fmtVar.format(Math.abs(variacao)).replace(/^[+\-−]\s*/, "");
-                const bom = variacao === 0 ? null : (variacao > 0) === cfg.subirEhBom.value;
-                this.pilula.textContent = `${variacao > 0 ? "▲" : variacao < 0 ? "▼" : "■"} ${texto}`;
-                this.pilula.style.display = "";
-                const corPilula = bom === null ? "#64748B" : bom ? cfg.corBom.value.value : cfg.corRuim.value.value;
-                // no cartão em destaque, pílula branca sólida com texto na cor (verde/vermelho sobre azul some)
-                this.pilula.style.color = corPilula;
-                this.pilula.style.background = escuro ? "#FFFFFF" : bom === null ? "#F1F5F9" : this.transparente(corPilula, 0.12);
-                this.pilula.style.setProperty("--cor-pilula", corPilula);
-                // variação ruim: a pílula pulsa duas vezes para puxar o olho, depois fica parada
-                this.pilula.classList.remove("alerta");
-                if (bom === false && animar) {
-                    void this.pilula.offsetWidth;
-                    this.pilula.classList.add("alerta");
-                }
-            } else {
-                this.pilula.style.display = "none";
-            }
+            // pílulas de variação: seta + valor sem sinal + rótulo do comparativo; cor pelo sentido bom/ruim
+            const colVar2 = col("variacao2");
+            this.preencherPilula(this.pilulas[0], colVar, cfg.rotuloVar1.value, cfg, escuro, animar);
+            this.preencherPilula(this.pilulas[1], colVar2, cfg.rotuloVar2.value, cfg, escuro, animar);
             const comp = colComp?.values[0];
-            this.comparacao.textContent = comp != null && comp !== "" ? `vs ${comp}` : "";
+            this.comparacao.textContent = comp != null ? String(comp) : "";
 
             // minigráfico
             const pontos = String(colSerie?.values[0] ?? "").split(";").map(s => parseFloat(s.replace(",", "."))).filter(v => isFinite(v));
@@ -157,6 +140,33 @@ export class Visual implements IVisual {
             this.events.renderingFinished(options);
         } catch (erro) {
             this.events.renderingFailed(options, String(erro));
+        }
+    }
+
+    /**
+     * Uma pílula de variação. Regra de neutralidade: se o valor formatado na precisão exibida é zero
+     * (ex.: -0,007 com formato 0,00 → "0,00"), mostra ■ em cinza, nunca ▲ verde ou ▼ vermelho.
+     */
+    private preencherPilula(el: HTMLElement, col: DataViewValueColumn, rotulo: string, cfg: VisualFormattingSettingsModel["cartaoCard"], escuro: boolean, animar: boolean) {
+        const v = col && col.values[0] != null ? Number(col.values[0]) : NaN;
+        el.classList.remove("alerta");
+        if (!isFinite(v)) { el.style.display = "none"; return; }
+        const fmt = valueFormatter.create({ format: col.source.format, cultureSelector: this.locale });
+        const texto = fmt.format(Math.abs(v)).replace(/^[+\-−]\s*/, "");
+        const sentido = /[1-9]/.test(texto) ? Math.sign(v) : 0;
+        const bom = sentido === 0 ? null : (sentido > 0) === cfg.subirEhBom.value;
+        const seta = sentido > 0 ? "▲" : sentido < 0 ? "▼" : "■";
+        el.textContent = `${seta} ${texto}${rotulo ? " " + rotulo : ""}`;
+        el.style.display = "";
+        const cor = bom === null ? "#64748B" : bom ? cfg.corBom.value.value : cfg.corRuim.value.value;
+        // no cartão em destaque, pílula branca sólida com texto na cor (verde/vermelho sobre azul some)
+        el.style.color = cor;
+        el.style.background = escuro ? "#FFFFFF" : bom === null ? "#F1F5F9" : this.transparente(cor, 0.12);
+        el.style.setProperty("--cor-pilula", cor);
+        // variação ruim: a pílula pulsa duas vezes para puxar o olho, depois fica parada
+        if (bom === false && animar) {
+            void el.offsetWidth;
+            el.classList.add("alerta");
         }
     }
 
