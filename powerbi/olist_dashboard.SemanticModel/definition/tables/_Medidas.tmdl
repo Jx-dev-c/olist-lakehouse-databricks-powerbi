@@ -224,9 +224,9 @@ table _Medidas
 		lineageTag: 248ba1b1-e304-4360-b880-33f09b370f46
 
 	/// Período com vendas no contexto (cartões das páginas de análise)
-	measure 'Período Selecionado' =
-			FORMAT ( CALCULATE ( MIN ( dim_date[date] ), fact_order_items ), "mmm/yy" ) & "–" & FORMAT ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), "mmm/yy" )
+	measure 'Período Selecionado' = FORMAT ( CALCULATE ( MIN ( dim_date[date] ), fact_order_items ), "mmm/yy" ) & "–" & FORMAT ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), "mmm/yy" )
 		displayFolder: 6. Comparativos
+		lineageTag: 62b002cb-506b-4116-ba5b-d96da9100ccb
 
 	/// Valor no mês de referência (último mês com vendas no contexto)
 	measure 'Receita Mês' =
@@ -234,6 +234,7 @@ table _Medidas
 			RETURN CALCULATE ( [Receita], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
 		formatString: "R$" #,0
 		displayFolder: 6. Comparativos
+		lineageTag: 18a8621c-440c-48bb-90ff-bb39b821c236
 
 	/// Variação relativa do mês de referência contra o mês anterior
 	measure 'Receita vs Mês Anterior' =
@@ -243,6 +244,7 @@ table _Medidas
 			RETURN DIVIDE ( atual - anterior, anterior )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 6. Comparativos
+		lineageTag: 75985f04-b7b0-4875-81c1-1ff7c3451c64
 
 	/// Variação relativa do mês de referência contra o mesmo mês do ano anterior
 	measure 'Receita vs Ano Anterior' =
@@ -252,6 +254,7 @@ table _Medidas
 			RETURN DIVIDE ( atual - anterior, anterior )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 6. Comparativos
+		lineageTag: 0232cf27-7acb-48c4-b7f8-0556d6ee7487
 
 	/// Valor no mês de referência (último mês com vendas no contexto)
 	measure 'Pedidos Mês' =
@@ -259,6 +262,7 @@ table _Medidas
 			RETURN CALCULATE ( [Pedidos], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
 		formatString: #,0
 		displayFolder: 6. Comparativos
+		lineageTag: f4109322-e993-4c61-bb99-3c053603e9ce
 
 	/// Variação relativa do mês de referência contra o mês anterior
 	measure 'Pedidos vs Mês Anterior' =
@@ -268,6 +272,7 @@ table _Medidas
 			RETURN DIVIDE ( atual - anterior, anterior )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 6. Comparativos
+		lineageTag: 63a994ac-321d-4ef1-8131-7669203ff491
 
 	/// Variação relativa do mês de referência contra o mesmo mês do ano anterior
 	measure 'Pedidos vs Ano Anterior' =
@@ -277,6 +282,7 @@ table _Medidas
 			RETURN DIVIDE ( atual - anterior, anterior )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 6. Comparativos
+		lineageTag: 8c24bacd-1a03-44b8-bbe3-860ee96edfdd
 
 	/// Valor no mês de referência (último mês com vendas no contexto)
 	measure 'Ticket Médio Mês' =
@@ -284,6 +290,7 @@ table _Medidas
 			RETURN CALCULATE ( [Ticket Médio], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
 		formatString: "R$" #,0.00
 		displayFolder: 6. Comparativos
+		lineageTag: 941beac7-5b38-4838-89dc-cf4e035b91eb
 
 	/// Variação relativa do mês de referência contra o mês anterior
 	measure 'Ticket Médio vs Mês Anterior' =
@@ -293,6 +300,7 @@ table _Medidas
 			RETURN DIVIDE ( atual - anterior, anterior )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 6. Comparativos
+		lineageTag: a6adb978-8f31-465c-afec-f00d95b613ef
 
 	/// Variação relativa do mês de referência contra o mesmo mês do ano anterior
 	measure 'Ticket Médio vs Ano Anterior' =
@@ -302,6 +310,7 @@ table _Medidas
 			RETURN DIVIDE ( atual - anterior, anterior )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 6. Comparativos
+		lineageTag: 87f27cc3-5d92-4eaa-8bba-187a79205262
 
 	/// Valor no mês de referência (último mês com vendas no contexto)
 	measure 'Nota Média Mês' =
@@ -309,6 +318,7 @@ table _Medidas
 			RETURN CALCULATE ( [Nota Média], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
 		formatString: 0.00
 		displayFolder: 6. Comparativos
+		lineageTag: 4ba509f7-a67b-4e40-9851-f0ac480c9098
 
 	/// Diferença em pontos (escala 1–5) contra o mês anterior
 	measure 'Nota Média vs Mês Anterior' =
@@ -318,6 +328,7 @@ table _Medidas
 			RETURN IF ( NOT ISBLANK ( atual ) && NOT ISBLANK ( anterior ), atual - anterior )
 		formatString: +0.00;-0.00;0.00
 		displayFolder: 6. Comparativos
+		lineageTag: c7a6e742-a272-4934-abfd-8b3af94c8675
 
 	/// Diferença em pontos (escala 1–5) contra o mesmo mês do ano anterior
 	measure 'Nota Média vs Ano Anterior' =
@@ -327,6 +338,7 @@ table _Medidas
 			RETURN IF ( NOT ISBLANK ( atual ) && NOT ISBLANK ( anterior ), atual - anterior )
 		formatString: +0.00;-0.00;0.00
 		displayFolder: 6. Comparativos
+		lineageTag: 5175089c-34c2-4fbe-96ae-cb0f43394b27
 
 	/// Valor no mês de referência (último mês com vendas no contexto)
 	measure '% Atraso Mês' =
@@ -334,6 +346,7 @@ table _Medidas
 			RETURN CALCULATE ( [% Atraso], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
 		formatString: 0.0%
 		displayFolder: 6. Comparativos
+		lineageTag: e9249524-b416-48b8-b64e-8b72dbac67e9
 
 	/// Diferença em pontos percentuais (p.p.) contra o mês anterior, não variação relativa
 	measure '% Atraso vs Mês Anterior' =
@@ -343,6 +356,7 @@ table _Medidas
 			RETURN IF ( NOT ISBLANK ( atual ) && NOT ISBLANK ( anterior ), ( atual - anterior ) * 100 )
 		formatString: +0.0" p.p.";-0.0" p.p.";0.0" p.p."
 		displayFolder: 6. Comparativos
+		lineageTag: b51cee34-a176-433f-a0e2-83094ad41f0f
 
 	/// Diferença em pontos percentuais (p.p.) contra o mesmo mês do ano anterior, não variação relativa
 	measure '% Atraso vs Ano Anterior' =
@@ -352,6 +366,7 @@ table _Medidas
 			RETURN IF ( NOT ISBLANK ( atual ) && NOT ISBLANK ( anterior ), ( atual - anterior ) * 100 )
 		formatString: +0.0" p.p.";-0.0" p.p.";0.0" p.p."
 		displayFolder: 6. Comparativos
+		lineageTag: 09209b01-93a5-4d1a-9e92-3e09041f370d
 
 	/// Acumulado do ano do mês de referência (jan até o mês)
 	measure 'Receita Acumulada Ano' =
@@ -359,6 +374,7 @@ table _Medidas
 			RETURN CALCULATE ( [Receita], DATESBETWEEN ( dim_date[date], DATE ( YEAR ( fim ), 1, 1 ), fim ) )
 		formatString: "R$" #,0
 		displayFolder: 6. Comparativos
+		lineageTag: 2d63ffad-8659-4b22-9ed7-7b4fa3540430
 
 	/// Acumulado do ano contra o mesmo período do ano anterior
 	measure 'Receita Acumulada vs Ano Anterior' =
@@ -368,12 +384,13 @@ table _Medidas
 			RETURN DIVIDE ( ytd - pytd, pytd )
 		formatString: +0.0%;-0.0%;0.0%
 		displayFolder: 6. Comparativos
+		lineageTag: c2c6d807-fc78-4f60-b5af-caaa2e39e49f
 
 	/// Mesma receita 12 meses antes (série de comparação no gráfico mensal)
-	measure 'Receita Ano Anterior' =
-			CALCULATE ( [Receita], DATEADD ( dim_date[date], -12, MONTH ) )
+	measure 'Receita Ano Anterior' = CALCULATE ( [Receita], DATEADD ( dim_date[date], -12, MONTH ) )
 		formatString: "R$" #,0
 		displayFolder: 7. Gráficos
+		lineageTag: 990e9fd9-194a-4194-9bb8-8758f856c640
 
 	/// Só o mês de maior receita do período (marcador + rótulo de anotação)
 	measure 'Receita Pico' =
@@ -383,6 +400,7 @@ table _Medidas
 			RETURN IF ( NOT ISBLANK ( atual ) && atual = maximo, atual )
 		formatString: "R$" #,0
 		displayFolder: 7. Gráficos
+		lineageTag: 999e53f8-ca15-485f-b453-73b6cb5d6483
 
 	/// Manchete dinâmica da Visão Geral: crescimento acumulado do ano
 	measure 'Insight Visão Título' =
@@ -392,6 +410,7 @@ table _Medidas
 			VAR g = DIVIDE ( ytd - pytd, pytd )
 			RETURN IF ( ISBLANK ( g ), "Receita de R$ " & FORMAT ( [Receita] / 1000000, "0.0" ) & " mi no período", "Receita " & YEAR ( fim ) & " cresce " & FORMAT ( g, "0%" ) & " sobre " & ( YEAR ( fim ) - 1 ) & " no acumulado" )
 		displayFolder: 8. Insights
+		lineageTag: 5705337d-f1c1-4921-8c85-dc6c9436aa03
 
 	/// Texto dinâmico da Visão Geral: pico, platô e ritmo do crescimento anual
 	measure 'Insight Visão Texto' =
@@ -410,11 +429,12 @@ table _Medidas
 			& "Nos últimos 6 meses, média de R$ " & FORMAT ( media6 / 1000000, "0.00" ) & " mi/mês (" & FORMAT ( DIVIDE ( media6, picoValor ), "0%" ) & " do pico): platô mensal."
 			& IF ( NOT ISBLANK ( gMes ), " Contra o mesmo mês do ano anterior, " & [Mês de Referência] & " cresce " & FORMAT ( gMes, "0%" ) & ": o crescimento anual " & ritmo & "." )
 		displayFolder: 8. Insights
+		lineageTag: eeee57a1-574a-4130-8ac2-fb5f41ffd9cc
 
 	/// Manchete dinâmica da Logística
-	measure 'Insight Logística Título' =
-			IF ( [Pedidos Entregues] < 30, "Poucos pedidos entregues no filtro atual", FORMAT ( [% Atraso], "0.0%" ) & " dos pedidos chegam atrasados" )
+	measure 'Insight Logística Título' = IF ( [Pedidos Entregues] < 30, "Poucos pedidos entregues no filtro atual", FORMAT ( [% Atraso], "0.0%" ) & " dos pedidos chegam atrasados" )
 		displayFolder: 8. Insights
+		lineageTag: 5d42dbf4-340e-49cb-aeae-a2cf4bf8ed82
 
 	/// Texto dinâmico da Logística: prazo real × prometido e pior estado
 	measure 'Insight Logística Texto' =
@@ -427,12 +447,14 @@ table _Medidas
 			" Pior estado com 500+ pedidos: " & MAXX ( pior, dim_customer[state] ) & ", " & FORMAT ( taxa, "0.0%" ) & " (" & FORMAT ( DIVIDE ( taxa, [% Atraso] ), "0.0" ) & "× a média).",
 			" Filtro atual sem estados suficientes (500+ pedidos) para comparar." )
 		displayFolder: 8. Insights
+		lineageTag: 5526a3fb-a6a4-41ab-abd9-d328cb2d9b5b
 
 	/// Manchete dinâmica de Clientes: nota no prazo × atrasado (mínimo de 30 avaliações)
 	measure 'Insight Clientes Título' =
 			VAR n = CALCULATE ( [Avaliações], fact_orders[is_late] = TRUE () )
 			RETURN IF ( n < 30, "Poucos pedidos atrasados no filtro atual", "Atraso derruba a nota de " & FORMAT ( [Nota Média - No Prazo], "0.00" ) & " para " & FORMAT ( [Nota Média - Atrasados], "0.00" ) )
 		displayFolder: 8. Insights
+		lineageTag: 111244a1-6c6b-46bd-9c1f-8799e3b2543c
 
 	/// Texto dinâmico de Clientes: avaliações negativas por atraso e recompra
 	measure 'Insight Clientes Texto' =
@@ -442,11 +464,12 @@ table _Medidas
 			IF ( NOT ISBLANK ( neg6 ), "Com 6+ dias de atraso, " & FORMAT ( neg6, "0%" ) & " das avaliações são negativas (no prazo: " & FORMAT ( negOk, "0%" ) & "). " )
 			& "Só " & FORMAT ( [% Recompra], "0.0%" ) & " dos clientes compram de novo: entregar no prazo é a alavanca de retenção."
 		displayFolder: 8. Insights
+		lineageTag: fd25dc84-66eb-45c3-b18c-d64acf37678e
 
 	/// Manchete dinâmica de Vendas: concentração (Pareto)
-	measure 'Insight Vendas Título' =
-			FORMAT ( [% Receita Top 20% Vendedores], "0%" ) & " da receita vem de 20% dos vendedores"
+	measure 'Insight Vendas Título' = FORMAT ( [% Receita Top 20% Vendedores], "0%" ) & " da receita vem de 20% dos vendedores"
 		displayFolder: 8. Insights
+		lineageTag: 252fd5a4-f805-423b-8604-a3a2a5dc2ea1
 
 	/// Texto dinâmico de Vendas: vendedores ativos e categoria líder
 	measure 'Insight Vendas Texto' =
@@ -456,6 +479,7 @@ table _Medidas
 			FORMAT ( [Vendedores Ativos], "#,0" ) & " vendedores ativos. Categoria líder: " & MAXX ( lider, dim_product[category_pt] ) & " (" & FORMAT ( DIVIDE ( MAXX ( lider, [@r] ), [Receita] ), "0.0%" ) & " da receita). "
 			& "Perder um grande vendedor pesa: reter o topo e desenvolver a cauda longa."
 		displayFolder: 8. Insights
+		lineageTag: fe26903d-8b66-4de4-911c-9469bbf3840f
 
 	column Coluna
 		dataType: string

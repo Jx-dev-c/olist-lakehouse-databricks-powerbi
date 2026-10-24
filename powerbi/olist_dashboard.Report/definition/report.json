@@ -169,11 +169,6 @@
           "name": "OlistLight.json",
           "path": "OlistLight.json",
           "type": "CustomTheme"
-        },
-        {
-          "name": "hero_glossario.png",
-          "path": "hero_glossario.png",
-          "type": "Image"
         }
       ]
     },

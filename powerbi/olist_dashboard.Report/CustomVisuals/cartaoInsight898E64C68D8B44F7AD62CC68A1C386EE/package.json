@@ -1,17 +1,29 @@
 {
-		"version": "1.0.0.0",
-		"author": {"name":"João Batista","email":"joaobatistademacedojunior97@gmail.com"},
-		"resources": [
-			{
-				"resourceId": "rId0",
-				"sourceType": 5,
-				"file": "resources/cartaoInsight898E64C68D8B44F7AD62CC68A1C386EE.pbiviz.json"
-			}
-		],
-		"visual": {"name":"cartaoInsight","displayName":"Cartão Insight","guid":"cartaoInsight898E64C68D8B44F7AD62CC68A1C386EE","visualClassName":"Visual","version":"1.0.0.0","description":"Cartão de insight com manchete e texto vindos de medidas DAX: o texto acompanha os filtros.","supportUrl":"https://github.com/","gitHubUrl":""},
-		"metadata": {
-			"pbivizjson": {
-				"resourceId": "rId0"
-			}
-		}
-	}
+  "version": "1.0.0.0",
+  "author": {
+    "name": "João Batista",
+    "email": "joaobatistademacedojunior97@gmail.com"
+  },
+  "resources": [
+    {
+      "resourceId": "rId0",
+      "sourceType": 5,
+      "file": "resources/cartaoInsight898E64C68D8B44F7AD62CC68A1C386EE.pbiviz.json"
+    }
+  ],
+  "visual": {
+    "name": "cartaoInsight",
+    "displayName": "Cartão Insight",
+    "guid": "cartaoInsight898E64C68D8B44F7AD62CC68A1C386EE",
+    "visualClassName": "Visual",
+    "version": "1.0.0.0",
+    "description": "Cartão de insight com manchete e texto vindos de medidas DAX: o texto acompanha os filtros.",
+    "supportUrl": "https://github.com/",
+    "gitHubUrl": ""
+  },
+  "metadata": {
+    "pbivizjson": {
+      "resourceId": "rId0"
+    }
+  }
+}
