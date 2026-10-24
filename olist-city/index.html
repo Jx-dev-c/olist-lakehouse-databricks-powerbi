@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Olist City</title>
+  <meta name="description" content="Dashboard 3D isométrico do e-commerce Olist: cada prédio é uma área do negócio, com dados reais do lakehouse Databricks.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilo.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="ceu" aria-hidden="true"></div>
+  <div id="cena" aria-label="Cidade 3D: clique num prédio para ver os indicadores da área"></div>
+  <div id="etiquetas" aria-hidden="true"></div>
+
+  <header class="topo">
+    <div class="marca">
+      <div class="marca-logo" aria-hidden="true">🏙️</div>
+      <div>
+        <strong>Olist City</strong>
+        <span>E-commerce Analytics · Databricks lakehouse</span>
+      </div>
+    </div>
+    <ul class="topo-kpis" id="topoKpis"></ul>
+    <button class="botao-icone" id="botaoNoite" aria-label="Alternar modo noite" title="Modo noite">🌙</button>
+  </header>
+
+  <aside class="passaporte" id="passaporte" aria-label="Passaporte do tour">
+    <div class="passaporte-topo"><span>🎫 Passaporte do Tour</span><b id="passaporteConta">0/7</b></div>
+    <div class="passaporte-selos" id="passaporteSelos"></div>
+  </aside>
+
+  <nav class="doca" id="doca" aria-label="Prédios da cidade"></nav>
+
+  <div class="zoom">
+    <button class="botao-icone" id="zoomMais" aria-label="Aproximar">+</button>
+    <button class="botao-icone" id="zoomMenos" aria-label="Afastar">−</button>
+    <button class="botao-icone" id="zoomReset" aria-label="Ver a cidade inteira" title="Ver a cidade inteira">⌂</button>
+  </div>
+
+  <aside class="painel" id="painel" role="dialog" aria-modal="false" aria-labelledby="painelTitulo" hidden></aside>
+
+  <footer class="letreiro" aria-label="Insights">
+    <span class="ao-vivo">● AO VIVO</span>
+    <div class="letreiro-trilho"><div class="letreiro-texto" id="letreiro"></div></div>
+  </footer>
+
+  <div class="carregando" id="carregando"><div class="carregando-anel"></div><span>Construindo a cidade…</span></div>
+  <div class="aviso" id="aviso" role="status" aria-live="polite"></div>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
