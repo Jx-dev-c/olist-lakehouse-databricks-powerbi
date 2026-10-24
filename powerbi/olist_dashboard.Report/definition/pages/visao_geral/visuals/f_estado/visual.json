@@ -2,8 +2,8 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "f_estado",
   "position": {
-    "x": 16,
-    "y": 368,
+    "x": 15.298804780876493,
+    "y": 451.31474103585657,
     "z": 300,
     "height": 64,
     "width": 152,
