@@ -76,11 +76,6 @@ table _Medidas
 		displayFolder: 1. Vendas
 		lineageTag: bb93c95c-ccfc-4b95-8963-a12cf8194e29
 
-	/// Participação no total de pedidos do contexto (ex.: forma de pagamento)
-	measure '% dos Pedidos' = DIVIDE ( [Pedidos], CALCULATE ( [Pedidos], REMOVEFILTERS ( fact_orders[forma_pagamento] ) ) )
-		formatString: 0.0%
-		displayFolder: 1. Vendas
-
 	measure 'Vendedores Ativos' = DISTINCTCOUNT ( fact_order_items[seller_id] )
 		formatString: #,0
 		displayFolder: 2. Vendedores
@@ -319,6 +314,12 @@ table _Medidas
 	measure '% Recompra Série' = CONCATENATEX ( ADDCOLUMNS ( SUMMARIZE ( ALLSELECTED ( dim_date ), dim_date[year_month] ), "@v", [% Recompra] ), FORMAT ( [@v], "0.######", "en-US" ), ";", dim_date[year_month], ASC )
 		displayFolder: 7. Séries (minigráficos)
 		lineageTag: 528b3d47-323d-4dab-92b0-a8e82439c4f5
+
+	/// Participação no total de pedidos do contexto (ex.: forma de pagamento)
+	measure '% dos Pedidos' = DIVIDE ( [Pedidos], CALCULATE ( [Pedidos], REMOVEFILTERS ( fact_orders[forma_pagamento] ) ) )
+		formatString: 0.0%
+		displayFolder: 1. Vendas
+		lineageTag: 248ba1b1-e304-4360-b880-33f09b370f46
 
 	column Coluna
 		dataType: string

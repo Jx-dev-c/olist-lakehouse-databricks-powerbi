@@ -205,12 +205,6 @@ table fact_orders
 		summarizeBy: none
 		sortByColumn: faixa_entrega_ordem
 
-	/// Ordem lógica de faixa_entrega (o rótulo não precisa de prefixo numérico)
-	column faixa_entrega_ordem = SWITCH ( TRUE (), fact_orders[is_delivered] = FALSE (), 6, fact_orders[delay_days] <= -10, 1, fact_orders[delay_days] <= 0, 2, fact_orders[delay_days] <= 5, 3, fact_orders[delay_days] <= 15, 4, 5 )
-		dataType: int64
-		isHidden
-		summarizeBy: none
-
 	column forma_pagamento = SWITCH ( fact_orders[main_payment_type], "credit_card", "Cartão de crédito", "boleto", "Boleto", "voucher", "Voucher", "debit_card", "Cartão de débito", "Outros" )
 		dataType: string
 		lineageTag: 63b6490e-4cb6-43f8-81f6-976883af3b16
@@ -222,10 +216,18 @@ table fact_orders
 		summarizeBy: none
 		sortByColumn: faixa_parcelas_ordem
 
+	/// Ordem lógica de faixa_entrega (o rótulo não precisa de prefixo numérico)
+	column faixa_entrega_ordem = SWITCH ( TRUE (), fact_orders[is_delivered] = FALSE (), 6, fact_orders[delay_days] <= -10, 1, fact_orders[delay_days] <= 0, 2, fact_orders[delay_days] <= 5, 3, fact_orders[delay_days] <= 15, 4, 5 )
+		dataType: int64
+		isHidden
+		lineageTag: 77235f2f-4228-4405-ba67-72e6e2603e5f
+		summarizeBy: none
+
 	/// Ordem lógica de faixa_parcelas (o rótulo não precisa de prefixo numérico)
 	column faixa_parcelas_ordem = SWITCH ( TRUE (), fact_orders[installments] <= 1, 1, fact_orders[installments] <= 3, 2, fact_orders[installments] <= 6, 3, fact_orders[installments] <= 10, 4, 5 )
 		dataType: int64
 		isHidden
+		lineageTag: 09d93660-436b-4152-acab-d01bc138a9fe
 		summarizeBy: none
 
 	partition fact_orders = m
