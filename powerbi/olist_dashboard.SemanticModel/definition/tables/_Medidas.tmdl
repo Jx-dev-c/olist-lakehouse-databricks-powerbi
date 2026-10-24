@@ -386,21 +386,20 @@ table _Medidas
 		displayFolder: 6. Comparativos
 		lineageTag: c2c6d807-fc78-4f60-b5af-caaa2e39e49f
 
-	/// Mesma receita 12 meses antes (série de comparação no gráfico mensal)
-	measure 'Receita Ano Anterior' = CALCULATE ( [Receita], DATEADD ( dim_date[date], -12, MONTH ) )
+	/// Receita do mesmo mês do ano anterior; vazia quando aquele mês tem menos de 500 pedidos (pontas de 2016)
+	measure 'Receita Ano Anterior' =
+			VAR pedidosAnt = CALCULATE ( [Pedidos], DATEADD ( dim_date[date], -12, MONTH ) )
+			RETURN IF ( pedidosAnt >= 500, CALCULATE ( [Receita], DATEADD ( dim_date[date], -12, MONTH ) ) )
 		formatString: "R$" #,0
 		displayFolder: 7. Gráficos
-		lineageTag: 990e9fd9-194a-4194-9bb8-8758f856c640
 
 	/// Só o mês de maior receita do período (marcador + rótulo de anotação)
 	measure 'Receita Pico' =
-			VAR meses = ADDCOLUMNS ( SUMMARIZE ( ALLSELECTED ( dim_date ), dim_date[year_month] ), "@r", [Receita] )
-			VAR maximo = MAXX ( meses, [@r] )
+			VAR maximo = CALCULATE ( MAXX ( VALUES ( dim_date[year_month] ), [Receita] ), ALLSELECTED ( dim_date ) )
 			VAR atual = [Receita]
 			RETURN IF ( NOT ISBLANK ( atual ) && atual = maximo, atual )
 		formatString: "R$" #,0
 		displayFolder: 7. Gráficos
-		lineageTag: 999e53f8-ca15-485f-b453-73b6cb5d6483
 
 	/// Manchete dinâmica da Visão Geral: crescimento acumulado do ano
 	measure 'Insight Visão Título' =
