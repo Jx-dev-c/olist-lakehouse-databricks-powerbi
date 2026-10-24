@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "kpi_3",
   "position": {
-    "x": 848,
+    "x": 848.0,
     "y": 72,
     "z": 5130,
     "height": 104,
-    "width": 200,
+    "width": 200.0,
     "tabOrder": 5130
   },
   "visual": {
@@ -23,11 +23,11 @@
                       "Entity": "_Medidas"
                     }
                   },
-                  "Property": "Nota Média"
+                  "Property": "Nota Média Mês"
                 }
               },
-              "queryRef": "_Medidas.Nota Média",
-              "nativeQueryRef": "Nota Média"
+              "queryRef": "_Medidas.Nota Média Mês",
+              "nativeQueryRef": "Nota Média Mês"
             }
           ]
         },
@@ -41,11 +41,29 @@
                       "Entity": "_Medidas"
                     }
                   },
-                  "Property": "Nota Média Δ"
+                  "Property": "Nota Média vs Mês Anterior"
                 }
               },
-              "queryRef": "_Medidas.Nota Média Δ",
-              "nativeQueryRef": "Nota Média Δ"
+              "queryRef": "_Medidas.Nota Média vs Mês Anterior",
+              "nativeQueryRef": "Nota Média vs Mês Anterior"
+            }
+          ]
+        },
+        "variacao2": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Nota Média vs Ano Anterior"
+                }
+              },
+              "queryRef": "_Medidas.Nota Média vs Ano Anterior",
+              "nativeQueryRef": "Nota Média vs Ano Anterior"
             }
           ]
         },
@@ -59,11 +77,11 @@
                       "Entity": "_Medidas"
                     }
                   },
-                  "Property": "Mês Anterior"
+                  "Property": "Mês de Referência"
                 }
               },
-              "queryRef": "_Medidas.Mês Anterior",
-              "nativeQueryRef": "Mês Anterior"
+              "queryRef": "_Medidas.Mês de Referência",
+              "nativeQueryRef": "Mês de Referência"
             }
           ]
         },
@@ -95,6 +113,13 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            },
+            "titulo": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Nota Média'"
                 }
               }
             }

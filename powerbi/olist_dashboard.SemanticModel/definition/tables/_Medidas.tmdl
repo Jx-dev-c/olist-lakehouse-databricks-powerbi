@@ -4,13 +4,13 @@
 table _Medidas
 	lineageTag: e31df32b-a77d-48d2-b2df-8691fa519dac
 
-	/// Preço + frete dos itens. Responde a filtros de dimensões e de colunas de fact_orders.
-	measure Receita = CALCULATE ( SUM ( fact_order_items[total_value] ), TREATAS ( VALUES ( fact_orders[order_id] ), fact_order_items[order_id] ) )
+	/// Preço + frete dos itens de pedidos válidos (sem cancelados/indisponíveis), pela data da compra. Responde a filtros de dimensões e de colunas de fact_orders.
+	measure Receita = CALCULATE ( SUM ( fact_order_items[total_value] ), TREATAS ( CALCULATETABLE ( VALUES ( fact_orders[order_id] ), fact_orders[pedido_valido] = TRUE () ), fact_order_items[order_id] ) )
 		formatString: "R$" #,0
 		displayFolder: 1. Vendas
 		lineageTag: 2d0a6009-9f1c-48e4-beef-3bc2379c4588
 
-	measure Pedidos = CALCULATE ( DISTINCTCOUNT ( fact_orders[order_id] ), TREATAS ( VALUES ( fact_order_items[order_id] ), fact_orders[order_id] ) )
+	measure Pedidos = CALCULATE ( DISTINCTCOUNT ( fact_orders[order_id] ), fact_orders[pedido_valido] = TRUE (), TREATAS ( VALUES ( fact_order_items[order_id] ), fact_orders[order_id] ) )
 		formatString: #,0
 		displayFolder: 1. Vendas
 		lineageTag: 86701da5-9ceb-4792-a9c5-092f5e2ce362
@@ -20,12 +20,12 @@ table _Medidas
 		displayFolder: 1. Vendas
 		lineageTag: b8228336-a7ca-4f65-98e4-df125d512432
 
-	measure 'Clientes Únicos' = COUNTROWS ( SUMMARIZE ( CALCULATETABLE ( fact_order_items, TREATAS ( VALUES ( fact_orders[order_id] ), fact_order_items[order_id] ) ), dim_customer[customer_unique_id] ) )
+	measure 'Clientes Únicos' = COUNTROWS ( SUMMARIZE ( CALCULATETABLE ( fact_order_items, TREATAS ( CALCULATETABLE ( VALUES ( fact_orders[order_id] ), fact_orders[pedido_valido] = TRUE () ), fact_order_items[order_id] ) ), dim_customer[customer_unique_id] ) )
 		formatString: #,0
 		displayFolder: 1. Vendas
 		lineageTag: b74e1609-3ef3-4cac-9112-cccc5913b1ac
 
-	measure 'Receita Produtos' = CALCULATE ( SUM ( fact_order_items[price] ), TREATAS ( VALUES ( fact_orders[order_id] ), fact_order_items[order_id] ) )
+	measure 'Receita Produtos' = CALCULATE ( SUM ( fact_order_items[price] ), TREATAS ( CALCULATETABLE ( VALUES ( fact_orders[order_id] ), fact_orders[pedido_valido] = TRUE () ), fact_order_items[order_id] ) )
 		formatString: "R$" #,0
 		displayFolder: 1. Vendas
 		lineageTag: 49ce369c-1b8e-4747-ba37-771a66b18cc2
@@ -61,7 +61,7 @@ table _Medidas
 		displayFolder: 5. Clientes
 		lineageTag: ae26bb9e-048f-4c1c-a6c0-3b6a74de248f
 
-	measure Frete = CALCULATE ( SUM ( fact_order_items[freight_value] ), TREATAS ( VALUES ( fact_orders[order_id] ), fact_order_items[order_id] ) )
+	measure Frete = CALCULATE ( SUM ( fact_order_items[freight_value] ), TREATAS ( CALCULATETABLE ( VALUES ( fact_orders[order_id] ), fact_orders[pedido_valido] = TRUE () ), fact_order_items[order_id] ) )
 		formatString: "R$" #,0
 		displayFolder: 1. Vendas
 		lineageTag: 3b64ee5e-ffc9-4b03-9b8c-b66585a77938
@@ -71,7 +71,7 @@ table _Medidas
 		displayFolder: 1. Vendas
 		lineageTag: 0e9c1973-e4f8-44e0-92f5-2c1d8f3e0107
 
-	measure 'Itens por Pedido' = DIVIDE ( CALCULATE ( COUNTROWS ( fact_order_items ), TREATAS ( VALUES ( fact_orders[order_id] ), fact_order_items[order_id] ) ), [Pedidos] )
+	measure 'Itens por Pedido' = DIVIDE ( CALCULATE ( COUNTROWS ( fact_order_items ), TREATAS ( CALCULATETABLE ( VALUES ( fact_orders[order_id] ), fact_orders[pedido_valido] = TRUE () ), fact_order_items[order_id] ) ), [Pedidos] )
 		formatString: 0.00
 		displayFolder: 1. Vendas
 		lineageTag: bb93c95c-ccfc-4b95-8963-a12cf8194e29
@@ -150,110 +150,12 @@ table _Medidas
 
 	/// Último mês com vendas no contexto e o mês anterior a ele (base dos cards de variação)
 	measure 'Mês de Referência' = FORMAT ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), "mmm/yy" )
-		displayFolder: 6. Variação mensal
+		displayFolder: 6. Comparativos
 		lineageTag: 95276943-0892-49a1-a0ed-422ff28f7988
 
 	measure 'Mês Anterior' = FORMAT ( EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), -1 ), "mmm/yy" )
-		displayFolder: 6. Variação mensal
+		displayFolder: 6. Comparativos
 		lineageTag: c122a388-226d-4f44-83e3-c9e865bde35d
-
-	measure 'Receita Δ%' =
-			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
-			VAR atual = CALCULATE ( [Receita], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
-			VAR anterior = CALCULATE ( [Receita], DATESINPERIOD ( dim_date[date], EOMONTH ( fim, -1 ), -1, MONTH ) )
-			RETURN DIVIDE ( atual - anterior, anterior )
-		formatString: +0.0%;-0.0%;0.0%
-		displayFolder: 6. Variação mensal
-		lineageTag: dd8efd5c-5f50-43b8-8a43-63d9c077eacf
-
-	measure 'Pedidos Δ%' =
-			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
-			VAR atual = CALCULATE ( [Pedidos], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
-			VAR anterior = CALCULATE ( [Pedidos], DATESINPERIOD ( dim_date[date], EOMONTH ( fim, -1 ), -1, MONTH ) )
-			RETURN DIVIDE ( atual - anterior, anterior )
-		formatString: +0.0%;-0.0%;0.0%
-		displayFolder: 6. Variação mensal
-		lineageTag: 1e2b0d9a-3b77-423f-9300-7704f45e4b82
-
-	measure 'Ticket Médio Δ%' =
-			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
-			VAR atual = CALCULATE ( [Ticket Médio], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
-			VAR anterior = CALCULATE ( [Ticket Médio], DATESINPERIOD ( dim_date[date], EOMONTH ( fim, -1 ), -1, MONTH ) )
-			RETURN DIVIDE ( atual - anterior, anterior )
-		formatString: +0.0%;-0.0%;0.0%
-		displayFolder: 6. Variação mensal
-		lineageTag: 0c14f2f6-a4b4-4466-8fb9-c5eb8c70b1ef
-
-	/// Nota: diferença absoluta em pontos (escala 1 a 5)
-	measure 'Nota Média Δ' =
-			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
-			VAR atual = CALCULATE ( [Nota Média], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
-			VAR anterior = CALCULATE ( [Nota Média], DATESINPERIOD ( dim_date[date], EOMONTH ( fim, -1 ), -1, MONTH ) )
-			RETURN IF ( NOT ISBLANK ( anterior ), atual - anterior )
-		formatString: +0.00;-0.00;0.00
-		displayFolder: 6. Variação mensal
-		lineageTag: 80cc271a-8e40-4c50-b81b-f71a47dfe397
-
-	/// % Atraso: diferença em pontos percentuais
-	measure '% Atraso Δ' =
-			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
-			VAR atual = CALCULATE ( [% Atraso], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
-			VAR anterior = CALCULATE ( [% Atraso], DATESINPERIOD ( dim_date[date], EOMONTH ( fim, -1 ), -1, MONTH ) )
-			RETURN IF ( NOT ISBLANK ( anterior ), atual - anterior )
-		formatString: +0.0%;-0.0%;0.0%
-		displayFolder: 6. Variação mensal
-		lineageTag: a3c91eae-154a-426e-87c2-0fcea7e9019c
-
-	measure 'Receita Δ Texto' =
-			VAR d = [Receita Δ%]
-			RETURN IF ( NOT ISBLANK ( d ), IF ( d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( d ), "0.0%" ) & "  vs " & [Mês Anterior] )
-		displayFolder: 6. Variação mensal
-		lineageTag: 0bb3d880-c667-41eb-a03e-255b7cacc4a8
-
-	measure 'Pedidos Δ Texto' =
-			VAR d = [Pedidos Δ%]
-			RETURN IF ( NOT ISBLANK ( d ), IF ( d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( d ), "0.0%" ) & "  vs " & [Mês Anterior] )
-		displayFolder: 6. Variação mensal
-		lineageTag: bab50613-4108-48b1-82bb-1b8324c1dbfc
-
-	measure 'Ticket Médio Δ Texto' =
-			VAR d = [Ticket Médio Δ%]
-			RETURN IF ( NOT ISBLANK ( d ), IF ( d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( d ), "0.0%" ) & "  vs " & [Mês Anterior] )
-		displayFolder: 6. Variação mensal
-		lineageTag: a6f1c842-03b6-4424-8872-d7c47b78c2df
-
-	measure 'Nota Média Δ Texto' =
-			VAR d = [Nota Média Δ]
-			RETURN IF ( NOT ISBLANK ( d ), IF ( d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( d ), "0.00" ) & " pts  vs " & [Mês Anterior] )
-		displayFolder: 6. Variação mensal
-		lineageTag: 4b142cfd-450b-42c9-a84c-ae9ea5f528d8
-
-	measure '% Atraso Δ Texto' =
-			VAR d = [% Atraso Δ]
-			RETURN IF ( NOT ISBLANK ( d ), IF ( d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( d ) * 100, "0.0" ) & " p.p.  vs " & [Mês Anterior] )
-		displayFolder: 6. Variação mensal
-		lineageTag: 02612349-1e66-4712-9ae1-1a2586de93bb
-
-	measure 'Receita Δ Cor' = IF ( [Receita Δ%] >= 0, "#10B981", "#EF4444" )
-		displayFolder: 6. Variação mensal
-		lineageTag: 7b381670-3498-4d39-8cb5-9612850b76ae
-
-	measure 'Pedidos Δ Cor' = IF ( [Pedidos Δ%] >= 0, "#10B981", "#EF4444" )
-		displayFolder: 6. Variação mensal
-		lineageTag: cc65ad82-8fe7-40db-9e28-b744a816924d
-
-	measure 'Ticket Médio Δ Cor' = IF ( [Ticket Médio Δ%] >= 0, "#10B981", "#EF4444" )
-		displayFolder: 6. Variação mensal
-		lineageTag: 817a9d20-7ff9-4903-bd81-254ada09b408
-
-	measure 'Nota Média Δ Cor' = IF ( [Nota Média Δ] >= 0, "#10B981", "#EF4444" )
-		displayFolder: 6. Variação mensal
-		lineageTag: c0bff338-4683-4f33-ae34-7bc63d089a3b
-
-	/// Para atraso, subir é ruim: a cor é invertida
-	measure '% Atraso Δ Cor' = IF ( [% Atraso Δ] <= 0, "#10B981", "#EF4444" )
-		displayFolder: 6. Variação mensal
-		lineageTag: e96708e8-0a73-4225-abf0-70ad9e102b23
 
 	/// Minigráfico do Cartão KPI: valor de cada mês do período filtrado, separados por ";"
 	measure 'Receita Série' = CONCATENATEX ( ADDCOLUMNS ( SUMMARIZE ( ALLSELECTED ( dim_date ), dim_date[year_month] ), "@v", [Receita] ), FORMAT ( [@v], "0.######", "en-US" ), ";", dim_date[year_month], ASC )
@@ -320,6 +222,240 @@ table _Medidas
 		formatString: 0.0%
 		displayFolder: 1. Vendas
 		lineageTag: 248ba1b1-e304-4360-b880-33f09b370f46
+
+	/// Período com vendas no contexto (cartões das páginas de análise)
+	measure 'Período Selecionado' =
+			FORMAT ( CALCULATE ( MIN ( dim_date[date] ), fact_order_items ), "mmm/yy" ) & "–" & FORMAT ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), "mmm/yy" )
+		displayFolder: 6. Comparativos
+
+	/// Valor no mês de referência (último mês com vendas no contexto)
+	measure 'Receita Mês' =
+			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
+			RETURN CALCULATE ( [Receita], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
+		formatString: "R$" #,0
+		displayFolder: 6. Comparativos
+
+	/// Variação relativa do mês de referência contra o mês anterior
+	measure 'Receita vs Mês Anterior' =
+			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
+			VAR atual = CALCULATE ( [Receita], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
+			VAR anterior = CALCULATE ( [Receita], DATESINPERIOD ( dim_date[date], EOMONTH ( fim, -1 ), -1, MONTH ) )
+			RETURN DIVIDE ( atual - anterior, anterior )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 6. Comparativos
+
+	/// Variação relativa do mês de referência contra o mesmo mês do ano anterior
+	measure 'Receita vs Ano Anterior' =
+			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
+			VAR atual = CALCULATE ( [Receita], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
+			VAR anterior = CALCULATE ( [Receita], DATESINPERIOD ( dim_date[date], EOMONTH ( fim, -12 ), -1, MONTH ) )
+			RETURN DIVIDE ( atual - anterior, anterior )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 6. Comparativos
+
+	/// Valor no mês de referência (último mês com vendas no contexto)
+	measure 'Pedidos Mês' =
+			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
+			RETURN CALCULATE ( [Pedidos], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
+		formatString: #,0
+		displayFolder: 6. Comparativos
+
+	/// Variação relativa do mês de referência contra o mês anterior
+	measure 'Pedidos vs Mês Anterior' =
+			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
+			VAR atual = CALCULATE ( [Pedidos], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
+			VAR anterior = CALCULATE ( [Pedidos], DATESINPERIOD ( dim_date[date], EOMONTH ( fim, -1 ), -1, MONTH ) )
+			RETURN DIVIDE ( atual - anterior, anterior )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 6. Comparativos
+
+	/// Variação relativa do mês de referência contra o mesmo mês do ano anterior
+	measure 'Pedidos vs Ano Anterior' =
+			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
+			VAR atual = CALCULATE ( [Pedidos], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
+			VAR anterior = CALCULATE ( [Pedidos], DATESINPERIOD ( dim_date[date], EOMONTH ( fim, -12 ), -1, MONTH ) )
+			RETURN DIVIDE ( atual - anterior, anterior )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 6. Comparativos
+
+	/// Valor no mês de referência (último mês com vendas no contexto)
+	measure 'Ticket Médio Mês' =
+			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
+			RETURN CALCULATE ( [Ticket Médio], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
+		formatString: "R$" #,0.00
+		displayFolder: 6. Comparativos
+
+	/// Variação relativa do mês de referência contra o mês anterior
+	measure 'Ticket Médio vs Mês Anterior' =
+			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
+			VAR atual = CALCULATE ( [Ticket Médio], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
+			VAR anterior = CALCULATE ( [Ticket Médio], DATESINPERIOD ( dim_date[date], EOMONTH ( fim, -1 ), -1, MONTH ) )
+			RETURN DIVIDE ( atual - anterior, anterior )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 6. Comparativos
+
+	/// Variação relativa do mês de referência contra o mesmo mês do ano anterior
+	measure 'Ticket Médio vs Ano Anterior' =
+			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
+			VAR atual = CALCULATE ( [Ticket Médio], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
+			VAR anterior = CALCULATE ( [Ticket Médio], DATESINPERIOD ( dim_date[date], EOMONTH ( fim, -12 ), -1, MONTH ) )
+			RETURN DIVIDE ( atual - anterior, anterior )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 6. Comparativos
+
+	/// Valor no mês de referência (último mês com vendas no contexto)
+	measure 'Nota Média Mês' =
+			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
+			RETURN CALCULATE ( [Nota Média], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
+		formatString: 0.00
+		displayFolder: 6. Comparativos
+
+	/// Diferença em pontos (escala 1–5) contra o mês anterior
+	measure 'Nota Média vs Mês Anterior' =
+			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
+			VAR atual = CALCULATE ( [Nota Média], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
+			VAR anterior = CALCULATE ( [Nota Média], DATESINPERIOD ( dim_date[date], EOMONTH ( fim, -1 ), -1, MONTH ) )
+			RETURN IF ( NOT ISBLANK ( atual ) && NOT ISBLANK ( anterior ), atual - anterior )
+		formatString: +0.00;-0.00;0.00
+		displayFolder: 6. Comparativos
+
+	/// Diferença em pontos (escala 1–5) contra o mesmo mês do ano anterior
+	measure 'Nota Média vs Ano Anterior' =
+			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
+			VAR atual = CALCULATE ( [Nota Média], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
+			VAR anterior = CALCULATE ( [Nota Média], DATESINPERIOD ( dim_date[date], EOMONTH ( fim, -12 ), -1, MONTH ) )
+			RETURN IF ( NOT ISBLANK ( atual ) && NOT ISBLANK ( anterior ), atual - anterior )
+		formatString: +0.00;-0.00;0.00
+		displayFolder: 6. Comparativos
+
+	/// Valor no mês de referência (último mês com vendas no contexto)
+	measure '% Atraso Mês' =
+			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
+			RETURN CALCULATE ( [% Atraso], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
+		formatString: 0.0%
+		displayFolder: 6. Comparativos
+
+	/// Diferença em pontos percentuais (p.p.) contra o mês anterior, não variação relativa
+	measure '% Atraso vs Mês Anterior' =
+			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
+			VAR atual = CALCULATE ( [% Atraso], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
+			VAR anterior = CALCULATE ( [% Atraso], DATESINPERIOD ( dim_date[date], EOMONTH ( fim, -1 ), -1, MONTH ) )
+			RETURN IF ( NOT ISBLANK ( atual ) && NOT ISBLANK ( anterior ), ( atual - anterior ) * 100 )
+		formatString: +0.0" p.p.";-0.0" p.p.";0.0" p.p."
+		displayFolder: 6. Comparativos
+
+	/// Diferença em pontos percentuais (p.p.) contra o mesmo mês do ano anterior, não variação relativa
+	measure '% Atraso vs Ano Anterior' =
+			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
+			VAR atual = CALCULATE ( [% Atraso], DATESINPERIOD ( dim_date[date], fim, -1, MONTH ) )
+			VAR anterior = CALCULATE ( [% Atraso], DATESINPERIOD ( dim_date[date], EOMONTH ( fim, -12 ), -1, MONTH ) )
+			RETURN IF ( NOT ISBLANK ( atual ) && NOT ISBLANK ( anterior ), ( atual - anterior ) * 100 )
+		formatString: +0.0" p.p.";-0.0" p.p.";0.0" p.p."
+		displayFolder: 6. Comparativos
+
+	/// Acumulado do ano do mês de referência (jan até o mês)
+	measure 'Receita Acumulada Ano' =
+			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
+			RETURN CALCULATE ( [Receita], DATESBETWEEN ( dim_date[date], DATE ( YEAR ( fim ), 1, 1 ), fim ) )
+		formatString: "R$" #,0
+		displayFolder: 6. Comparativos
+
+	/// Acumulado do ano contra o mesmo período do ano anterior
+	measure 'Receita Acumulada vs Ano Anterior' =
+			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
+			VAR ytd = CALCULATE ( [Receita], DATESBETWEEN ( dim_date[date], DATE ( YEAR ( fim ), 1, 1 ), fim ) )
+			VAR pytd = CALCULATE ( [Receita], DATESBETWEEN ( dim_date[date], DATE ( YEAR ( fim ) - 1, 1, 1 ), EDATE ( fim, -12 ) ) )
+			RETURN DIVIDE ( ytd - pytd, pytd )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 6. Comparativos
+
+	/// Mesma receita 12 meses antes (série de comparação no gráfico mensal)
+	measure 'Receita Ano Anterior' =
+			CALCULATE ( [Receita], DATEADD ( dim_date[date], -12, MONTH ) )
+		formatString: "R$" #,0
+		displayFolder: 7. Gráficos
+
+	/// Só o mês de maior receita do período (marcador + rótulo de anotação)
+	measure 'Receita Pico' =
+			VAR meses = ADDCOLUMNS ( SUMMARIZE ( ALLSELECTED ( dim_date ), dim_date[year_month] ), "@r", [Receita] )
+			VAR maximo = MAXX ( meses, [@r] )
+			VAR atual = [Receita]
+			RETURN IF ( NOT ISBLANK ( atual ) && atual = maximo, atual )
+		formatString: "R$" #,0
+		displayFolder: 7. Gráficos
+
+	/// Manchete dinâmica da Visão Geral: crescimento acumulado do ano
+	measure 'Insight Visão Título' =
+			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
+			VAR ytd = CALCULATE ( [Receita], DATESBETWEEN ( dim_date[date], DATE ( YEAR ( fim ), 1, 1 ), fim ) )
+			VAR pytd = CALCULATE ( [Receita], DATESBETWEEN ( dim_date[date], DATE ( YEAR ( fim ) - 1, 1, 1 ), EDATE ( fim, -12 ) ) )
+			VAR g = DIVIDE ( ytd - pytd, pytd )
+			RETURN IF ( ISBLANK ( g ), "Receita de R$ " & FORMAT ( [Receita] / 1000000, "0.0" ) & " mi no período", "Receita " & YEAR ( fim ) & " cresce " & FORMAT ( g, "0%" ) & " sobre " & ( YEAR ( fim ) - 1 ) & " no acumulado" )
+		displayFolder: 8. Insights
+
+	/// Texto dinâmico da Visão Geral: pico, platô e ritmo do crescimento anual
+	measure 'Insight Visão Texto' =
+			VAR fim = EOMONTH ( CALCULATE ( MAX ( dim_date[date] ), fact_order_items ), 0 )
+			VAR meses = FILTER ( ADDCOLUMNS ( SUMMARIZE ( ALLSELECTED ( dim_date ), dim_date[year_month], dim_date[month_year] ), "@r", [Receita] ), NOT ISBLANK ( [@r] ) )
+			VAR pico = TOPN ( 1, meses, [@r], DESC )
+			VAR picoValor = MAXX ( pico, [@r] )
+			VAR media6 = AVERAGEX ( TOPN ( 6, meses, dim_date[year_month], DESC ), [@r] )
+			VAR ytd = CALCULATE ( [Receita], DATESBETWEEN ( dim_date[date], DATE ( YEAR ( fim ), 1, 1 ), fim ) )
+			VAR pytd = CALCULATE ( [Receita], DATESBETWEEN ( dim_date[date], DATE ( YEAR ( fim ) - 1, 1, 1 ), EDATE ( fim, -12 ) ) )
+			VAR gAcum = DIVIDE ( ytd - pytd, pytd )
+			VAR gMes = [Receita vs Ano Anterior]
+			VAR ritmo = IF ( gMes < gAcum, "desacelera", "acelera" )
+			RETURN
+			"Pico em " & MAXX ( pico, dim_date[month_year] ) & " (R$ " & FORMAT ( picoValor / 1000000, "0.00" ) & " mi). "
+			& "Nos últimos 6 meses, média de R$ " & FORMAT ( media6 / 1000000, "0.00" ) & " mi/mês (" & FORMAT ( DIVIDE ( media6, picoValor ), "0%" ) & " do pico): platô mensal."
+			& IF ( NOT ISBLANK ( gMes ), " Contra o mesmo mês do ano anterior, " & [Mês de Referência] & " cresce " & FORMAT ( gMes, "0%" ) & ": o crescimento anual " & ritmo & "." )
+		displayFolder: 8. Insights
+
+	/// Manchete dinâmica da Logística
+	measure 'Insight Logística Título' =
+			IF ( [Pedidos Entregues] < 30, "Poucos pedidos entregues no filtro atual", FORMAT ( [% Atraso], "0.0%" ) & " dos pedidos chegam atrasados" )
+		displayFolder: 8. Insights
+
+	/// Texto dinâmico da Logística: prazo real × prometido e pior estado
+	measure 'Insight Logística Texto' =
+			VAR estados = FILTER ( ADDCOLUMNS ( VALUES ( dim_customer[state] ), "@a", [% Atraso], "@n", [Pedidos Entregues] ), [@n] >= 500 )
+			VAR pior = TOPN ( 1, estados, [@a], DESC )
+			VAR taxa = MAXX ( pior, [@a] )
+			RETURN
+			"A entrega leva " & FORMAT ( [Tempo Médio de Entrega (dias)], "0.0" ) & " dias contra " & FORMAT ( [Prazo Estimado (dias)], "0.0" ) & " prometidos."
+			& IF ( COUNTROWS ( estados ) > 1,
+			" Pior estado com 500+ pedidos: " & MAXX ( pior, dim_customer[state] ) & ", " & FORMAT ( taxa, "0.0%" ) & " (" & FORMAT ( DIVIDE ( taxa, [% Atraso] ), "0.0" ) & "× a média).",
+			" Filtro atual sem estados suficientes (500+ pedidos) para comparar." )
+		displayFolder: 8. Insights
+
+	/// Manchete dinâmica de Clientes: nota no prazo × atrasado (mínimo de 30 avaliações)
+	measure 'Insight Clientes Título' =
+			VAR n = CALCULATE ( [Avaliações], fact_orders[is_late] = TRUE () )
+			RETURN IF ( n < 30, "Poucos pedidos atrasados no filtro atual", "Atraso derruba a nota de " & FORMAT ( [Nota Média - No Prazo], "0.00" ) & " para " & FORMAT ( [Nota Média - Atrasados], "0.00" ) )
+		displayFolder: 8. Insights
+
+	/// Texto dinâmico de Clientes: avaliações negativas por atraso e recompra
+	measure 'Insight Clientes Texto' =
+			VAR neg6 = CALCULATE ( [% Avaliações Negativas], fact_orders[delay_days] > 5, fact_orders[is_delivered] = TRUE () )
+			VAR negOk = CALCULATE ( [% Avaliações Negativas], fact_orders[is_late] = FALSE (), fact_orders[is_delivered] = TRUE () )
+			RETURN
+			IF ( NOT ISBLANK ( neg6 ), "Com 6+ dias de atraso, " & FORMAT ( neg6, "0%" ) & " das avaliações são negativas (no prazo: " & FORMAT ( negOk, "0%" ) & "). " )
+			& "Só " & FORMAT ( [% Recompra], "0.0%" ) & " dos clientes compram de novo: entregar no prazo é a alavanca de retenção."
+		displayFolder: 8. Insights
+
+	/// Manchete dinâmica de Vendas: concentração (Pareto)
+	measure 'Insight Vendas Título' =
+			FORMAT ( [% Receita Top 20% Vendedores], "0%" ) & " da receita vem de 20% dos vendedores"
+		displayFolder: 8. Insights
+
+	/// Texto dinâmico de Vendas: vendedores ativos e categoria líder
+	measure 'Insight Vendas Texto' =
+			VAR cats = ADDCOLUMNS ( VALUES ( dim_product[category_pt] ), "@r", [Receita] )
+			VAR lider = TOPN ( 1, cats, [@r], DESC )
+			RETURN
+			FORMAT ( [Vendedores Ativos], "#,0" ) & " vendedores ativos. Categoria líder: " & MAXX ( lider, dim_product[category_pt] ) & " (" & FORMAT ( DIVIDE ( MAXX ( lider, [@r] ), [Receita] ), "0.0%" ) & " da receita). "
+			& "Perder um grande vendedor pesa: reter o topo e desenvolver a cauda longa."
+		displayFolder: 8. Insights
 
 	column Coluna
 		dataType: string

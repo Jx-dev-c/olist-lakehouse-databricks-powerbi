@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "kpi_3",
   "position": {
-    "x": 1010,
+    "x": 1010.0,
     "y": 72,
     "z": 5130,
     "height": 104,
-    "width": 254,
+    "width": 254.0,
     "tabOrder": 5130
   },
   "visual": {
@@ -28,6 +28,24 @@
               },
               "queryRef": "_Medidas.% Recompra",
               "nativeQueryRef": "% Recompra"
+            }
+          ]
+        },
+        "comparacao": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Período Selecionado"
+                }
+              },
+              "queryRef": "_Medidas.Período Selecionado",
+              "nativeQueryRef": "Período Selecionado"
             }
           ]
         },
@@ -59,6 +77,13 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            },
+            "titulo": {
+              "expr": {
+                "Literal": {
+                  "Value": "'% Recompra'"
                 }
               }
             }

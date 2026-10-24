@@ -169,6 +169,11 @@
           "name": "OlistLight.json",
           "path": "OlistLight.json",
           "type": "CustomTheme"
+        },
+        {
+          "name": "hero_glossario.png",
+          "path": "hero_glossario.png",
+          "type": "Image"
         }
       ]
     },
@@ -190,6 +195,17 @@
         {
           "name": "cartaoKpi11141578A8AA47AB972EA4E95E3FC9D6.pbiviz.json",
           "path": "cartaoKpi11141578A8AA47AB972EA4E95E3FC9D6.pbiviz.json",
+          "type": "CustomVisualMetadata"
+        }
+      ]
+    },
+    {
+      "name": "cartaoInsight898E64C68D8B44F7AD62CC68A1C386EE",
+      "type": "CustomVisual",
+      "items": [
+        {
+          "name": "cartaoInsight898E64C68D8B44F7AD62CC68A1C386EE.pbiviz.json",
+          "path": "cartaoInsight898E64C68D8B44F7AD62CC68A1C386EE.pbiviz.json",
           "type": "CustomVisualMetadata"
         }
       ]

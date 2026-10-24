@@ -230,6 +230,11 @@ table fact_orders
 		lineageTag: 09d93660-436b-4152-acab-d01bc138a9fe
 		summarizeBy: none
 
+	/// Pedido que conta como venda: exclui cancelados e indisponíveis (status final sem receita)
+	column pedido_valido = NOT ( fact_orders[order_status] IN { "canceled", "unavailable" } )
+		dataType: boolean
+		summarizeBy: none
+
 	partition fact_orders = m
 		mode: import
 		source =

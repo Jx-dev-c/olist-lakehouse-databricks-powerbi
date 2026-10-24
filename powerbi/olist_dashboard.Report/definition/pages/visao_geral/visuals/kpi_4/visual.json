@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "kpi_4",
   "position": {
-    "x": 1064,
+    "x": 1064.0,
     "y": 72,
     "z": 5140,
     "height": 104,
-    "width": 200,
+    "width": 200.0,
     "tabOrder": 5140
   },
   "visual": {
@@ -23,11 +23,11 @@
                       "Entity": "_Medidas"
                     }
                   },
-                  "Property": "% Atraso"
+                  "Property": "% Atraso Mês"
                 }
               },
-              "queryRef": "_Medidas.% Atraso",
-              "nativeQueryRef": "% Atraso"
+              "queryRef": "_Medidas.% Atraso Mês",
+              "nativeQueryRef": "% Atraso Mês"
             }
           ]
         },
@@ -41,11 +41,29 @@
                       "Entity": "_Medidas"
                     }
                   },
-                  "Property": "% Atraso Δ"
+                  "Property": "% Atraso vs Mês Anterior"
                 }
               },
-              "queryRef": "_Medidas.% Atraso Δ",
-              "nativeQueryRef": "% Atraso Δ"
+              "queryRef": "_Medidas.% Atraso vs Mês Anterior",
+              "nativeQueryRef": "% Atraso vs Mês Anterior"
+            }
+          ]
+        },
+        "variacao2": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "% Atraso vs Ano Anterior"
+                }
+              },
+              "queryRef": "_Medidas.% Atraso vs Ano Anterior",
+              "nativeQueryRef": "% Atraso vs Ano Anterior"
             }
           ]
         },
@@ -59,11 +77,11 @@
                       "Entity": "_Medidas"
                     }
                   },
-                  "Property": "Mês Anterior"
+                  "Property": "Mês de Referência"
                 }
               },
-              "queryRef": "_Medidas.Mês Anterior",
-              "nativeQueryRef": "Mês Anterior"
+              "queryRef": "_Medidas.Mês de Referência",
+              "nativeQueryRef": "Mês de Referência"
             }
           ]
         },
@@ -95,6 +113,13 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            },
+            "titulo": {
+              "expr": {
+                "Literal": {
+                  "Value": "'% Atraso'"
                 }
               }
             }

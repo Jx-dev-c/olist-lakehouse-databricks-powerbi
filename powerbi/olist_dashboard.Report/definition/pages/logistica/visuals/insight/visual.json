@@ -4,57 +4,52 @@
   "position": {
     "x": 640,
     "y": 456,
-    "z": 1400,
+    "z": 6100,
     "height": 248,
     "width": 208,
-    "tabOrder": 1400
+    "tabOrder": 6100
   },
   "visual": {
-    "visualType": "textbox",
-    "objects": {
-      "general": [
-        {
-          "properties": {
-            "paragraphs": [
-              {
-                "textRuns": [
-                  {
-                    "value": "INSIGHT",
-                    "textStyle": {
-                      "fontSize": "8pt",
-                      "fontWeight": "bold",
-                      "color": "#22D3EE"
+    "visualType": "cartaoInsight898E64C68D8B44F7AD62CC68A1C386EE",
+    "query": {
+      "queryState": {
+        "titulo": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
                     }
-                  }
-                ]
+                  },
+                  "Property": "Insight Logística Título"
+                }
               },
-              {
-                "textRuns": [
-                  {
-                    "value": "Prazo folgado, atraso regional",
-                    "textStyle": {
-                      "fontSize": "13pt",
-                      "fontWeight": "bold",
-                      "color": "#FFFFFF"
+              "queryRef": "_Medidas.Insight Logística Título",
+              "nativeQueryRef": "Insight Logística Título"
+            }
+          ]
+        },
+        "texto": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
                     }
-                  }
-                ]
+                  },
+                  "Property": "Insight Logística Texto"
+                }
               },
-              {
-                "textRuns": [
-                  {
-                    "value": "A entrega leva 12,5 dias contra 24,3 prometidos, e mesmo assim MA, CE, BA e RJ atrasam de 1,8× a 2,6× a média (estados com 500+ pedidos). O pico foi em mar/2018 (19%).",
-                    "textStyle": {
-                      "fontSize": "9pt",
-                      "color": "#CBD5E1"
-                    }
-                  }
-                ]
-              }
-            ]
-          }
+              "queryRef": "_Medidas.Insight Logística Texto",
+              "nativeQueryRef": "Insight Logística Texto"
+            }
+          ]
         }
-      ]
+      }
     },
     "visualContainerObjects": {
       "background": [
@@ -63,25 +58,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#0F1E3D'"
-                    }
-                  }
-                }
-              }
-            },
-            "transparency": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+                  "Value": "false"
                 }
               }
             }
@@ -94,59 +71,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#1E3A8A'"
-                    }
-                  }
-                }
-              }
-            },
-            "radius": {
-              "expr": {
-                "Literal": {
-                  "Value": "12D"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "padding": [
-        {
-          "properties": {
-            "right": {
-              "expr": {
-                "Literal": {
-                  "Value": "14D"
-                }
-              }
-            },
-            "top": {
-              "expr": {
-                "Literal": {
-                  "Value": "12D"
-                }
-              }
-            },
-            "bottom": {
-              "expr": {
-                "Literal": {
-                  "Value": "12D"
-                }
-              }
-            },
-            "left": {
-              "expr": {
-                "Literal": {
-                  "Value": "14D"
+                  "Value": "false"
                 }
               }
             }
@@ -159,60 +84,54 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#1E3A8A'"
-                    }
-                  }
-                }
-              }
-            },
-            "transparency": {
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
               "expr": {
                 "Literal": {
-                  "Value": "70D"
+                  "Value": "0D"
                 }
               }
             },
-            "preset": {
+            "bottom": {
               "expr": {
                 "Literal": {
-                  "Value": "'Custom'"
+                  "Value": "0D"
                 }
               }
             },
-            "shadowBlur": {
+            "left": {
               "expr": {
                 "Literal": {
-                  "Value": "14D"
+                  "Value": "0D"
                 }
               }
             },
-            "shadowDistance": {
+            "right": {
               "expr": {
                 "Literal": {
-                  "Value": "4D"
+                  "Value": "0D"
                 }
               }
-            },
-            "angle": {
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
               "expr": {
                 "Literal": {
-                  "Value": "90D"
-                }
-              }
-            },
-            "position": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Outer'"
+                  "Value": "false"
                 }
               }
             }

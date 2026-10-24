@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "kpi_0",
   "position": {
-    "x": 200,
+    "x": 200.0,
     "y": 72,
     "z": 5100,
     "height": 104,
-    "width": 254,
+    "width": 254.0,
     "tabOrder": 5100
   },
   "visual": {
@@ -31,24 +31,6 @@
             }
           ]
         },
-        "variacao": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Nota Média Δ"
-                }
-              },
-              "queryRef": "_Medidas.Nota Média Δ",
-              "nativeQueryRef": "Nota Média Δ"
-            }
-          ]
-        },
         "comparacao": {
           "projections": [
             {
@@ -59,11 +41,11 @@
                       "Entity": "_Medidas"
                     }
                   },
-                  "Property": "Mês Anterior"
+                  "Property": "Período Selecionado"
                 }
               },
-              "queryRef": "_Medidas.Mês Anterior",
-              "nativeQueryRef": "Mês Anterior"
+              "queryRef": "_Medidas.Período Selecionado",
+              "nativeQueryRef": "Período Selecionado"
             }
           ]
         },
@@ -95,6 +77,13 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            },
+            "titulo": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Nota Média'"
                 }
               }
             },

@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "kpi_1",
   "position": {
-    "x": 416,
+    "x": 416.0,
     "y": 72,
     "z": 5110,
     "height": 104,
-    "width": 200,
+    "width": 200.0,
     "tabOrder": 5110
   },
   "visual": {
@@ -23,11 +23,11 @@
                       "Entity": "_Medidas"
                     }
                   },
-                  "Property": "Pedidos"
+                  "Property": "Pedidos Mês"
                 }
               },
-              "queryRef": "_Medidas.Pedidos",
-              "nativeQueryRef": "Pedidos"
+              "queryRef": "_Medidas.Pedidos Mês",
+              "nativeQueryRef": "Pedidos Mês"
             }
           ]
         },
@@ -41,11 +41,29 @@
                       "Entity": "_Medidas"
                     }
                   },
-                  "Property": "Pedidos Δ%"
+                  "Property": "Pedidos vs Mês Anterior"
                 }
               },
-              "queryRef": "_Medidas.Pedidos Δ%",
-              "nativeQueryRef": "Pedidos Δ%"
+              "queryRef": "_Medidas.Pedidos vs Mês Anterior",
+              "nativeQueryRef": "Pedidos vs Mês Anterior"
+            }
+          ]
+        },
+        "variacao2": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Pedidos vs Ano Anterior"
+                }
+              },
+              "queryRef": "_Medidas.Pedidos vs Ano Anterior",
+              "nativeQueryRef": "Pedidos vs Ano Anterior"
             }
           ]
         },
@@ -59,11 +77,11 @@
                       "Entity": "_Medidas"
                     }
                   },
-                  "Property": "Mês Anterior"
+                  "Property": "Mês de Referência"
                 }
               },
-              "queryRef": "_Medidas.Mês Anterior",
-              "nativeQueryRef": "Mês Anterior"
+              "queryRef": "_Medidas.Mês de Referência",
+              "nativeQueryRef": "Mês de Referência"
             }
           ]
         },
@@ -95,6 +113,13 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            },
+            "titulo": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Pedidos'"
                 }
               }
             }

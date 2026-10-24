@@ -110,7 +110,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Pareto: top 15 vendedores'"
+                  "Value": "'Pareto: top 10 vendedores'"
                 }
               }
             },
@@ -191,7 +191,7 @@
                         }
                       }
                     ],
-                    "Top": 15
+                    "Top": 10
                   }
                 }
               },

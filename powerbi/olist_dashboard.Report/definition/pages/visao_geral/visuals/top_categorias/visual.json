@@ -92,7 +92,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Top 10 categorias por receita'"
+                  "Value": "'Top 8 categorias por receita'"
                 }
               }
             },
@@ -173,7 +173,7 @@
                         }
                       }
                     ],
-                    "Top": 10
+                    "Top": 8
                   }
                 }
               },

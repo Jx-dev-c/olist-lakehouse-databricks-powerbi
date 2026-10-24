@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "kpi_1",
   "position": {
-    "x": 470,
+    "x": 470.0,
     "y": 72,
     "z": 5110,
     "height": 104,
-    "width": 254,
+    "width": 254.0,
     "tabOrder": 5110
   },
   "visual": {
@@ -31,24 +31,6 @@
             }
           ]
         },
-        "variacao": {
-          "projections": [
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Medidas"
-                    }
-                  },
-                  "Property": "Ticket Médio Δ%"
-                }
-              },
-              "queryRef": "_Medidas.Ticket Médio Δ%",
-              "nativeQueryRef": "Ticket Médio Δ%"
-            }
-          ]
-        },
         "comparacao": {
           "projections": [
             {
@@ -59,11 +41,11 @@
                       "Entity": "_Medidas"
                     }
                   },
-                  "Property": "Mês Anterior"
+                  "Property": "Período Selecionado"
                 }
               },
-              "queryRef": "_Medidas.Mês Anterior",
-              "nativeQueryRef": "Mês Anterior"
+              "queryRef": "_Medidas.Período Selecionado",
+              "nativeQueryRef": "Período Selecionado"
             }
           ]
         },
@@ -95,6 +77,13 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            },
+            "titulo": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Ticket Médio'"
                 }
               }
             }

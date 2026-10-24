@@ -4,57 +4,52 @@
   "position": {
     "x": 1064,
     "y": 192,
-    "z": 1300,
+    "z": 6100,
     "height": 256,
     "width": 200,
-    "tabOrder": 1300
+    "tabOrder": 6100
   },
   "visual": {
-    "visualType": "textbox",
-    "objects": {
-      "general": [
-        {
-          "properties": {
-            "paragraphs": [
-              {
-                "textRuns": [
-                  {
-                    "value": "INSIGHT",
-                    "textStyle": {
-                      "fontSize": "8pt",
-                      "fontWeight": "bold",
-                      "color": "#22D3EE"
+    "visualType": "cartaoInsight898E64C68D8B44F7AD62CC68A1C386EE",
+    "query": {
+      "queryState": {
+        "titulo": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
                     }
-                  }
-                ]
+                  },
+                  "Property": "Insight Vendas Título"
+                }
               },
-              {
-                "textRuns": [
-                  {
-                    "value": "20% dos vendedores = 82% da receita",
-                    "textStyle": {
-                      "fontSize": "13pt",
-                      "fontWeight": "bold",
-                      "color": "#FFFFFF"
+              "queryRef": "_Medidas.Insight Vendas Título",
+              "nativeQueryRef": "Insight Vendas Título"
+            }
+          ]
+        },
+        "texto": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
                     }
-                  }
-                ]
+                  },
+                  "Property": "Insight Vendas Texto"
+                }
               },
-              {
-                "textRuns": [
-                  {
-                    "value": "Concentração alta: perder um grande vendedor pesa. Programa de retenção dos top sellers e de desenvolvimento da cauda longa.",
-                    "textStyle": {
-                      "fontSize": "9pt",
-                      "color": "#CBD5E1"
-                    }
-                  }
-                ]
-              }
-            ]
-          }
+              "queryRef": "_Medidas.Insight Vendas Texto",
+              "nativeQueryRef": "Insight Vendas Texto"
+            }
+          ]
         }
-      ]
+      }
     },
     "visualContainerObjects": {
       "background": [
@@ -63,25 +58,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#0F1E3D'"
-                    }
-                  }
-                }
-              }
-            },
-            "transparency": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
+                  "Value": "false"
                 }
               }
             }
@@ -94,59 +71,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#1E3A8A'"
-                    }
-                  }
-                }
-              }
-            },
-            "radius": {
-              "expr": {
-                "Literal": {
-                  "Value": "12D"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "padding": [
-        {
-          "properties": {
-            "right": {
-              "expr": {
-                "Literal": {
-                  "Value": "14D"
-                }
-              }
-            },
-            "top": {
-              "expr": {
-                "Literal": {
-                  "Value": "12D"
-                }
-              }
-            },
-            "bottom": {
-              "expr": {
-                "Literal": {
-                  "Value": "12D"
-                }
-              }
-            },
-            "left": {
-              "expr": {
-                "Literal": {
-                  "Value": "14D"
+                  "Value": "false"
                 }
               }
             }
@@ -159,60 +84,54 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#1E3A8A'"
-                    }
-                  }
-                }
-              }
-            },
-            "transparency": {
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
               "expr": {
                 "Literal": {
-                  "Value": "70D"
+                  "Value": "0D"
                 }
               }
             },
-            "preset": {
+            "bottom": {
               "expr": {
                 "Literal": {
-                  "Value": "'Custom'"
+                  "Value": "0D"
                 }
               }
             },
-            "shadowBlur": {
+            "left": {
               "expr": {
                 "Literal": {
-                  "Value": "14D"
+                  "Value": "0D"
                 }
               }
             },
-            "shadowDistance": {
+            "right": {
               "expr": {
                 "Literal": {
-                  "Value": "4D"
+                  "Value": "0D"
                 }
               }
-            },
-            "angle": {
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
               "expr": {
                 "Literal": {
-                  "Value": "90D"
-                }
-              }
-            },
-            "position": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Outer'"
+                  "Value": "false"
                 }
               }
             }

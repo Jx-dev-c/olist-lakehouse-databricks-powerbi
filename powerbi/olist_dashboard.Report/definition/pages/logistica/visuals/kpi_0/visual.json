@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "kpi_0",
   "position": {
-    "x": 200,
+    "x": 200.0,
     "y": 72,
     "z": 5100,
     "height": 104,
-    "width": 254,
+    "width": 254.0,
     "tabOrder": 5100
   },
   "visual": {
@@ -28,6 +28,24 @@
               },
               "queryRef": "_Medidas.Tempo Médio de Entrega (dias)",
               "nativeQueryRef": "Tempo Médio de Entrega (dias)"
+            }
+          ]
+        },
+        "comparacao": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Período Selecionado"
+                }
+              },
+              "queryRef": "_Medidas.Período Selecionado",
+              "nativeQueryRef": "Período Selecionado"
             }
           ]
         },
